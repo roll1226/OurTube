@@ -11,7 +11,7 @@ const store = firebase.firestore()
 
 class FirebaseStoreUtil {
   public static async getChats() {
-    let data = []
+    const data = []
 
     await store
       .collection("chat")
