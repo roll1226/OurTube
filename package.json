@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --max-warnings=0 --ext .tsx --ext .ts --fix"
+  },
   "dependencies": {
     "firebase": "^8.2.3",
     "next": "10.0.5",
