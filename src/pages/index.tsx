@@ -1,12 +1,7 @@
 import Head from "next/head"
-import { useEffect } from "react"
-import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
+import Link from "next/link"
 
 const Home = () => {
-  useEffect(() => {
-    FirebaseStoreUtil.getChats()
-  }, [])
-
   return (
     <div className="container">
       <Head>
@@ -19,10 +14,22 @@ const Home = () => {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
+        <Link
+          href={{
+            pathname: "test/testYouTube",
+            query: {
+              v: "8nNujr378EA",
+              h: "test1234",
+              i: "HuHvFSuBsQNZQnXafQEW",
+            },
+          }}
+        >
+          <a>お金</a>
+        </Link>
+
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
-
         <div className="grid">
           <a href="https://nextjs.org/docs" className="card">
             <h3>Documentation &rarr;</h3>
