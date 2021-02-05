@@ -1,8 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 import { env } from "../../env/DotEnv"
-import { LiveModel, liveConverter } from "../../models/firebase/LiveModel"
-import LoggerUtil from "../debugger/LoggerUtil"
+import { liveConverter } from "../../models/firebase/LiveModel"
 import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
 
 !firebase.apps.length

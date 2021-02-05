@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/router"
 import YouTube, { Options } from "react-youtube"
 import dynamic from "next/dynamic"
@@ -8,8 +8,7 @@ import { LiveModel } from "../../models/firebase/LiveModel"
 import styled from "styled-components"
 
 let isPlay: boolean | null = null
-
-// let intervalCurrentTime
+let intervalCurrentTime
 
 const YouTubeContainer = styled.div`
   position: relative;
@@ -56,6 +55,7 @@ const YouTubeVideo = (props) => {
       iv_load_policy: 3,
       playsinline: 1,
       modestbranding: 1,
+      rel: 0,
     },
   }
 
@@ -78,7 +78,6 @@ const YouTubeVideo = (props) => {
     getChangeUser.onSnapshot(
       async (users) => {
         const changeUser = users.data()
-        LoggerUtil.debug(changeUser.name, hostId)
         if (isPlay !== null && changeUser.name === hostId) return
 
         const liveInfo = await FirebaseStoreUtil.getLiveInfo(liveUid).get()
@@ -99,49 +98,29 @@ const YouTubeVideo = (props) => {
     isPlay === null ? setCurrentTime(0) : setCurrentTime(liveInfo.currentTime)
     isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
+    stopIntervalCurrentTime()
     if (!liveInfo.play) return event.target.pauseVideo()
 
     await event.target.playVideo()
+    event.target.seekTo(liveInfo.currentTime)
     setCurrentTime(liveInfo.currentTime)
+    startIntervalCurrentTime(event)
   }
 
-  useEffect(() => {
-    if (!isPlayYouTube) return
-    youTubeEvent.target.seekTo(currentTime)
-  }, [currentTime])
-
   /**
-   * ready youtube video
+   * ready youTube video
    * @param event
    */
   const _onReady = async (event) => {
     await event.target.mute()
-    // await event.target.pauseVideo()
-    const duration = await event.target.getDuration()
     setYouTubeEvent(event)
     getLiveInfo(event)
-    setDurationTime(duration)
-  }
-
-  const changeTimeP = () => {
-    // const currentTime = youTubeEvent.target.getCurrentTime() as number
-    // FirebaseStoreUtil.setLiveCurrentTime(liveUid, currentTime + 10)
-    // youTubeEvent.target.seekTo(currentTime + 10)
-  }
-
-  const changeTimeM = () => {
-    // const currentTime = youTubeEvent.target.getCurrentTime() as number
-    // FirebaseStoreUtil.setLiveCurrentTime(liveUid, currentTime - 10)
-    // youTubeEvent.target.seekTo(currentTime - 10 < 0 ? 0 : currentTime - 10)
   }
 
   /**
    * set duration time
    */
-  const setDurationTime = (duration: number) => {
-    LoggerUtil.debug(`time: ${duration}`)
-    setDuration(duration)
-  }
+  const setDurationTime = (duration: number) => setDuration(duration)
 
   /**
    * change state
@@ -164,20 +143,24 @@ const YouTubeVideo = (props) => {
    * play youTube
    */
   const playYouTube = async () => {
+    setIsPlayYouTube(true)
     await youTubeEvent.target.playVideo()
     youTubeEvent.target.seekTo(currentTime)
     const nowCurrentTime = youTubeEvent.target.getCurrentTime()
     FirebaseStoreUtil.setLivePlay(liveUid, true, hostId, nowCurrentTime)
+    startIntervalCurrentTime(youTubeEvent)
   }
 
   /**
    * pause youTube
    */
-  const pauseYouTube = () => {
-    youTubeEvent.target.pauseVideo()
+  const pauseYouTube = async () => {
+    setIsPlayYouTube(false)
+    await youTubeEvent.target.pauseVideo()
     const nowCurrentTime = youTubeEvent.target.getCurrentTime()
-    setCurrentTime(nowCurrentTime)
     FirebaseStoreUtil.setLivePlay(liveUid, false, hostId, nowCurrentTime)
+    setCurrentTime(nowCurrentTime)
+    clearInterval(intervalCurrentTime)
   }
 
   /**
@@ -194,36 +177,41 @@ const YouTubeVideo = (props) => {
       hostId,
       isPlayNow === 1 ? true : false
     )
-  }
-
-  /**
-   * set current time function
-   * @param range
-   */
-  const setCurrentTimeFun = (range) => {
-    setCurrentTime(range.target.value)
-    // clearInterval(intervalCurrentTime)
+    startIntervalCurrentTime(youTubeEvent)
   }
 
   /**
    * click youTube
    */
   const clickYouTube = () => {
-    if (isPlayYouTube) {
-      pauseYouTube()
-      setIsPlayYouTube(false)
-    } else {
-      playYouTube()
-      // intervalCurrentTime = setInterval(() => {
-      //   setCurrentTime(nowCurrentTime + 1)
-      // }, 1000)
-      setIsPlayYouTube(true)
-    }
+    if (isPlayYouTube) return pauseYouTube()
+    playYouTube()
   }
+
+  /**
+   * stop interval current time
+   */
+  const stopIntervalCurrentTime = () => clearInterval(intervalCurrentTime)
+
+  /**
+   * start interval current time
+   * @param event
+   */
+  const startIntervalCurrentTime = (event) => {
+    intervalCurrentTime = setInterval(() => {
+      const nowCurrentTime = event.target.getCurrentTime()
+      setCurrentTime(nowCurrentTime + 1)
+    }, 1000)
+  }
+
+  /**
+   * change current time
+   * @param range
+   */
+  const changeCurrentTime = (range) => setCurrentTime(range.target.value)
 
   return (
     <>
-      {/* <img src={samne} alt="サムネ" /> */}
       <YouTubeContainer>
         <YouTubePlayWrap onClick={clickYouTube} />
         <YouTubePlayer
@@ -235,8 +223,6 @@ const YouTubeVideo = (props) => {
       </YouTubeContainer>
       <button onClick={playYouTube}>スタート</button>
       <button onClick={pauseYouTube}>ストップ</button>
-      <button onClick={changeTimeP}>+10</button>
-      <button onClick={changeTimeM}>-10</button>
       {duration > 0 && (
         <input
           id="typeinp"
@@ -246,12 +232,12 @@ const YouTubeVideo = (props) => {
           step="1"
           defaultValue="0"
           value={currentTime}
-          onChange={(range) => setCurrentTimeFun(range)}
-          onMouseDown={() => LoggerUtil.debug("hogehogehoge")}
+          onChange={(range) => changeCurrentTime(range)}
+          onMouseDown={stopIntervalCurrentTime}
           onMouseUp={(range) => getCurrentTime(range)}
         />
       )}
-      {currentTime}
+      {duration}
     </>
   )
 }
