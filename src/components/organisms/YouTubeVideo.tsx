@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, ChangeEvent, MouseEvent } from "react"
 import { useRouter } from "next/router"
 import YouTube, { Options } from "react-youtube"
 import dynamic from "next/dynamic"
@@ -29,6 +29,11 @@ const YouTubePlayer = styled(YouTube)`
   top: 0;
   z-index: 1;
 `
+
+export type YouTubePlayer = {
+  target: any
+  data: number
+}
 
 const YouTubeVideo = (props) => {
   /**
@@ -66,6 +71,7 @@ const YouTubeVideo = (props) => {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isPlayYouTube, setIsPlayYouTube] = useState(false)
+  const [isAnotherUser, setIsAnotherUser] = useState(false)
 
   /**
    * get live info
@@ -93,7 +99,10 @@ const YouTubeVideo = (props) => {
    * change video status
    * @param liveInfo
    */
-  const changeVideoStatus = async (liveInfo: LiveModel, event) => {
+  const changeVideoStatus = async (
+    liveInfo: LiveModel,
+    event: YouTubePlayer
+  ) => {
     if (!event) return
     isPlay === null ? setCurrentTime(0) : setCurrentTime(liveInfo.currentTime)
     isPlay = liveInfo.play
@@ -101,8 +110,8 @@ const YouTubeVideo = (props) => {
     stopIntervalCurrentTime()
     if (!liveInfo.play) return event.target.pauseVideo()
 
+    setIsAnotherUser(true)
     await event.target.playVideo()
-    event.target.seekTo(liveInfo.currentTime)
     setCurrentTime(liveInfo.currentTime)
     startIntervalCurrentTime(event)
   }
@@ -126,12 +135,23 @@ const YouTubeVideo = (props) => {
    * change state
    * @param event
    */
-  const changeState = (event) => {
+  const changeState = (event: YouTubePlayer) => {
     const ytStatus = event.data
 
     switch (ytStatus) {
       case YouTube.PlayerState.PLAYING:
         setDurationTime(event.target.getDuration())
+        LoggerUtil.debug(currentTime)
+        if (!isAnotherUser) return
+        event.target.seekTo(currentTime)
+        setIsAnotherUser(false)
+        break
+
+      case YouTube.PlayerState.ENDED:
+        setIsPlayYouTube(false)
+        setCurrentTime(0)
+        event.target.seekTo(0)
+        FirebaseStoreUtil.setLivePlay(liveUid, false, "", 0)
         break
 
       default:
@@ -167,13 +187,18 @@ const YouTubeVideo = (props) => {
    * get current time
    * @param range
    */
-  const getCurrentTime = (range) => {
-    setCurrentTime(range.target.value)
-    youTubeEvent.target.seekTo(range.target.value)
+  const getCurrentTime = (
+    range: MouseEvent<HTMLInputElement, globalThis.MouseEvent>
+  ) => {
+    const rangeEvent = range.target as HTMLInputElement
+    const rangeCurrentTime = Number(rangeEvent.value)
+
+    setCurrentTime(rangeCurrentTime)
+    youTubeEvent.target.seekTo(rangeCurrentTime)
     const isPlayNow = youTubeEvent.target.getPlayerState()
     FirebaseStoreUtil.setLiveCurrentTime(
       liveUid,
-      range.target.value,
+      rangeCurrentTime,
       hostId,
       isPlayNow === 1 ? true : false
     )
@@ -197,7 +222,7 @@ const YouTubeVideo = (props) => {
    * start interval current time
    * @param event
    */
-  const startIntervalCurrentTime = (event) => {
+  const startIntervalCurrentTime = (event: YouTubePlayer) => {
     intervalCurrentTime = setInterval(() => {
       const nowCurrentTime = event.target.getCurrentTime()
       setCurrentTime(nowCurrentTime + 1)
@@ -208,7 +233,8 @@ const YouTubeVideo = (props) => {
    * change current time
    * @param range
    */
-  const changeCurrentTime = (range) => setCurrentTime(range.target.value)
+  const changeCurrentTime = (range: ChangeEvent<HTMLInputElement>) =>
+    setCurrentTime(Number(range.target.value))
 
   return (
     <>
