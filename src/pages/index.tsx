@@ -18,7 +18,6 @@ const Home = () => {
           href={{
             pathname: "test/testYouTube",
             query: {
-              v: "8nNujr378EA",
               h: "test1234",
               i: "HuHvFSuBsQNZQnXafQEW",
             },

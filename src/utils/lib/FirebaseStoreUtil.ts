@@ -17,7 +17,7 @@ class FirebaseStoreUtil {
    * @param liveUid
    * @return live info
    */
-  public static getLiveInfo(liveUid: string) {
+  public static liveInfo(liveUid: string) {
     return store.collection("lives").withConverter(liveConverter).doc(liveUid)
   }
 
@@ -32,9 +32,23 @@ class FirebaseStoreUtil {
     liveUid: string,
     play: boolean,
     name: string,
-    currentTime: number
+    currentTime: number,
+    playNow?: number
   ) {
-    await FirebaseStoreUtil.getLiveInfo(liveUid).update({ play, currentTime })
+    if (playNow) {
+      await FirebaseStoreUtil.liveInfo(liveUid).update({
+        play,
+        currentTime,
+        playNow,
+        updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      })
+    } else {
+      await FirebaseStoreUtil.liveInfo(liveUid).update({
+        play,
+        currentTime,
+        updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      })
+    }
     await FirebaseStoreUtil.setChangeUser(liveUid, name)
   }
 
@@ -49,7 +63,11 @@ class FirebaseStoreUtil {
     name: string,
     play: boolean
   ) {
-    await FirebaseStoreUtil.getLiveInfo(liveUid).update({ currentTime, play })
+    await FirebaseStoreUtil.liveInfo(liveUid).update({
+      currentTime,
+      play,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
     await FirebaseStoreUtil.setChangeUser(liveUid, name)
   }
 
@@ -76,13 +94,64 @@ class FirebaseStoreUtil {
    * get change user
    * @param liveUid
    */
-  public static getChangeUser(liveUid: string) {
+  public static changeUser(liveUid: string) {
     return store
       .collection("lives")
       .doc(liveUid)
       .withConverter(changeUserConverter)
       .collection("changeUsers")
       .doc("user")
+  }
+
+  /**
+   * set play now
+   * @param liveUid
+   * @param currentTime
+   * @param playNow
+   */
+  public static async setPlayNow(
+    liveUid: string,
+    currentTime: number,
+    playNow: number
+  ) {
+    await FirebaseStoreUtil.liveInfo(liveUid).update({
+      playNow,
+      currentTime,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+    await FirebaseStoreUtil.setChangeUser(liveUid, "")
+  }
+
+  /**
+   * set video id
+   * @param liveUid
+   * @param videoId
+   * @param listCnt
+   * @param name
+   * @param play
+   */
+  public static async setVideoId(
+    liveUid: string,
+    videoId: string,
+    listCnt: number,
+    name: string,
+    play?: boolean
+  ) {
+    if (play) {
+      await FirebaseStoreUtil.liveInfo(liveUid).update({
+        listCnt,
+        videoId: FirebaseStoreUtil.setArrayValue(videoId),
+        updatedAt: FirebaseStoreUtil.getTimeStamp(),
+        play,
+      })
+    } else {
+      await FirebaseStoreUtil.liveInfo(liveUid).update({
+        listCnt,
+        videoId: FirebaseStoreUtil.setArrayValue(videoId),
+        updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      })
+    }
+    await FirebaseStoreUtil.setChangeUser(liveUid, name)
   }
 
   /**
@@ -97,6 +166,14 @@ class FirebaseStoreUtil {
    */
   public static setCount(cnt: number) {
     return firebase.firestore.FieldValue.increment(cnt)
+  }
+
+  /**
+   * set array value
+   * @param value
+   */
+  public static setArrayValue(value: any) {
+    return firebase.firestore.FieldValue.arrayUnion(value)
   }
 }
 

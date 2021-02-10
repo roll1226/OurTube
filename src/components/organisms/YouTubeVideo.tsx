@@ -6,6 +6,7 @@ import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { LiveModel } from "../../models/firebase/LiveModel"
 import styled from "styled-components"
+import ControlsMolecules from "../molecules/ControlsMolecules"
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
@@ -40,8 +41,7 @@ const YouTubeVideo = (props) => {
    * router
    */
   const router = useRouter()
-  const { v, h, i } = router.query
-  const videoId = v as string
+  const { h, i } = router.query
   const hostId = h as string
   const liveUid = i as string
 
@@ -72,6 +72,15 @@ const YouTubeVideo = (props) => {
   const [duration, setDuration] = useState(0)
   const [isPlayYouTube, setIsPlayYouTube] = useState(false)
   const [isAnotherUser, setIsAnotherUser] = useState(false)
+  const [isMute, setIsMute] = useState(true)
+  const [isInitVideo, setIsInitVide] = useState(true)
+  const [videoId, setVideoId] = useState("")
+  const [volume, setVolume] = useState(0)
+
+  const [listCnt, setListCnt] = useState(0)
+  const [playNow, setPlayNow] = useState(0)
+
+  const [newVideoId, setNewVideoId] = useState("")
 
   /**
    * get live info
@@ -79,14 +88,22 @@ const YouTubeVideo = (props) => {
    */
   const getLiveInfo = async (event) => {
     if (!liveUid) return
-    const getChangeUser = FirebaseStoreUtil.getChangeUser(liveUid)
+    const getChangeUser = FirebaseStoreUtil.changeUser(liveUid)
 
     getChangeUser.onSnapshot(
       async (users) => {
         const changeUser = users.data()
         if (isPlay !== null && changeUser.name === hostId) return
 
-        const liveInfo = await FirebaseStoreUtil.getLiveInfo(liveUid).get()
+        const liveInfo = await FirebaseStoreUtil.liveInfo(liveUid).get()
+        const playNow = liveInfo.data().playNow
+
+        if (isPlay !== null && changeUser.name === "setYouTubePlayerBot")
+          return setListCnt(liveInfo.data().listCnt)
+
+        setListCnt(liveInfo.data().listCnt)
+        setPlayNow(liveInfo.data().playNow)
+        setVideoId(liveInfo.data().videoId[playNow])
         changeVideoStatus(liveInfo.data(), event)
       },
       (error) => {
@@ -112,6 +129,7 @@ const YouTubeVideo = (props) => {
 
     setIsAnotherUser(true)
     await event.target.playVideo()
+    event.target.seekTo(liveInfo.currentTime)
     setCurrentTime(liveInfo.currentTime)
     startIntervalCurrentTime(event)
   }
@@ -122,6 +140,7 @@ const YouTubeVideo = (props) => {
    */
   const _onReady = async (event) => {
     await event.target.mute()
+    setVolume(event.target.getVolume())
     setYouTubeEvent(event)
     getLiveInfo(event)
   }
@@ -141,18 +160,27 @@ const YouTubeVideo = (props) => {
     switch (ytStatus) {
       case YouTube.PlayerState.PLAYING:
         setDurationTime(event.target.getDuration())
-        LoggerUtil.debug(currentTime)
+
         if (!isAnotherUser) return
+        if (!isInitVideo) return
+
+        setIsInitVide(false)
         event.target.seekTo(currentTime)
         setIsAnotherUser(false)
         break
 
-      case YouTube.PlayerState.ENDED:
+      case YouTube.PlayerState.ENDED: {
+        const nextCnt = playNow + 1
         setIsPlayYouTube(false)
         setCurrentTime(0)
         event.target.seekTo(0)
-        FirebaseStoreUtil.setLivePlay(liveUid, false, "", 0)
+        if (listCnt === nextCnt) {
+          FirebaseStoreUtil.setLivePlay(liveUid, false, "", 0, nextCnt)
+        } else {
+          FirebaseStoreUtil.setPlayNow(liveUid, 0, nextCnt)
+        }
         break
+      }
 
       default:
         break
@@ -216,7 +244,9 @@ const YouTubeVideo = (props) => {
   /**
    * stop interval current time
    */
-  const stopIntervalCurrentTime = () => clearInterval(intervalCurrentTime)
+  const stopIntervalCurrentTime = () => {
+    clearInterval(intervalCurrentTime)
+  }
 
   /**
    * start interval current time
@@ -233,8 +263,98 @@ const YouTubeVideo = (props) => {
    * change current time
    * @param range
    */
-  const changeCurrentTime = (range: ChangeEvent<HTMLInputElement>) =>
+  const changeCurrentTime = (range: ChangeEvent<HTMLInputElement>) => {
     setCurrentTime(Number(range.target.value))
+  }
+
+  /**
+   * video change mute
+   */
+  const videoChangeMute = () => {
+    if (youTubeEvent.target.isMuted()) {
+      youTubeEvent.target.unMute()
+      setIsMute(false)
+    } else {
+      youTubeEvent.target.mute()
+      setIsMute(true)
+    }
+  }
+
+  const getURLParams = (path: string): any => {
+    if (!path) return false
+
+    const param = path.match(/\?([^?]*)$/)
+
+    if (!param || param[1] === "") return false
+
+    const tmpParams = param[1].split("&")
+    let keyValue = []
+    const params = {}
+
+    for (let i = 0, len = tmpParams.length; i < len; i++) {
+      keyValue = tmpParams[i].split("=")
+      params[keyValue[0]] = keyValue[1]
+    }
+
+    return params
+  }
+
+  /**
+   * change volume
+   * @param range
+   */
+  const changeVolume = (range: ChangeEvent<HTMLInputElement>) => {
+    const rangeVolume = Number(range.target.value)
+    youTubeEvent.target.setVolume(rangeVolume)
+    setVolume(rangeVolume)
+  }
+
+  const setStoreVideoId = () => {
+    const nextListCnt = listCnt + 1
+    const resultUrlParams = getURLParams(newVideoId)
+    let getNewVideoId: string
+
+    if (resultUrlParams) {
+      getNewVideoId = resultUrlParams.v
+    } else if (newVideoId.includes("youtu.be/")) {
+      getNewVideoId = newVideoId
+        .substring(newVideoId.indexOf("youtu.be/"))
+        .replace("youtu.be/", "")
+    }
+
+    if (listCnt === 0) {
+      FirebaseStoreUtil.setVideoId(
+        liveUid,
+        getNewVideoId,
+        nextListCnt,
+        "",
+        true
+      )
+      setNewVideoId("")
+      return
+    }
+
+    if (listCnt === playNow) {
+      FirebaseStoreUtil.setVideoId(
+        liveUid,
+        getNewVideoId,
+        nextListCnt,
+        "",
+        true
+      )
+      setNewVideoId("")
+    } else if (listCnt > playNow) {
+      FirebaseStoreUtil.setVideoId(
+        liveUid,
+        getNewVideoId,
+        nextListCnt,
+        "setYouTubePlayerBot"
+      )
+      setNewVideoId("")
+    } else {
+      LoggerUtil.debug("error")
+    }
+  }
 
   return (
     <>
@@ -247,23 +367,30 @@ const YouTubeVideo = (props) => {
           onStateChange={changeState}
         />
       </YouTubeContainer>
-      <button onClick={playYouTube}>スタート</button>
-      <button onClick={pauseYouTube}>ストップ</button>
-      {duration > 0 && (
-        <input
-          id="typeinp"
-          type="range"
-          min="0"
-          max={duration}
-          step="1"
-          defaultValue="0"
-          value={currentTime}
-          onChange={(range) => changeCurrentTime(range)}
-          onMouseDown={stopIntervalCurrentTime}
-          onMouseUp={(range) => getCurrentTime(range)}
-        />
-      )}
-      {duration}
+
+      <ControlsMolecules
+        mute={videoChangeMute}
+        isMute={isMute}
+        isPlayYouTube={isPlayYouTube}
+        play={playYouTube}
+        pause={pauseYouTube}
+        changeCurrentTime={(range) => changeCurrentTime(range)}
+        mouseDownCurrentTime={stopIntervalCurrentTime}
+        mouseUpCurrentTime={(range) => getCurrentTime(range)}
+        currentTimeMax={duration}
+        currentTimeValue={currentTime}
+        volumeValue={volume}
+        changeVolume={(range) => changeVolume(range)}
+      />
+
+      <input
+        type="text"
+        value={newVideoId}
+        onChange={(range) => {
+          setNewVideoId(range.target.value)
+        }}
+      />
+      <button onClick={setStoreVideoId}>送信</button>
     </>
   )
 }
