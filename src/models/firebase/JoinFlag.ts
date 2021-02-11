@@ -2,34 +2,27 @@ import { Timestamp } from "@google-cloud/firestore"
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-export class ChangeUser {
+export class JoinFlag {
   constructor(
     readonly createdAt: Timestamp,
-    readonly userListCnt: number,
-    readonly updatedAt: Timestamp,
-    readonly users: Array<string>
+    readonly flagCnt: number,
+    readonly updatedAt: Timestamp
   ) {}
 }
 
 export const changeUserConverter = {
-  toFirestore(post: ChangeUser): firebase.firestore.DocumentData {
+  toFirestore(post: JoinFlag): firebase.firestore.DocumentData {
     return {
       createdAt: post.createdAt,
-      userListCnt: post.userListCnt,
+      flagCnt: post.flagCnt,
       updatedAt: post.updatedAt,
-      users: post.users,
     }
   },
   fromFirestore(
     snapshot: firebase.firestore.QueryDocumentSnapshot,
     options: firebase.firestore.SnapshotOptions
-  ): ChangeUser {
+  ): JoinFlag {
     const data = snapshot.data(options)!
-    return new ChangeUser(
-      data.createdAt,
-      data.userListCnt,
-      data.updatedAt,
-      data.users
-    )
+    return new JoinFlag(data.createdAt, data.flagCnt, data.updatedAt)
   },
 }

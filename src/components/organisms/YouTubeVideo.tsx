@@ -10,6 +10,8 @@ import ControlsMolecules from "../molecules/ControlsMolecules"
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
+let initJoinFlag = true
+let initJoinFlagCnt = 0
 
 const YouTubeContainer = styled.div`
   position: relative;
@@ -17,12 +19,14 @@ const YouTubeContainer = styled.div`
   height: 390px;
 `
 
-const YouTubePlayWrap = styled.div`
+const YouTubePlayWrap = styled.div<{ img: string }>`
   position: absolute;
   z-index: 2;
   width: 640px;
   height: 390px;
   top: 0;
+  background: url(${({ img }) => img}) no-repeat center center;
+  background-size: cover;
 `
 
 const YouTubePlayer = styled(YouTube)`
@@ -82,18 +86,48 @@ const YouTubeVideo = (props) => {
 
   const [newVideoId, setNewVideoId] = useState("")
 
+  const [isInitThumbnail, setIsInitThumbnail] = useState(true)
+
   /**
    * get live info
    * @param liveUid
    */
   const getLiveInfo = async (event) => {
     if (!liveUid) return
+
     const getChangeUser = FirebaseStoreUtil.changeUser(liveUid)
+    const getJoinFlag = FirebaseStoreUtil.joinFlag(liveUid)
+
+    getJoinFlag.onSnapshot(
+      async (flag) => {
+        if (initJoinFlag) {
+          initJoinFlagCnt++
+          if (initJoinFlagCnt >= 2) initJoinFlag = false
+
+          return
+        }
+
+        let joinFlagYouTubePlayer = false
+        if (event.target.getPlayerState() === YouTube.PlayerState.PLAYING)
+          joinFlagYouTubePlayer = true
+
+        FirebaseStoreUtil.setLiveCurrentTime(
+          liveUid,
+          event.target.getCurrentTime(),
+          "",
+          joinFlagYouTubePlayer
+        )
+      },
+      (error) => {
+        LoggerUtil.debug(`error log: ${error}`)
+      }
+    )
 
     getChangeUser.onSnapshot(
       async (users) => {
         const changeUser = users.data()
         if (isPlay !== null && changeUser.name === hostId) return
+        // if (isPlay !== null && changeUser.name === "joinLiveYouTubeBot") return
 
         const liveInfo = await FirebaseStoreUtil.liveInfo(liveUid).get()
         const playNow = liveInfo.data().playNow
@@ -110,6 +144,7 @@ const YouTubeVideo = (props) => {
         LoggerUtil.debug(`error log: ${error}`)
       }
     )
+    FirebaseStoreUtil.setJoinFlag(liveUid)
   }
 
   /**
@@ -125,13 +160,14 @@ const YouTubeVideo = (props) => {
     isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
     stopIntervalCurrentTime()
+    event.target.seekTo(liveInfo.currentTime)
     if (!liveInfo.play) return event.target.pauseVideo()
 
     setIsAnotherUser(true)
+    setIsInitThumbnail(false)
     await event.target.playVideo()
-    event.target.seekTo(liveInfo.currentTime)
     setCurrentTime(liveInfo.currentTime)
-    startIntervalCurrentTime(event)
+    startIntervalCurrentTime()
   }
 
   /**
@@ -160,6 +196,7 @@ const YouTubeVideo = (props) => {
     switch (ytStatus) {
       case YouTube.PlayerState.PLAYING:
         setDurationTime(event.target.getDuration())
+        LoggerUtil.debug(isInitVideo)
 
         if (!isAnotherUser) return
         if (!isInitVideo) return
@@ -192,11 +229,12 @@ const YouTubeVideo = (props) => {
    */
   const playYouTube = async () => {
     setIsPlayYouTube(true)
+    setIsInitThumbnail(false)
     await youTubeEvent.target.playVideo()
-    youTubeEvent.target.seekTo(currentTime)
-    const nowCurrentTime = youTubeEvent.target.getCurrentTime()
-    FirebaseStoreUtil.setLivePlay(liveUid, true, hostId, nowCurrentTime)
-    startIntervalCurrentTime(youTubeEvent)
+    await youTubeEvent.target.seekTo(currentTime)
+
+    FirebaseStoreUtil.setLivePlay(liveUid, true, hostId, currentTime)
+    startIntervalCurrentTime()
   }
 
   /**
@@ -230,7 +268,7 @@ const YouTubeVideo = (props) => {
       hostId,
       isPlayNow === 1 ? true : false
     )
-    startIntervalCurrentTime(youTubeEvent)
+    startIntervalCurrentTime()
   }
 
   /**
@@ -252,10 +290,9 @@ const YouTubeVideo = (props) => {
    * start interval current time
    * @param event
    */
-  const startIntervalCurrentTime = (event: YouTubePlayer) => {
+  const startIntervalCurrentTime = () => {
     intervalCurrentTime = setInterval(() => {
-      const nowCurrentTime = event.target.getCurrentTime()
-      setCurrentTime(nowCurrentTime + 1)
+      setCurrentTime((currentTime) => currentTime + 1)
     }, 1000)
   }
 
@@ -359,7 +396,15 @@ const YouTubeVideo = (props) => {
   return (
     <>
       <YouTubeContainer>
-        <YouTubePlayWrap onClick={clickYouTube} />
+        <YouTubePlayWrap
+          onClick={clickYouTube}
+          img={
+            isInitThumbnail
+              ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
+              : ""
+          }
+        />
+
         <YouTubePlayer
           videoId={videoId}
           opts={opts}
@@ -391,6 +436,7 @@ const YouTubeVideo = (props) => {
         }}
       />
       <button onClick={setStoreVideoId}>送信</button>
+      {currentTime}
     </>
   )
 }

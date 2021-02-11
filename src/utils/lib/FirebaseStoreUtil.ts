@@ -155,6 +155,29 @@ class FirebaseStoreUtil {
   }
 
   /**
+   * join flag
+   * @param liveUid
+   */
+  public static joinFlag(liveUid: string) {
+    return store
+      .collection("lives")
+      .doc(liveUid)
+      .collection("joinFlag")
+      .doc("flag")
+  }
+
+  /**
+   * set join flag
+   * @param liveUid
+   */
+  public static async setJoinFlag(liveUid: string) {
+    await FirebaseStoreUtil.joinFlag(liveUid).update({
+      flagCnt: FirebaseStoreUtil.setCount(1),
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+  }
+
+  /**
    * get timestamp
    */
   public static getTimeStamp() {
