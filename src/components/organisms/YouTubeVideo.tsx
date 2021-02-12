@@ -208,6 +208,7 @@ const YouTubeVideo = (props) => {
 
       case YouTube.PlayerState.ENDED: {
         const nextCnt = playNow + 1
+        setIsInitThumbnail(true)
         setIsPlayYouTube(false)
         setCurrentTime(0)
         event.target.seekTo(0)
@@ -400,11 +401,10 @@ const YouTubeVideo = (props) => {
           onClick={clickYouTube}
           img={
             isInitThumbnail
-              ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
+              ? `http://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
               : ""
           }
         />
-
         <YouTubePlayer
           videoId={videoId}
           opts={opts}
@@ -436,7 +436,6 @@ const YouTubeVideo = (props) => {
         }}
       />
       <button onClick={setStoreVideoId}>送信</button>
-      {currentTime}
     </>
   )
 }
