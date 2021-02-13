@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components"
 import { HoverItem } from "../../styles/shadow/GeneralShadowStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import {
   GeneralText,
   GeneralFontSize,
@@ -11,6 +12,7 @@ export type Props = {
   outlineColor?: string
   text: string
   fontColor: string
+  disabled?: boolean
   icon?: JSX.Element
   onClick: () => void
 }
@@ -18,6 +20,7 @@ export type Props = {
 const ButtonContainer = styled.button<{
   bgColor: string
   outlineColor: string
+  disabled: boolean
 }>`
   border: ${({ bgColor }) => bgColor};
   border-radius: 12px;
@@ -36,9 +39,19 @@ const ButtonContainer = styled.button<{
       border: 1px ${outlineColor} solid;
     `}
   background: ${({ bgColor }) => bgColor};
-  &:hover {
-    box-shadow: ${HoverItem};
-  }
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      &:hover {
+        box-shadow: ${HoverItem};
+      }
+    `}
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      border: 1px ${GeneralColorStyle.Grey} solid;
+      background: ${GeneralColorStyle.Grey};
+    `}
 `
 
 const ButtonAtoms = ({
@@ -46,6 +59,7 @@ const ButtonAtoms = ({
   outlineColor,
   text,
   fontColor,
+  disabled = false,
   icon,
   onClick,
 }: Props) => {
@@ -54,6 +68,7 @@ const ButtonAtoms = ({
       onClick={onClick}
       bgColor={bgColor}
       outlineColor={outlineColor}
+      disabled={disabled}
     >
       {icon && (
         <>
@@ -62,7 +77,10 @@ const ButtonAtoms = ({
         </>
       )}
 
-      <GeneralText fontSize={GeneralFontSize.SIZE_16} fontColor={fontColor}>
+      <GeneralText
+        fontSize={GeneralFontSize.SIZE_16}
+        fontColor={disabled ? GeneralColorStyle.White : fontColor}
+      >
         {text}
       </GeneralText>
     </ButtonContainer>

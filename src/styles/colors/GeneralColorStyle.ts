@@ -7,6 +7,7 @@ const GeneralColorStyle = {
   ThinGreen: "#8bd7d2",
   ColoredWhite: "#fffbfa",
   Twitter: "#1AA1F2",
+  Grey: "#C4C4C4",
 }
 
 export default GeneralColorStyle
