@@ -1,8 +1,8 @@
-import OurTube from "../../../assets/images/ourTube.svg"
+import OurTube from "../../../assets/images/ourTubeLogo.svg"
 
 export enum LogoColor {
   WHITE = "#fff",
-  DARK_BLUE = "#49c6e5",
+  BLUE = "#54defd",
 }
 
 export type Props = {
