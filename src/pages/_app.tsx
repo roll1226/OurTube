@@ -1,5 +1,5 @@
 import { AppProps } from "next/app"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
@@ -8,6 +8,8 @@ import createStore from "../ducks/createStore"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import LoggerUtil from "../utils/debugger/LoggerUtil"
 import FirebaseAuthenticationUtil from "../utils/lib/FirebaseAuthenticationUtil"
+import CircleAtoms from "../components/atoms/CircleAtoms"
+import { OurTubePath } from "../consts/PathConsts"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -35,17 +37,25 @@ const ComponentContainer = styled.div`
   z-index: 3;
 `
 
+const DarkBlueCircle = styled(CircleAtoms)``
+
+const DarkGreenCircle = styled(CircleAtoms)``
+
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const router = useRouter()
 
+  const [nowPathname, setNowPathname] = useState("/")
+
   useEffect(() => {
     LoggerUtil.debug(router)
+    const pathname = router.pathname
+    setNowPathname(pathname)
 
     if (
-      router.pathname !== "/" &&
-      router.pathname !== "/_error" &&
-      router.pathname !== "/insert_room_password/[id]" &&
-      router.pathname !== "/create_guest/[id]"
+      pathname !== OurTubePath.TOP &&
+      pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+      pathname !== OurTubePath.CREATE_GUEST &&
+      pathname !== OurTubePath.ERROR
     ) {
       const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
 
@@ -59,7 +69,19 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     <Provider store={createStore()}>
       <GlobalStyle />
       <CircleContainer>
-        <div>ホゲホゲホゲhごえほげ</div>
+        <DarkBlueCircle
+          color={GeneralColorStyle.DarkBlue}
+          size={1200}
+          path={nowPathname}
+          scale={1}
+        />
+
+        <DarkGreenCircle
+          color={GeneralColorStyle.DarkGreen}
+          size={900}
+          path={nowPathname}
+          scale={1}
+        />
       </CircleContainer>
 
       <ComponentContainer>
