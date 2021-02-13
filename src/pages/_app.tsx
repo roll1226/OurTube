@@ -1,4 +1,6 @@
-import { AppProps, AppContext } from "next/app"
+import { AppProps } from "next/app"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
 import { Provider } from "react-redux"
@@ -19,50 +21,52 @@ const GlobalStyle = createGlobalStyle`
 const CircleContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 0;
 `
 
 const ComponentContainer = styled.div`
   position: relative;
+  top: 0;
+  left: 0;
   z-index: 3;
 `
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
-  return (
-    <>
-      <Provider store={createStore()}>
-        <GlobalStyle />
-        <CircleContainer>
-          <div>hogehogehogehoge</div>
+  const router = useRouter()
 
-          <ComponentContainer>
-            <Component {...pageProps} />
-          </ComponentContainer>
-        </CircleContainer>
-      </Provider>
-    </>
-  )
-}
+  useEffect(() => {
+    LoggerUtil.debug(router)
 
-App.getInitialProps = async ({ Component, ctx }: AppContext) => {
-  const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
-  if (ctx.pathname !== "/" && ctx.pathname !== "/_error") {
-    if (!isLogin) {
-      LoggerUtil.debug(isLogin)
-      ctx.res.statusCode = 302
-      ctx.res.setHeader("Location", "/")
-    } else {
-      LoggerUtil.debug(isLogin)
+    if (
+      router.pathname !== "/" &&
+      router.pathname !== "/_error" &&
+      router.pathname !== "/insert_room_password/[id]" &&
+      router.pathname !== "/create_guest/[id]"
+    ) {
+      const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
+
+      if (!isLogin) {
+        router.replace("/")
+      }
     }
-  }
-  return {
-    pageProps: {
-      ...(Component.getInitialProps
-        ? await Component.getInitialProps(ctx)
-        : {}),
-      pathname: ctx.pathname,
-    },
-  }
+  }, [router])
+
+  return (
+    <Provider store={createStore()}>
+      <GlobalStyle />
+      <CircleContainer>
+        <div>ホゲホゲホゲhごえほげ</div>
+      </CircleContainer>
+
+      <ComponentContainer>
+        <Component {...pageProps} />
+      </ComponentContainer>
+    </Provider>
+  )
 }
 
 export default App
