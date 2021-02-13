@@ -27,7 +27,7 @@ const CardContainer = styled.div<{
   ${({ height }) =>
     height &&
     css`
-      height: ${height};
+      height: ${height}px;
     `}
   background: ${({ bgColor }) => bgColor}
 `

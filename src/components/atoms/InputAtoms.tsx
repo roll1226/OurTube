@@ -1,19 +1,31 @@
 import { ChangeEvent } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
-import { GeneralFontSize } from "../../styles/typography/GeneralTextStyle"
+import { CardShadow } from "../../styles/shadow/GeneralShadowStyle"
 
 const InputContainer = styled.input<{
   width: number
   outlineColor: string
+  disabledStyle: boolean
 }>`
   padding: 12px 16px;
   outline: none;
   border-radius: 1000px;
+  transition: all 150ms;
+  font-size: 16px;
+
   width: ${({ width }) => width}px;
-  font-size: ${GeneralFontSize.SIZE_16};
   color: ${GeneralColorStyle.Black};
   border: 2px solid ${({ outlineColor }) => outlineColor};
+  ${({ disabledStyle }) =>
+    disabledStyle &&
+    css`
+      border: 2px solid ${GeneralColorStyle.Grey};
+    `}
+
+  &:focus {
+    box-shadow: ${CardShadow};
+  }
 `
 
 export type Props = {
@@ -21,6 +33,7 @@ export type Props = {
   placeholder: string
   value: string
   outlineColor: string
+  disabled?: boolean
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -29,6 +42,7 @@ const InputAtoms = ({
   placeholder,
   value,
   outlineColor,
+  disabled = false,
   onChange,
 }: Props) => {
   return (
@@ -39,6 +53,8 @@ const InputAtoms = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      disabled={disabled}
+      disabledStyle={disabled}
     />
   )
 }

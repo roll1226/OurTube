@@ -21,7 +21,7 @@ const InsertAccountNameMolecules = () => {
 
   return (
     <>
-      <CardAtoms width={400}>
+      <CardAtoms width={480}>
         <OurTubeLogoAtoms size={392} color={LogoColor.BLUE} />
 
         <GeneralSpacer vertical={52} />
