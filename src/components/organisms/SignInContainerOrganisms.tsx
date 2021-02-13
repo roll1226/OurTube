@@ -1,21 +1,20 @@
 import styled from "styled-components"
 import GoogleSignInButtonMolecules from "../molecules/GoogleSignInButtonMolecules"
 import TwitterSignInButtonMolecules from "../molecules/TwitterSignInButtonMolecules"
+import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 
 const SignInContainer = styled.div`
   display: flex;
   flex-direction: column;
 `
 
-const SignInSpacer = styled.div`
-  margin-top: 12px;
-`
-
 const SignInContainerOrganisms = () => {
   return (
     <SignInContainer>
       <GoogleSignInButtonMolecules />
-      <SignInSpacer />
+
+      <GeneralSpacer vertical={12} />
+
       <TwitterSignInButtonMolecules />
     </SignInContainer>
   )

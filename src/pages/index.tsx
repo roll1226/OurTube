@@ -4,7 +4,6 @@ import OurTubeLogoAtoms, {
 } from "../components/atoms/svg/OurTubeLogoAtoms"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import styled from "styled-components"
-import LoggerUtil from "../utils/debugger/LoggerUtil"
 import SignInContainerOrganisms from "../components/organisms/SignInContainerOrganisms"
 import {
   GeneralText,
@@ -22,8 +21,8 @@ const TopPageContainer = styled.div`
 
 const LogoContainer = styled.div`
   position: absolute;
-  top: 0;
-  margin-left: 40px;
+  top: 40px;
+  left: 40px;
 `
 
 const TopMessageContainer = styled.div`

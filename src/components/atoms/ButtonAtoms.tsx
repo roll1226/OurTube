@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import { HoverItem } from "../../styles/shadow/GeneralShadowStyle"
+import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import {
   GeneralText,
   GeneralFontSize,
@@ -19,8 +20,8 @@ const ButtonContainer = styled.button<{
   outlineColor: string
 }>`
   border: ${({ bgColor }) => bgColor};
-  border-radius: 20px;
-  padding: 12px 16px;
+  border-radius: 12px;
+  padding: 8px 16px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -40,10 +41,6 @@ const ButtonContainer = styled.button<{
   }
 `
 
-const IconSpacer = styled.div`
-  margin-left: 4px;
-`
-
 const ButtonAtoms = ({
   bgColor,
   outlineColor,
@@ -61,7 +58,7 @@ const ButtonAtoms = ({
       {icon && (
         <>
           {icon}
-          <IconSpacer />
+          <GeneralSpacer horizontal={4} />
         </>
       )}
 

@@ -46,23 +46,28 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   const [nowPathname, setNowPathname] = useState("/")
 
+  // useEffect(() => {
+  //   LoggerUtil.debug(router)
+  //   const pathname = router.pathname
+  //   setNowPathname(pathname)
+
+  //   if (
+  //     pathname !== OurTubePath.TOP &&
+  //     pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+  //     pathname !== OurTubePath.CREATE_GUEST &&
+  //     pathname !== OurTubePath.ERROR
+  //   ) {
+  //     const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
+
+  //     if (!isLogin) {
+  //       router.replace("/")
+  //     }
+  //   }
+  // }, [router])
+
   useEffect(() => {
-    LoggerUtil.debug(router)
     const pathname = router.pathname
     setNowPathname(pathname)
-
-    if (
-      pathname !== OurTubePath.TOP &&
-      pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-      pathname !== OurTubePath.CREATE_GUEST &&
-      pathname !== OurTubePath.ERROR
-    ) {
-      const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
-
-      if (!isLogin) {
-        router.replace("/")
-      }
-    }
   }, [router])
 
   return (

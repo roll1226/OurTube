@@ -11,7 +11,7 @@ export type Props = {
 }
 
 const OurTubeLogoAtoms = ({ size, color }: Props) => {
-  return <OurTube width={size} fill={color} />
+  return <OurTube width={size} height={"100%"} fill={color} />
 }
 
 export default OurTubeLogoAtoms

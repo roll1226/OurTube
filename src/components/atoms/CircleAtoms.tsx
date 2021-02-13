@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { OurTubePath } from "../../consts/PathConsts"
+import { DefaultAnimation } from "../../styles/animation/GeneralAnimationStyle"
 
 const getPosition = (scale: number, color: string, path: string) => {
   if (color === GeneralColorStyle.DarkBlue) {
@@ -79,7 +80,7 @@ const CircleContainer = styled.div<{
   position: absolute;
   transform-origin: center center;
   transform: translate(0%, -50%) scale(0);
-  transition: all 300ms cubic-bezier(0.15, 0.74, 0.34, 1.07);
+  transition: all 350ms ${DefaultAnimation};
   ${(props) => getPosition(props.scale, props.color, props.path)};
 `
 
