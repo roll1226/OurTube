@@ -7,6 +7,7 @@ import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { LiveModel } from "../../models/firebase/LiveModel"
 import styled from "styled-components"
 import ControlsMolecules from "../molecules/ControlsMolecules"
+import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
@@ -318,25 +319,6 @@ const YouTubeVideo = (props) => {
     }
   }
 
-  const getURLParams = (path: string): any => {
-    if (!path) return false
-
-    const param = path.match(/\?([^?]*)$/)
-
-    if (!param || param[1] === "") return false
-
-    const tmpParams = param[1].split("&")
-    let keyValue = []
-    const params = {}
-
-    for (let i = 0, len = tmpParams.length; i < len; i++) {
-      keyValue = tmpParams[i].split("=")
-      params[keyValue[0]] = keyValue[1]
-    }
-
-    return params
-  }
-
   /**
    * change volume
    * @param range
@@ -349,7 +331,7 @@ const YouTubeVideo = (props) => {
 
   const setStoreVideoId = () => {
     const nextListCnt = listCnt + 1
-    const resultUrlParams = getURLParams(newVideoId)
+    const resultUrlParams = UrlParamsUtil.getURLParams(newVideoId)
     let getNewVideoId: string
 
     if (resultUrlParams) {

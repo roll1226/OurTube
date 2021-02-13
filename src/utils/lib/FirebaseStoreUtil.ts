@@ -1,14 +1,13 @@
 import firebase from "firebase/app"
-import "firebase/firestore"
-import { env } from "../../env/DotEnv"
-import { liveConverter } from "../../models/firebase/LiveModel"
-import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
+import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
+import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
+import FirebaseInitUtil from "./FIrebaseInitUtil"
+import {
+  changeUserConverter,
+  ChangeUser,
+} from "../../models/firebase/ChangeUserModel"
 
-!firebase.apps.length
-  ? firebase.initializeApp(env.getFirebaseConfig())
-  : firebase.app()
-
-export const store = firebase.firestore()
+const fireStore = FirebaseInitUtil.fireStore()
 
 class FirebaseStoreUtil {
   /**
@@ -17,8 +16,13 @@ class FirebaseStoreUtil {
    * @param liveUid
    * @return live info
    */
-  public static liveInfo(liveUid: string) {
-    return store.collection("lives").withConverter(liveConverter).doc(liveUid)
+  public static liveInfo(
+    liveUid: string
+  ): firebase.firestore.DocumentReference<LiveModel> {
+    return fireStore
+      .collection("lives")
+      .withConverter(liveConverter)
+      .doc(liveUid)
   }
 
   /**
@@ -77,7 +81,7 @@ class FirebaseStoreUtil {
    * @param name
    */
   public static async setChangeUser(liveUid: string, name: string) {
-    await store
+    await fireStore
       .collection("lives")
       .doc(liveUid)
       .collection("changeUsers")
@@ -94,12 +98,14 @@ class FirebaseStoreUtil {
    * get change user
    * @param liveUid
    */
-  public static changeUser(liveUid: string) {
-    return store
+  public static changeUser(
+    liveUid: string
+  ): firebase.firestore.DocumentReference<ChangeUser> {
+    return fireStore
       .collection("lives")
       .doc(liveUid)
-      .withConverter(changeUserConverter)
       .collection("changeUsers")
+      .withConverter(changeUserConverter)
       .doc("user")
   }
 
@@ -158,11 +164,14 @@ class FirebaseStoreUtil {
    * join flag
    * @param liveUid
    */
-  public static joinFlag(liveUid: string) {
-    return store
+  public static joinFlag(
+    liveUid: string
+  ): firebase.firestore.DocumentReference<JoinFlag> {
+    return fireStore
       .collection("lives")
       .doc(liveUid)
       .collection("joinFlag")
+      .withConverter(joinFlagConverter)
       .doc("flag")
   }
 
@@ -187,7 +196,7 @@ class FirebaseStoreUtil {
   /**
    * set count
    */
-  public static setCount(cnt: number) {
+  public static setCount(cnt: number): firebase.firestore.FieldValue {
     return firebase.firestore.FieldValue.increment(cnt)
   }
 
@@ -195,7 +204,7 @@ class FirebaseStoreUtil {
    * set array value
    * @param value
    */
-  public static setArrayValue(value: any) {
+  public static setArrayValue(value: any): firebase.firestore.FieldValue {
     return firebase.firestore.FieldValue.arrayUnion(value)
   }
 }

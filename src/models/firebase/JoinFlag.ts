@@ -10,7 +10,7 @@ export class JoinFlag {
   ) {}
 }
 
-export const changeUserConverter = {
+export const joinFlagConverter = {
   toFirestore(post: JoinFlag): firebase.firestore.DocumentData {
     return {
       createdAt: post.createdAt,

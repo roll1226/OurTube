@@ -1,14 +1,15 @@
 import firebase from "firebase/app"
-import "firebase/auth"
-import "firebase/firestore"
-import { env } from "../../env/DotEnv"
+import FirebaseInitUtil from "./FIrebaseInitUtil"
 
-!firebase.apps.length
-  ? firebase.initializeApp(env.getFirebaseConfig())
-  : firebase.app()
+const firebaseAuth = FirebaseInitUtil.firebaseAuth()
 
-const auth = firebase.auth()
-
-class FirebaseAuthenticationUtil {}
+class FirebaseAuthenticationUtil {
+  /**
+   * get current user
+   */
+  public static getCurrentUser(): firebase.User | null {
+    return firebaseAuth.currentUser
+  }
+}
 
 export default FirebaseAuthenticationUtil
