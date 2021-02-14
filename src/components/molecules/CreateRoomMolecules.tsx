@@ -7,11 +7,16 @@ import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import CheckboxAtoms from "../atoms/CheckboxAtoms"
 import styled from "styled-components"
+import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
+import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
+import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
+import { useRouter } from "next/router"
 import {
   GeneralFontSize,
   GeneralFontWeight,
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
+import { OurTubePath } from "../../consts/PathConsts"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -20,9 +25,10 @@ const PasswordWrap = styled.div`
 `
 
 const CreateRoomMolecules = () => {
+  const router = useRouter()
   const [videoUrl, setVideoUrl] = useState("")
   const [password, setPassword] = useState("")
-  const [isPassword, setIsPassword] = useState(false)
+  const [isPrivateRoom, setIsPrivateRoom] = useState(false)
 
   const insertVideoId = (event: ChangeEvent<HTMLInputElement>) => {
     setVideoUrl(event.target.value)
@@ -33,7 +39,21 @@ const CreateRoomMolecules = () => {
   }
 
   const checkPassword = () => {
-    setIsPassword((check) => !check)
+    setIsPrivateRoom((check) => !check)
+  }
+
+  const createShareRoom = async () => {
+    const user = FirebaseAuthenticationUtil.getCurrentUser()
+    const resultVideoId = UrlParamsUtil.getVideoId(videoUrl)
+
+    const roomId = await FirebaseStoreUtil.createShareRoom(
+      user.uid,
+      password,
+      isPrivateRoom,
+      resultVideoId
+    )
+
+    router.push(`${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`)
   }
 
   return (
@@ -51,7 +71,7 @@ const CreateRoomMolecules = () => {
 
         <InputAtoms
           width={360}
-          placeholder={"動画URL"}
+          placeholder={"初回の動画URL"}
           outlineColor={GeneralColorStyle.DarkGreen}
           value={videoUrl}
           onChange={insertVideoId}
@@ -66,13 +86,13 @@ const CreateRoomMolecules = () => {
             outlineColor={GeneralColorStyle.DarkGreen}
             value={password}
             onChange={insertPassword}
-            disabled={!isPassword}
+            disabled={!isPrivateRoom}
           />
 
           <GeneralSpacer vertical={8} />
 
           <CheckboxAtoms
-            isCheck={isPassword}
+            isCheck={isPrivateRoom}
             text={"プライベートルームにする"}
             onChange={checkPassword}
           />
@@ -84,7 +104,8 @@ const CreateRoomMolecules = () => {
           bgColor={GeneralColorStyle.DarkGreen}
           text={"ルームを作成する"}
           fontColor={GeneralColorStyle.White}
-          onClick={() => LoggerUtil.debug("hogehoge")}
+          onClick={createShareRoom}
+          disabled={videoUrl ? false : true}
         />
       </CardAtoms>
     </>

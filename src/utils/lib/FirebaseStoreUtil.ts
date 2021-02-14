@@ -13,7 +13,7 @@ const fireStore = FirebaseInitUtil.fireStore()
 
 class FirebaseStoreUtil {
   /**
-   * get live information
+   * live info
    *
    * @param liveUid
    * @return live info
@@ -83,21 +83,15 @@ class FirebaseStoreUtil {
    * @param name
    */
   public static async setChangeUser(liveUid: string, name: string) {
-    await fireStore
-      .collection("lives")
-      .doc(liveUid)
-      .collection("changeUsers")
-      .doc("user")
-      .withConverter(changeUserConverter)
-      .update({
-        name,
-        updatedAt: FirebaseStoreUtil.getTimeStamp(),
-        changeCnt: FirebaseStoreUtil.setCount(1),
-      })
+    await FirebaseStoreUtil.changeUser(liveUid).update({
+      name,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      changeCnt: FirebaseStoreUtil.setCount(1),
+    })
   }
 
   /**
-   * get change user
+   * change user
    * @param liveUid
    */
   public static changeUser(
@@ -230,8 +224,6 @@ class FirebaseStoreUtil {
       .doc(uid)
       .get()
 
-    // const userName = userNameDoc.exists ? userNameDoc.data().name : displayName
-
     return userNameDoc.exists
   }
 
@@ -248,6 +240,46 @@ class FirebaseStoreUtil {
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
     await user.updateProfile({ displayName: name })
+  }
+
+  public static async createShareRoom(
+    uid: string,
+    password: string,
+    isPrivateRoom: boolean,
+    videoId: string
+  ) {
+    const liveRoom = await fireStore
+      .collection("lives")
+      .withConverter(liveConverter)
+      .add({
+        currentTime: 0,
+        hostId: uid,
+        listCnt: 1,
+        password: isPrivateRoom ? password : "",
+        privateRoom: isPrivateRoom,
+        play: false,
+        playNow: 0,
+        videoId: [videoId],
+        createdAt: FirebaseStoreUtil.getTimeStamp(),
+        updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      })
+
+    const roomId = liveRoom.id
+
+    await FirebaseStoreUtil.changeUser(roomId).set({
+      changeCnt: 0,
+      name: "",
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+
+    await FirebaseStoreUtil.joinFlag(roomId).set({
+      flagCnt: 0,
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+
+    return roomId
   }
 }
 

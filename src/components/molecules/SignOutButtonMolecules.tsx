@@ -2,8 +2,8 @@ import ButtonAtoms from "../atoms/ButtonAtoms"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import IconAtoms from "../atoms/IconAtoms"
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
-import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import styled from "styled-components"
+import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 
 const SignOutButtonContainer = styled.div`
   position: absolute;
@@ -12,6 +12,10 @@ const SignOutButtonContainer = styled.div`
 `
 
 const SignOutButtonMolecules = () => {
+  const singOut = async () => {
+    await FirebaseAuthenticationUtil.SingOut()
+  }
+
   return (
     <SignOutButtonContainer>
       <ButtonAtoms
@@ -25,7 +29,7 @@ const SignOutButtonMolecules = () => {
             icon={faSignOutAlt}
           />
         }
-        onClick={() => LoggerUtil.debug("hogehoge")}
+        onClick={singOut}
       />
     </SignOutButtonContainer>
   )

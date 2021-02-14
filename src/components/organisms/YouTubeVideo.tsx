@@ -331,21 +331,12 @@ const YouTubeVideo = (props) => {
 
   const setStoreVideoId = () => {
     const nextListCnt = listCnt + 1
-    const resultUrlParams = UrlParamsUtil.getURLParams(newVideoId)
-    let getNewVideoId: string
-
-    if (resultUrlParams) {
-      getNewVideoId = resultUrlParams.v
-    } else if (newVideoId.includes("youtu.be/")) {
-      getNewVideoId = newVideoId
-        .substring(newVideoId.indexOf("youtu.be/"))
-        .replace("youtu.be/", "")
-    }
+    const resultVideoId = UrlParamsUtil.getVideoId(newVideoId)
 
     if (listCnt === 0) {
       FirebaseStoreUtil.setVideoId(
         liveUid,
-        getNewVideoId,
+        resultVideoId,
         nextListCnt,
         "",
         true
@@ -357,7 +348,7 @@ const YouTubeVideo = (props) => {
     if (listCnt === playNow) {
       FirebaseStoreUtil.setVideoId(
         liveUid,
-        getNewVideoId,
+        resultVideoId,
         nextListCnt,
         "",
         true
@@ -366,7 +357,7 @@ const YouTubeVideo = (props) => {
     } else if (listCnt > playNow) {
       FirebaseStoreUtil.setVideoId(
         liveUid,
-        getNewVideoId,
+        resultVideoId,
         nextListCnt,
         "setYouTubePlayerBot"
       )

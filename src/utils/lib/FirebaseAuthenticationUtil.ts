@@ -35,6 +35,13 @@ class FirebaseAuthenticationUtil {
   public static SignInForAnonymously() {
     return firebaseAuth.signInAnonymously()
   }
+
+  /**
+   * sign out
+   */
+  public static async SingOut() {
+    await firebaseAuth.signOut()
+  }
 }
 
 export default FirebaseAuthenticationUtil

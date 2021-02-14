@@ -25,4 +25,12 @@ export default class UrlParamsUtil {
 
     return params
   }
+
+  public static getVideoId(url: string) {
+    const resultUrlParams = UrlParamsUtil.getURLParams(url)
+
+    if (resultUrlParams) return resultUrlParams.v
+    else if (url.includes("youtu.be/"))
+      return url.substring(url.indexOf("youtu.be/")).replace("youtu.be/", "")
+  }
 }

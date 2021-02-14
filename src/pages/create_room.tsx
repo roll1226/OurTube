@@ -2,10 +2,7 @@ import HeadAtoms from "../components/atoms/HeadAtoms"
 import styled, { keyframes } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
 import CreateRoomMolecules from "../components/molecules/CreateRoomMolecules"
-import SignOutButtonMolecules from "../components/molecules/SignOutButtonMolecules"
-import OurTubeLogoAtoms, {
-  LogoColor,
-} from "../components/atoms/svg/OurTubeLogoAtoms"
+import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
 
 const CreateRoomContainer = styled.div`
   width: 100vw;
@@ -25,12 +22,6 @@ const CreateRoomCard = styled.div`
   `};
 `
 
-const LogoContainer = styled.div`
-  position: absolute;
-  top: 40px;
-  left: 40px;
-`
-
 const CreateRoom = () => {
   return (
     <CreateRoomContainer>
@@ -42,11 +33,7 @@ const CreateRoom = () => {
         top={false}
       />
 
-      <LogoContainer>
-        <OurTubeLogoAtoms size={240} color={LogoColor.WHITE} />
-      </LogoContainer>
-
-      <SignOutButtonMolecules />
+      <AccountHeadMolecules />
 
       <CreateRoomCard>
         <CreateRoomMolecules />
