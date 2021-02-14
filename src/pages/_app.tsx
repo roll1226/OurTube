@@ -54,8 +54,7 @@ const AppBackground = () => {
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(async (user) => {
       const pathname = router.pathname
-      LoggerUtil.debug("hogehogehoge", pathname)
-      LoggerUtil.debug("hogehogehoge")
+
       if (!user) {
         if (
           pathname !== OurTubePath.TOP &&
@@ -69,15 +68,9 @@ const AppBackground = () => {
       } else {
         dispatch(authSlice.actions.settUser(user.isAnonymous))
         const userName = await FirebaseStoreUtil.checkUserName(user.uid)
-        if (userName) {
-          dispatch(authSlice.actions.setName(userName))
-          router.push(OurTubePath.CREATE_ROOM)
-        } else {
-          dispatch(
-            authSlice.actions.setName(user.displayName ? user.displayName : "")
-          )
-          router.push(OurTubePath.CREATE_ACCOUNT)
-        }
+
+        if (userName) router.push(OurTubePath.CREATE_ROOM)
+        else router.push(OurTubePath.CREATE_ACCOUNT)
       }
     })
   }, [])

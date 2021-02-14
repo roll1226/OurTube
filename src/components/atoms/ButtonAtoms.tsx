@@ -22,7 +22,7 @@ const ButtonContainer = styled.button<{
   outlineColor: string
   disabled: boolean
 }>`
-  border: ${({ bgColor }) => bgColor};
+  border: 1px ${({ bgColor }) => bgColor} solid;
   border-radius: 12px;
   padding: 8px 16px;
   display: flex;
@@ -51,6 +51,7 @@ const ButtonContainer = styled.button<{
     css`
       border: 1px ${GeneralColorStyle.Grey} solid;
       background: ${GeneralColorStyle.Grey};
+      cursor: default;
     `}
 `
 

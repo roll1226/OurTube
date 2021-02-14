@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AuthState } from "./type"
-import firebase from "firebase/app"
 
 export const initialState: AuthState = {
   name: "",

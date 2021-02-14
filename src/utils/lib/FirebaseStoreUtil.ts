@@ -3,7 +3,7 @@ import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
 import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
 import FirebaseInitUtil from "./FIrebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
-import LoggerUtil from "../debugger/LoggerUtil"
+import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import {
   changeUserConverter,
   ChangeUser,
@@ -211,6 +211,14 @@ class FirebaseStoreUtil {
   }
 
   /**
+   * users
+   * @param uid
+   */
+  public static users(uid: string) {
+    return fireStore.collection("users").withConverter(UserConverter).doc(uid)
+  }
+
+  /**
    * check user name
    * 新規ユーザーかどうか
    * @param uid
@@ -222,11 +230,24 @@ class FirebaseStoreUtil {
       .doc(uid)
       .get()
 
-    LoggerUtil.debug(userNameDoc.exists)
+    // const userName = userNameDoc.exists ? userNameDoc.data().name : displayName
 
-    const userName = userNameDoc.exists ? userNameDoc.data().name : ""
+    return userNameDoc.exists
+  }
 
-    return userName
+  /**
+   * create user name
+   *  @params name
+   */
+  public static async createUserName(name: string) {
+    const user = FirebaseAuthenticationUtil.getCurrentUser()
+
+    await FirebaseStoreUtil.users(user.uid).set({
+      name,
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+    await user.updateProfile({ displayName: name })
   }
 }
 

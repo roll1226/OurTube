@@ -1,7 +1,11 @@
+import { useState, ChangeEvent } from "react"
 import HeadAtoms from "../components/atoms/HeadAtoms"
 import InsertAccountNameMolecules from "../components/molecules/InsertAccountNameMolecules"
 import styled, { keyframes } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
+import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
+import { useRouter } from "next/router"
+import { OurTubePath } from "../consts/PathConsts"
 
 const CreateAccountContainer = styled.div`
   width: 100vw;
@@ -20,7 +24,19 @@ const InsertAccountNameCard = styled.div`
   `};
 `
 
-const createAccount = () => {
+const CreateAccount = () => {
+  const [userName, setUserName] = useState("")
+  const router = useRouter()
+
+  const insetAccountName = (event: ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value)
+  }
+
+  const saveUserName = async () => {
+    await FirebaseStoreUtil.createUserName(userName)
+    router.replace(OurTubePath.CREATE_ROOM)
+  }
+
   return (
     <CreateAccountContainer>
       <HeadAtoms
@@ -31,10 +47,14 @@ const createAccount = () => {
         top={false}
       />
       <InsertAccountNameCard>
-        <InsertAccountNameMolecules />
+        <InsertAccountNameMolecules
+          userName={userName}
+          insetAccountName={insetAccountName}
+          saveUserName={saveUserName}
+        />
       </InsertAccountNameCard>
     </CreateAccountContainer>
   )
 }
 
-export default createAccount
+export default CreateAccount
