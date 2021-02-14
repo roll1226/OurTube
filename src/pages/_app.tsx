@@ -69,6 +69,7 @@ const AppBackground = () => {
         dispatch(authSlice.actions.settUser(user.isAnonymous))
         const userName = await FirebaseStoreUtil.checkUserName(user.uid)
 
+        if (pathname === OurTubePath.SHARE_ROOM) return
         if (userName) router.push(OurTubePath.CREATE_ROOM)
         else router.push(OurTubePath.CREATE_ACCOUNT)
       }
@@ -90,7 +91,7 @@ const AppBackground = () => {
       />
 
       <DarkGreenCircle
-        color={GeneralColorStyle.DarkGreen}
+        color={GeneralColorStyle.ThinGreen}
         size={900}
         path={nowPathname}
         scale={1}

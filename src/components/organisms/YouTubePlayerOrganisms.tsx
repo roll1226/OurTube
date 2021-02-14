@@ -8,6 +8,7 @@ import { LiveModel } from "../../models/firebase/LiveModel"
 import styled from "styled-components"
 import ControlsMolecules from "../molecules/ControlsMolecules"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
+import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
@@ -16,15 +17,15 @@ let initJoinFlagCnt = 0
 
 const YouTubeContainer = styled.div`
   position: relative;
-  width: 640px;
-  height: 390px;
+  width: 724px;
+  height: 408px;
 `
 
 const YouTubePlayWrap = styled.div<{ img: string }>`
   position: absolute;
   z-index: 2;
-  width: 640px;
-  height: 390px;
+  width: 724px;
+  height: 408px;
   top: 0;
   background: url(${({ img }) => img}) no-repeat center center;
   background-size: cover;
@@ -41,21 +42,17 @@ export type YouTubePlayer = {
   data: number
 }
 
-const YouTubeVideo = (props) => {
-  /**
-   * router
-   */
-  const router = useRouter()
-  const { h, i } = router.query
-  const hostId = h as string
-  const liveUid = i as string
+export type Props = {
+  roomId: string
+}
 
+const YouTubePlayerOrganisms = ({ roomId }: Props) => {
   /**
    * consts
    */
   const opts: Options = {
-    height: "390",
-    width: "640",
+    width: "724",
+    height: "408",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
@@ -91,16 +88,17 @@ const YouTubeVideo = (props) => {
 
   /**
    * get live info
-   * @param liveUid
+   * @param event
    */
   const getLiveInfo = async (event) => {
-    if (!liveUid) return
+    if (!roomId) return
 
-    const getChangeUser = FirebaseStoreUtil.changeUser(liveUid)
-    const getJoinFlag = FirebaseStoreUtil.joinFlag(liveUid)
+    const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
+    const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
 
     getJoinFlag.onSnapshot(
       async (flag) => {
+        LoggerUtil.debug(flag)
         if (initJoinFlag) {
           initJoinFlagCnt++
           if (initJoinFlagCnt >= 2) initJoinFlag = false
@@ -113,7 +111,7 @@ const YouTubeVideo = (props) => {
           joinFlagYouTubePlayer = true
 
         FirebaseStoreUtil.setLiveCurrentTime(
-          liveUid,
+          roomId,
           event.target.getCurrentTime(),
           "",
           joinFlagYouTubePlayer
@@ -127,10 +125,11 @@ const YouTubeVideo = (props) => {
     getChangeUser.onSnapshot(
       async (users) => {
         const changeUser = users.data()
-        if (isPlay !== null && changeUser.name === hostId) return
-        // if (isPlay !== null && changeUser.name === "joinLiveYouTubeBot") return
+        const liveInfo = await FirebaseStoreUtil.liveInfo(roomId).get()
 
-        const liveInfo = await FirebaseStoreUtil.liveInfo(liveUid).get()
+        if (isPlay !== null && changeUser.name === liveInfo.data().hostId)
+          return
+
         const playNow = liveInfo.data().playNow
 
         if (isPlay !== null && changeUser.name === "setYouTubePlayerBot")
@@ -145,7 +144,7 @@ const YouTubeVideo = (props) => {
         LoggerUtil.debug(`error log: ${error}`)
       }
     )
-    FirebaseStoreUtil.setJoinFlag(liveUid)
+    FirebaseStoreUtil.setJoinFlag(roomId)
   }
 
   /**
@@ -214,9 +213,9 @@ const YouTubeVideo = (props) => {
         setCurrentTime(0)
         event.target.seekTo(0)
         if (listCnt === nextCnt) {
-          FirebaseStoreUtil.setLivePlay(liveUid, false, "", 0, nextCnt)
+          FirebaseStoreUtil.setLivePlay(roomId, false, "", 0, nextCnt)
         } else {
-          FirebaseStoreUtil.setPlayNow(liveUid, 0, nextCnt)
+          FirebaseStoreUtil.setPlayNow(roomId, 0, nextCnt)
         }
         break
       }
@@ -224,6 +223,11 @@ const YouTubeVideo = (props) => {
       default:
         break
     }
+  }
+
+  const getCurrentUser = () => {
+    const user = FirebaseAuthenticationUtil.getCurrentUser()
+    return user.uid
   }
 
   /**
@@ -235,7 +239,9 @@ const YouTubeVideo = (props) => {
     await youTubeEvent.target.playVideo()
     await youTubeEvent.target.seekTo(currentTime)
 
-    FirebaseStoreUtil.setLivePlay(liveUid, true, hostId, currentTime)
+    const uid = getCurrentUser()
+
+    FirebaseStoreUtil.setLivePlay(roomId, true, uid, currentTime)
     startIntervalCurrentTime()
   }
 
@@ -246,7 +252,8 @@ const YouTubeVideo = (props) => {
     setIsPlayYouTube(false)
     await youTubeEvent.target.pauseVideo()
     const nowCurrentTime = youTubeEvent.target.getCurrentTime()
-    FirebaseStoreUtil.setLivePlay(liveUid, false, hostId, nowCurrentTime)
+    const uid = getCurrentUser()
+    FirebaseStoreUtil.setLivePlay(roomId, false, uid, nowCurrentTime)
     setCurrentTime(nowCurrentTime)
     clearInterval(intervalCurrentTime)
   }
@@ -264,12 +271,14 @@ const YouTubeVideo = (props) => {
     setCurrentTime(rangeCurrentTime)
     youTubeEvent.target.seekTo(rangeCurrentTime)
     const isPlayNow = youTubeEvent.target.getPlayerState()
+    const uid = getCurrentUser()
     FirebaseStoreUtil.setLiveCurrentTime(
-      liveUid,
+      roomId,
       rangeCurrentTime,
-      hostId,
+      uid,
       isPlayNow === 1 ? true : false
     )
+    if (!isPlayYouTube) return
     startIntervalCurrentTime()
   }
 
@@ -334,29 +343,17 @@ const YouTubeVideo = (props) => {
     const resultVideoId = UrlParamsUtil.getVideoId(newVideoId)
 
     if (listCnt === 0) {
-      FirebaseStoreUtil.setVideoId(
-        liveUid,
-        resultVideoId,
-        nextListCnt,
-        "",
-        true
-      )
+      FirebaseStoreUtil.setVideoId(roomId, resultVideoId, nextListCnt, "", true)
       setNewVideoId("")
       return
     }
 
     if (listCnt === playNow) {
-      FirebaseStoreUtil.setVideoId(
-        liveUid,
-        resultVideoId,
-        nextListCnt,
-        "",
-        true
-      )
+      FirebaseStoreUtil.setVideoId(roomId, resultVideoId, nextListCnt, "", true)
       setNewVideoId("")
     } else if (listCnt > playNow) {
       FirebaseStoreUtil.setVideoId(
-        liveUid,
+        roomId,
         resultVideoId,
         nextListCnt,
         "setYouTubePlayerBot"
@@ -413,6 +410,6 @@ const YouTubeVideo = (props) => {
   )
 }
 
-export default dynamic(() => Promise.resolve(YouTubeVideo), {
+export default dynamic(() => Promise.resolve(YouTubePlayerOrganisms), {
   ssr: false,
 })

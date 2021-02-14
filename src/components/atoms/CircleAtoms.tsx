@@ -34,7 +34,7 @@ const getPosition = (scale: number, color: string, path: string) => {
           transform: translate(-50%, -50%) scale(${scale});
         `
     }
-  } else if (color === GeneralColorStyle.DarkGreen) {
+  } else if (color === GeneralColorStyle.ThinGreen) {
     switch (path) {
       case OurTubePath.SHARE_ROOM:
         return css`

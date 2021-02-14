@@ -20,3 +20,8 @@ export const HoverItem = `0px 0px 8px ${ColorUtil.addOpacity(
   GeneralColorStyle.Black,
   0.4
 )}`
+
+export const ControlHover = `0px 0px 4px ${ColorUtil.addOpacity(
+  GeneralColorStyle.Black,
+  0.4
+)}`

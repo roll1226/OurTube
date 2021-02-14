@@ -1,9 +1,9 @@
-import YouTubeVideo from "../../components/organisms/YouTubeVideo"
+import YouTubePlayerOrganisms from "../../components/organisms/YouTubePlayerOrganisms"
 
 const TestYouTube = () => {
   return (
     <>
-      <YouTubeVideo />
+      <YouTubePlayerOrganisms />
     </>
   )
 }
