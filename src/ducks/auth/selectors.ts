@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
-import { CounterState } from "./type"
+import { AuthState } from "./type"
 
-export const useCounterState = () => {
-  return useSelector((state: { counter: CounterState }) => state)
+export const useAuthState = () => {
+  return useSelector((state: { auth: AuthState }) => state)
 }

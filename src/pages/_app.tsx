@@ -3,13 +3,17 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
-import { Provider } from "react-redux"
+import { Provider, useDispatch } from "react-redux"
 import createStore from "../ducks/createStore"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import LoggerUtil from "../utils/debugger/LoggerUtil"
-import FirebaseAuthenticationUtil from "../utils/lib/FirebaseAuthenticationUtil"
+import FirebaseAuthenticationUtil, {
+  firebaseAuth,
+} from "../utils/lib/FirebaseAuthenticationUtil"
 import CircleAtoms from "../components/atoms/CircleAtoms"
 import { OurTubePath } from "../consts/PathConsts"
+import authSlice from "../ducks/auth/slice"
+import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -41,29 +45,42 @@ const DarkBlueCircle = styled(CircleAtoms)``
 
 const DarkGreenCircle = styled(CircleAtoms)``
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+const AppBackground = () => {
+  const dispatch = useDispatch()
   const router = useRouter()
 
   const [nowPathname, setNowPathname] = useState("/")
 
-  // useEffect(() => {
-  //   LoggerUtil.debug(router)
-  //   const pathname = router.pathname
-  //   setNowPathname(pathname)
-
-  //   if (
-  //     pathname !== OurTubePath.TOP &&
-  //     pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-  //     pathname !== OurTubePath.CREATE_GUEST &&
-  //     pathname !== OurTubePath.ERROR
-  //   ) {
-  //     const isLogin = FirebaseAuthenticationUtil.getCurrentUser()
-
-  //     if (!isLogin) {
-  //       router.replace("/")
-  //     }
-  //   }
-  // }, [router])
+  useEffect(() => {
+    firebaseAuth.onAuthStateChanged(async (user) => {
+      const pathname = router.pathname
+      LoggerUtil.debug("hogehogehoge", pathname)
+      LoggerUtil.debug("hogehogehoge")
+      if (!user) {
+        if (
+          pathname !== OurTubePath.TOP &&
+          pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+          pathname !== OurTubePath.CREATE_GUEST &&
+          pathname !== OurTubePath.ERROR
+        ) {
+          router.replace("/")
+          LoggerUtil.debug(router)
+        }
+      } else {
+        dispatch(authSlice.actions.settUser(user.isAnonymous))
+        const userName = await FirebaseStoreUtil.checkUserName(user.uid)
+        if (userName) {
+          dispatch(authSlice.actions.setName(userName))
+          router.push(OurTubePath.CREATE_ROOM)
+        } else {
+          dispatch(
+            authSlice.actions.setName(user.displayName ? user.displayName : "")
+          )
+          router.push(OurTubePath.CREATE_ACCOUNT)
+        }
+      }
+    })
+  }, [])
 
   useEffect(() => {
     const pathname = router.pathname
@@ -71,23 +88,29 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   }, [router])
 
   return (
+    <CircleContainer>
+      <DarkBlueCircle
+        color={GeneralColorStyle.DarkBlue}
+        size={1200}
+        path={nowPathname}
+        scale={1}
+      />
+
+      <DarkGreenCircle
+        color={GeneralColorStyle.DarkGreen}
+        size={900}
+        path={nowPathname}
+        scale={1}
+      />
+    </CircleContainer>
+  )
+}
+
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+  return (
     <Provider store={createStore()}>
       <GlobalStyle />
-      <CircleContainer>
-        <DarkBlueCircle
-          color={GeneralColorStyle.DarkBlue}
-          size={1200}
-          path={nowPathname}
-          scale={1}
-        />
-
-        <DarkGreenCircle
-          color={GeneralColorStyle.DarkGreen}
-          size={900}
-          path={nowPathname}
-          scale={1}
-        />
-      </CircleContainer>
+      <AppBackground />
 
       <ComponentContainer>
         <Component {...pageProps} />

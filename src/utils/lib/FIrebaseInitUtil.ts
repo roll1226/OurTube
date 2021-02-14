@@ -21,6 +21,20 @@ class FirebaseInitUtil {
   public static firebaseAuth() {
     return firebase.auth()
   }
+
+  /**
+   * Auth Google
+   */
+  public static authGoogleProvider() {
+    return new firebase.auth.GoogleAuthProvider()
+  }
+
+  /**
+   * Auth Twitter
+   */
+  public static authTwitterProvider() {
+    return new firebase.auth.TwitterAuthProvider()
+  }
 }
 
 export default FirebaseInitUtil

@@ -1,6 +1,5 @@
-export type CounterState = {
-  count: number
-  loading: boolean
-  error: boolean
-  errorMessage: string
+export type AuthState = {
+  name: string
+  isAnonymously: boolean
+  authLoader: boolean
 }

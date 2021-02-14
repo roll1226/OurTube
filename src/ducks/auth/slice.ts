@@ -1,60 +1,31 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { CounterState } from "./type"
-import { asyncIncrementCounter } from "./asyncActions"
+import { AuthState } from "./type"
+import firebase from "firebase/app"
 
-export const initialState: CounterState = {
-  count: 0,
-  loading: false,
-  error: false,
-  errorMessage: "",
+export const initialState: AuthState = {
+  name: "",
+  isAnonymously: false,
+  authLoader: false,
 }
 
-const counterSlice = createSlice({
-  name: "counter",
+const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    incrementCounter: (state, action: PayloadAction<number>) => ({
+    settUser: (state, action: PayloadAction<boolean>) => ({
       ...state,
-      count: state.count + action.payload,
+      isAnonymously: action.payload,
+      authLoader: false,
     }),
-    decrementCounter: (state, action: PayloadAction<number>) => ({
+    setName: (state, action: PayloadAction<string>) => ({
       ...state,
-      count: state.count - action.payload,
+      name: action.payload,
     }),
-  },
-  extraReducers: (builder) => {
-    builder.addCase(asyncIncrementCounter.pending, (state) => {
-      return {
-        ...state,
-        loading: true,
-        error: false,
-        errorMessage: "",
-      }
-    })
-    builder.addCase(
-      asyncIncrementCounter.rejected,
-      (state, action: RejectedAction<number>) => {
-        return {
-          ...state,
-          loading: false,
-          error: true,
-          errorMessage: action.error.message,
-        }
-      }
-    )
-    builder.addCase(
-      asyncIncrementCounter.fulfilled,
-      (state, action: PayloadAction<number>) => {
-        return {
-          ...state,
-          count: state.count + action.payload,
-          loading: false,
-          error: false,
-          errorMessage: "",
-        }
-      }
-    )
+    setAuthLoader: (state, action: PayloadAction<boolean>) => ({
+      ...state,
+      authLoader: action.payload,
+    }),
   },
 })
 
-export default counterSlice
+export default authSlice

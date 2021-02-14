@@ -2,6 +2,8 @@ import firebase from "firebase/app"
 import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
 import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
 import FirebaseInitUtil from "./FIrebaseInitUtil"
+import { UserConverter } from "../../models/firebase/UsersModel"
+import LoggerUtil from "../debugger/LoggerUtil"
 import {
   changeUserConverter,
   ChangeUser,
@@ -206,6 +208,25 @@ class FirebaseStoreUtil {
    */
   public static setArrayValue(value: any): firebase.firestore.FieldValue {
     return firebase.firestore.FieldValue.arrayUnion(value)
+  }
+
+  /**
+   * check user name
+   * 新規ユーザーかどうか
+   * @param uid
+   */
+  public static async checkUserName(uid: string) {
+    const userNameDoc = await fireStore
+      .collection("users")
+      .withConverter(UserConverter)
+      .doc(uid)
+      .get()
+
+    LoggerUtil.debug(userNameDoc.exists)
+
+    const userName = userNameDoc.exists ? userNameDoc.data().name : ""
+
+    return userName
   }
 }
 

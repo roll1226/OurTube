@@ -1,10 +1,19 @@
 import ButtonAtoms from "../atoms/ButtonAtoms"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
-import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { faTwitter } from "@fortawesome/free-brands-svg-icons"
 import IconAtoms from "../atoms/IconAtoms"
+import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
+import { useDispatch } from "react-redux"
+import authSlice from "../../ducks/auth/slice"
 
 const TwitterSignInButtonMolecules = () => {
+  const dispatch = useDispatch()
+
+  const signInTwitter = async () => {
+    dispatch(authSlice.actions.setAuthLoader(true))
+    await FirebaseAuthenticationUtil.signInForTwitter()
+  }
+
   return (
     <ButtonAtoms
       bgColor={GeneralColorStyle.Twitter}
@@ -16,7 +25,7 @@ const TwitterSignInButtonMolecules = () => {
           icon={faTwitter}
         />
       }
-      onClick={() => LoggerUtil.debug("hogehoge")}
+      onClick={signInTwitter}
     />
   )
 }
