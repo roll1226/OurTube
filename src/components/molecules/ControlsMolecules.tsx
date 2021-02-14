@@ -1,13 +1,14 @@
 import {
   faPause,
   faPlay,
+  faSearch,
   faVolumeDown,
   faVolumeMute,
   faVolumeOff,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons"
 import React, { ChangeEvent, MouseEvent } from "react"
-import styled, { css } from "styled-components"
+import styled, { css, keyframes } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import {
   CardShadow,
@@ -17,8 +18,8 @@ import {
 } from "../../styles/shadow/GeneralShadowStyle"
 import ControlsButtonAtoms from "../atoms/controls/ControlsButtonAtoms"
 import { useState } from "react"
-import ColorUtil from "../../utils/color/ColorUtil"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import { GeneralText } from "../../styles/typography/GeneralTextStyle"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -179,7 +180,6 @@ const VolumeRangeInput = styled.input`
 `
 
 const ControlItemsWrap = styled.div`
-  margin-left: 40px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -193,6 +193,16 @@ const YouTubeTitleContainer = styled.div`
   flex-direction: row;
   align-items: center;
   box-shadow: ${InsetShadow};
+  overflow: hidden;
+`
+
+const YouTUbeTitleMoveWrap = styled.div`
+  position: relative;
+  left: 100%;
+  animation: 10s linear 2s infinite ${keyframes`
+    from { left: 100%; }
+    to { left: -100%;) }
+  `};
 `
 
 export type Props = {
@@ -295,6 +305,8 @@ const ControlsMolecules = ({
     <ControlsContainer>
       <ControlsWrap>
         <ControlItemsWrap>
+          <GeneralSpacer horizontal={40} />
+
           {PlayBtn(isPlayYouTube, play, pause)}
 
           <GeneralSpacer horizontal={28} />
@@ -331,7 +343,19 @@ const ControlsMolecules = ({
         </ControlItemsWrap>
 
         <ControlItemsWrap>
-          <YouTubeTitleContainer>aaaa</YouTubeTitleContainer>
+          <ControlsButtonAtoms size={48} icon={faSearch} />
+
+          <GeneralSpacer horizontal={28} />
+
+          <YouTubeTitleContainer>
+            <YouTUbeTitleMoveWrap>
+              <GeneralText fontSize={24} fontColor={GeneralColorStyle.Black}>
+                ホゲホゲ
+              </GeneralText>
+            </YouTUbeTitleMoveWrap>
+          </YouTubeTitleContainer>
+
+          <GeneralSpacer horizontal={40} />
         </ControlItemsWrap>
 
         <CurrentTimeRangeInput

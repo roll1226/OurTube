@@ -4,6 +4,8 @@ import IconAtoms from "../atoms/IconAtoms"
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
 import styled from "styled-components"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
+import { useRouter } from "next/router"
+import { OurTubePath } from "../../consts/PathConsts"
 
 const SignOutButtonContainer = styled.div`
   position: absolute;
@@ -12,8 +14,11 @@ const SignOutButtonContainer = styled.div`
 `
 
 const SignOutButtonMolecules = () => {
+  const router = useRouter()
+
   const singOut = async () => {
     await FirebaseAuthenticationUtil.SingOut()
+    router.replace(OurTubePath.TOP)
   }
 
   return (
