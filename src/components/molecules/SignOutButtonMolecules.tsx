@@ -18,7 +18,6 @@ const SignOutButtonMolecules = () => {
 
   const singOut = async () => {
     await FirebaseAuthenticationUtil.SingOut()
-    router.replace(OurTubePath.TOP)
   }
 
   return (
