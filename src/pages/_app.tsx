@@ -51,30 +51,30 @@ const AppBackground = () => {
 
   const [nowPathname, setNowPathname] = useState("/")
 
-  useEffect(() => {
-    firebaseAuth.onAuthStateChanged(async (user) => {
-      const pathname = router.pathname
+  // useEffect(() => {
+  //   firebaseAuth.onAuthStateChanged(async (user) => {
+  //     const pathname = router.pathname
 
-      if (!user) {
-        if (
-          pathname !== OurTubePath.TOP &&
-          pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-          pathname !== OurTubePath.CREATE_GUEST &&
-          pathname !== OurTubePath.ERROR
-        ) {
-          router.replace("/")
-          LoggerUtil.debug(router)
-        }
-      } else {
-        dispatch(authSlice.actions.settUser(user.isAnonymous))
-        const userName = await FirebaseStoreUtil.checkUserName(user.uid)
+  //     if (!user) {
+  //       if (
+  //         pathname !== OurTubePath.TOP &&
+  //         pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+  //         pathname !== OurTubePath.CREATE_GUEST &&
+  //         pathname !== OurTubePath.ERROR
+  //       ) {
+  //         router.replace("/")
+  //         LoggerUtil.debug(router)
+  //       }
+  //     } else {
+  //       dispatch(authSlice.actions.settUser(user.isAnonymous))
+  //       const userName = await FirebaseStoreUtil.checkUserName(user.uid)
 
-        if (pathname === OurTubePath.SHARE_ROOM) return
-        if (userName) router.push(OurTubePath.CREATE_ROOM)
-        else router.push(OurTubePath.CREATE_ACCOUNT)
-      }
-    })
-  }, [])
+  //       if (pathname === OurTubePath.SHARE_ROOM) return
+  //       if (userName) router.push(OurTubePath.CREATE_ROOM)
+  //       else router.push(OurTubePath.CREATE_ACCOUNT)
+  //     }
+  //   })
+  // }, [])
 
   useEffect(() => {
     const pathname = router.pathname

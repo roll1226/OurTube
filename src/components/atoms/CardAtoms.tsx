@@ -8,15 +8,21 @@ export type Props = {
   height?: number | string
   children: ReactNode
   bgColor?: string
+  isPadding?: boolean
 }
 
 const CardContainer = styled.div<{
   width: number | string
   height?: number | string
   bgColor: string
+  isPadding: boolean
 }>`
-  padding: 28px;
-  border-radius: 12px;
+  ${({ isPadding }) =>
+    isPadding &&
+    css`
+      padding: 28px;
+    `}
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,9 +43,15 @@ const CardAtoms = ({
   height,
   children,
   bgColor = GeneralColorStyle.ColoredWhite,
+  isPadding = true,
 }: Props) => {
   return (
-    <CardContainer width={width} height={height} bgColor={bgColor}>
+    <CardContainer
+      width={width}
+      height={height}
+      bgColor={bgColor}
+      isPadding={isPadding}
+    >
       {children}
     </CardContainer>
   )

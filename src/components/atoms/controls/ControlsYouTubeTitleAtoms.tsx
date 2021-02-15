@@ -3,7 +3,6 @@ import { GeneralText } from "../../../styles/typography/GeneralTextStyle"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import { useState, useRef, useEffect } from "react"
 import { InsetShadow } from "../../../styles/shadow/GeneralShadowStyle"
-import LoggerUtil from "../../../utils/debugger/LoggerUtil"
 
 const YouTubeTitleContainer = styled.div`
   width: 400px;
@@ -51,7 +50,6 @@ const ControlsYouTubeTitleAtoms = ({ title }: Props) => {
   const [titleWidth, setTitleWidth] = useState(0)
 
   useEffect(() => {
-    LoggerUtil.debug("width", ref.current.offsetWidth)
     setTitleWidth(ref.current.offsetWidth)
   }, [title])
 

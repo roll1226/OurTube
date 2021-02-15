@@ -9,6 +9,8 @@ import styled from "styled-components"
 import ControlsMolecules from "../molecules/ControlsMolecules"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
+import ControlsButtonAtoms from "../atoms/controls/ControlsButtonAtoms"
+import { faPlay } from "@fortawesome/free-solid-svg-icons"
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
@@ -29,6 +31,11 @@ const YouTubePlayWrap = styled.div<{ img: string }>`
   top: 0;
   background: url(${({ img }) => img}) no-repeat center center;
   background-size: cover;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `
 
 const YouTubePlayer = styled(YouTube)`
@@ -370,11 +377,15 @@ const YouTubePlayerOrganisms = ({ roomId }: Props) => {
         <YouTubePlayWrap
           onClick={clickYouTube}
           img={
-            isInitThumbnail
+            isInitThumbnail && videoId
               ? `http://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
               : ""
           }
-        />
+        >
+          {videoId && !isPlayYouTube && (
+            <ControlsButtonAtoms size={92} icon={faPlay} />
+          )}
+        </YouTubePlayWrap>
         <YouTubePlayer
           videoId={videoId}
           opts={opts}

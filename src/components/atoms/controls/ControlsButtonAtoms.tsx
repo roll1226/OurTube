@@ -34,7 +34,7 @@ export type Props = {
   size: number
   iconSize?: number
   icon: IconProp
-  onClick: () => void
+  onClick?: () => void
 }
 
 const ControlsButtonAtoms = ({ size, iconSize, icon, onClick }: Props) => {

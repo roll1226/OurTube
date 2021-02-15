@@ -4,6 +4,7 @@ import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
 import FirebaseInitUtil from "./FIrebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
+import { chatConverter } from "../../models/firebase/ChatModel"
 import {
   changeUserConverter,
   ChangeUser,
@@ -242,6 +243,13 @@ class FirebaseStoreUtil {
     await user.updateProfile({ displayName: name })
   }
 
+  /**
+   * create share room
+   * @param uid
+   * @param password
+   * @param isPrivateRoom
+   * @param videoId
+   */
   public static async createShareRoom(
     uid: string,
     password: string,
@@ -280,6 +288,39 @@ class FirebaseStoreUtil {
     })
 
     return roomId
+  }
+
+  /**
+   * chat
+   * @param roomId
+   */
+  public static chat(roomId: string) {
+    return fireStore
+      .collection("lives")
+      .doc(roomId)
+      .collection("chat")
+      .withConverter(chatConverter)
+  }
+
+  /**
+   * create comment
+   * @param roomId
+   * @param uid
+   * @param name
+   * @param comment
+   */
+  public static async createComment(
+    roomId: string,
+    uid: string,
+    name: string,
+    comment: string
+  ) {
+    await FirebaseStoreUtil.chat(roomId).add({
+      uid,
+      name,
+      comment,
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
+    })
   }
 }
 
