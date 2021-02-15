@@ -4,7 +4,7 @@ import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 const YouTubeListContainer = styled.div`
   margin: 16px 28px;
   width: 344px;
-  height: 428px;
+  height: 408px;
   overflow: auto;
 
   &::-webkit-scrollbar {

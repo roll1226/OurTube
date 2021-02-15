@@ -44,7 +44,7 @@ const CommentsMolecules = ({ roomId, isActive = true }: Props) => {
 
             commentsList.push({
               comment: commentData.comment,
-              name: user.displayName,
+              name: commentData.name,
               isMyComment: commentData.uid === user.uid ? true : false,
             })
             setCommentsListSave([

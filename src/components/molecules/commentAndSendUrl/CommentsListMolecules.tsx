@@ -6,7 +6,7 @@ import CommentAtoms from "../../atoms/commentAndSendUrl/CommentAtoms"
 const CommentsListContainer = styled.div`
   margin: 16px 28px;
   width: 344px;
-  height: 428px;
+  height: 408px;
   overflow: auto;
 
   &::-webkit-scrollbar {
