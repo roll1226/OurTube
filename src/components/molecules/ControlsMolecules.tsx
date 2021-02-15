@@ -8,12 +8,9 @@ import {
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons"
 import React, { ChangeEvent, MouseEvent, useState } from "react"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
-import {
-  CardShadow,
-  ControlHover,
-} from "../../styles/shadow/GeneralShadowStyle"
+import { CardShadow } from "../../styles/shadow/GeneralShadowStyle"
 import ControlsButtonAtoms from "../atoms/controls/ControlsButtonAtoms"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import ControlsCurrentTimeRangeInputAtoms from "../atoms/controls/ControlsCurrentTimeRangeInputAtoms"

@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent, useRef } from "react"
+import { useEffect, useState, ChangeEvent } from "react"
 import firebase from "firebase/app"
 import SendTextMolecules from "./SendTextMolecules"
 import styled, { css } from "styled-components"
@@ -6,6 +6,7 @@ import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticationUtil"
 import CommentsListMolecules from "./CommentsListMolecules"
 import dynamic from "next/dynamic"
+import LoggerUtil from "../../../utils/debugger/LoggerUtil"
 
 const commentsList = []
 let user: firebase.User | null = null
@@ -64,6 +65,7 @@ const CommentsMolecules = ({ roomId, isActive = true }: Props) => {
   }
 
   const sendMessage = async () => {
+    LoggerUtil.debug(commentsListSave)
     const sendUser = FirebaseAuthenticationUtil.getCurrentUser()
     await FirebaseStoreUtil.createComment(
       roomId,

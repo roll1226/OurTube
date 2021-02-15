@@ -1,5 +1,5 @@
-import { useState, ChangeEvent, MouseEvent, useEffect } from "react"
-import YouTube, { Options } from "react-youtube"
+import { useState, ChangeEvent, MouseEvent } from "react"
+import YouTube from "react-youtube"
 import { useRouter } from "next/router"
 import styled, { css } from "styled-components"
 import HeadAtoms from "../../components/atoms/HeadAtoms"
