@@ -13,6 +13,10 @@ export default class DotEnv {
       appId: process.env.FIREBASE_APP_ID as string,
     }
   }
+
+  public getYouTubeApi = (): string => {
+    return process.env.YOU_TUBE_API_KEY as string
+  }
 }
 
 export const env = new DotEnv()
