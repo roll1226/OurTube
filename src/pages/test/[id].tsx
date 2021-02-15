@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAndSendUrlCardOrganisms"
 import styled from "styled-components"
 
@@ -11,9 +12,13 @@ const Test = styled.div`
 `
 
 const TestYouTube = () => {
+  const router = useRouter()
+  const { id } = router.query
+  const roomId = id as string
+
   return (
     <Test>
-      <CommentAndSendUrlCardOrganisms />
+      <CommentAndSendUrlCardOrganisms roomId={roomId} />
     </Test>
   )
 }

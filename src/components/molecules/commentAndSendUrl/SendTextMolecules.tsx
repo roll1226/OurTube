@@ -50,7 +50,7 @@ const SendTextMolecules = ({ placeholder, text, onChange, onClick }: Props) => {
         <IconAtoms
           icon={faPaperPlane}
           style={{
-            fontSize: 32,
+            width: 32,
             color: text ? GeneralColorStyle.Black : GeneralColorStyle.Grey,
             transition: "all 150ms linear",
           }}

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, ChangeEvent } from "react"
 import { faComments } from "@fortawesome/free-regular-svg-icons"
 import { faFilm } from "@fortawesome/free-solid-svg-icons"
 import CardAtoms from "../atoms/CardAtoms"
@@ -6,6 +6,7 @@ import styled from "styled-components"
 import TabMolecules from "../molecules/commentAndSendUrl/TabAtoms"
 import CommentsMolecules from "../molecules/commentAndSendUrl/CommentsMolecules"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
+import UrlSendMolecules from "../molecules/commentAndSendUrl/UrlSendMolecules "
 
 const TabsContainer = styled.div`
   display: flex;
@@ -14,7 +15,19 @@ const TabsContainer = styled.div`
   cursor: pointer;
 `
 
-const CommentAndSendUrlCardOrganisms = () => {
+export type Props = {
+  roomId: string
+  youTubeUrl: string
+  changeYouTubeUrl: (event: ChangeEvent<HTMLInputElement>) => void
+  sendYouTubeUrl: () => void
+}
+
+const CommentAndSendUrlCardOrganisms = ({
+  roomId,
+  youTubeUrl,
+  changeYouTubeUrl,
+  sendYouTubeUrl,
+}: Props) => {
   const [isCommentActive, setIsCommentActive] = useState(true)
   const [isSendUrl, setIsSendUrl] = useState(false)
 
@@ -40,7 +53,14 @@ const CommentAndSendUrlCardOrganisms = () => {
           onClick={() => selectTab(false)}
         />
       </TabsContainer>
-      {isCommentActive && <CommentsMolecules />}
+      <CommentsMolecules isActive={isCommentActive} roomId={roomId} />
+
+      <UrlSendMolecules
+        isActive={isSendUrl}
+        youTubeUrl={youTubeUrl}
+        changeYouTubeUrl={changeYouTubeUrl}
+        sendYouTubeUrl={sendYouTubeUrl}
+      />
     </CardAtoms>
   )
 }

@@ -1,19 +1,32 @@
 import { useEffect, useState, ChangeEvent, useRef } from "react"
 import firebase from "firebase/app"
 import SendTextMolecules from "./SendTextMolecules"
-import { useRouter } from "next/router"
+import styled, { css } from "styled-components"
 import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticationUtil"
 import CommentsListMolecules from "./CommentsListMolecules"
+import dynamic from "next/dynamic"
 
 const commentsList = []
 let user: firebase.User | null = null
 
-const CommentsMolecules = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const roomId = id as string
+export type Props = {
+  roomId: string
+  isActive: boolean
+}
 
+const CommentsContainer = styled.div<{ isActive: boolean }>`
+  width: 100%;
+  height: 100%;
+  display: none;
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      display: block;
+    `};
+`
+
+const CommentsMolecules = ({ roomId, isActive = true }: Props) => {
   const [comment, setComment] = useState("")
   const [commentsListSave, setCommentsListSave] = useState([])
 
@@ -62,7 +75,7 @@ const CommentsMolecules = () => {
   }
 
   return (
-    <>
+    <CommentsContainer isActive={isActive}>
       <CommentsListMolecules comments={commentsList} />
 
       <SendTextMolecules
@@ -71,8 +84,10 @@ const CommentsMolecules = () => {
         placeholder={"メッセージを入力"}
         onClick={sendMessage}
       />
-    </>
+    </CommentsContainer>
   )
 }
 
-export default CommentsMolecules
+export default dynamic(() => Promise.resolve(CommentsMolecules), {
+  ssr: false,
+})

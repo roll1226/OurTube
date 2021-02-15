@@ -1,10 +1,9 @@
 import { useRef, useEffect } from "react"
 import styled from "styled-components"
-import dynamic from "next/dynamic"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import CommentAtoms from "../../atoms/commentAndSendUrl/CommentAtoms"
 
-const CommentsContainer = styled.div`
+const CommentsListContainer = styled.div`
   margin: 16px 28px;
   width: 344px;
   height: 428px;
@@ -41,7 +40,7 @@ const CommentsListMolecules = ({ comments }: Props) => {
   })
 
   return (
-    <CommentsContainer>
+    <CommentsListContainer>
       {comments.map((comment, index) => (
         <CommentAtoms
           key={index}
@@ -51,10 +50,8 @@ const CommentsListMolecules = ({ comments }: Props) => {
         />
       ))}
       <span ref={commentEndRef} />
-    </CommentsContainer>
+    </CommentsListContainer>
   )
 }
 
-export default dynamic(() => Promise.resolve(CommentsListMolecules), {
-  ssr: false,
-})
+export default CommentsListMolecules

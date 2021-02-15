@@ -44,7 +44,7 @@ const TabMolecules = ({
     <TabContainer isActive={isActive} position={position} onClick={onClick}>
       <IconAtoms
         style={{
-          fontSize: 52,
+          width: 52,
           color: isActive
             ? GeneralColorStyle.DarkBlue
             : GeneralColorStyle.White,
