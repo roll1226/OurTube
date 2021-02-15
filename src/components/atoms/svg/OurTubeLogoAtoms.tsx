@@ -1,4 +1,4 @@
-import OurTube from "../../../assets/images/ourTubeLogo.svg"
+import OurTube from "../../../assets/images/ourTubeLogo1.svg"
 
 export enum LogoColor {
   WHITE = "#fff",
