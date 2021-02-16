@@ -152,6 +152,7 @@ const ShareRoom = () => {
     setIsPlayYouTube(liveInfo.play)
     stopIntervalCurrentTime()
     event.target.seekTo(liveInfo.currentTime)
+    LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!liveInfo.play) return event.target.pauseVideo()
 
     setIsAnotherUser(true)

@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
 import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
-import FirebaseInitUtil from "./FIrebaseInitUtil"
+import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"
@@ -241,53 +241,6 @@ class FirebaseStoreUtil {
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
     await user.updateProfile({ displayName: name })
-  }
-
-  /**
-   * create share room
-   * @param uid
-   * @param password
-   * @param isPrivateRoom
-   * @param videoId
-   */
-  public static async createShareRoom(
-    uid: string,
-    password: string,
-    isPrivateRoom: boolean,
-    videoId: string
-  ) {
-    const liveRoom = await fireStore
-      .collection("lives")
-      .withConverter(liveConverter)
-      .add({
-        currentTime: 0,
-        hostId: uid,
-        listCnt: 1,
-        password: isPrivateRoom ? password : "",
-        privateRoom: isPrivateRoom,
-        play: false,
-        playNow: 0,
-        videoId: [videoId],
-        createdAt: FirebaseStoreUtil.getTimeStamp(),
-        updatedAt: FirebaseStoreUtil.getTimeStamp(),
-      })
-
-    const roomId = liveRoom.id
-
-    await FirebaseStoreUtil.changeUser(roomId).set({
-      changeCnt: 0,
-      name: "",
-      createdAt: FirebaseStoreUtil.getTimeStamp(),
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
-    })
-
-    await FirebaseStoreUtil.joinFlag(roomId).set({
-      flagCnt: 0,
-      createdAt: FirebaseStoreUtil.getTimeStamp(),
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
-    })
-
-    return roomId
   }
 
   /**

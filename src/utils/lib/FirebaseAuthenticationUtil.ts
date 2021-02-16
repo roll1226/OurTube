@@ -1,5 +1,5 @@
 import firebase from "firebase/app"
-import FirebaseInitUtil from "./FIrebaseInitUtil"
+import FirebaseInitUtil from "./FirebaseInitUtil"
 
 export const firebaseAuth = FirebaseInitUtil.firebaseAuth()
 

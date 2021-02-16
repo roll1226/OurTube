@@ -16,6 +16,8 @@ import {
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
 import { OurTubePath } from "../../consts/PathConsts"
+import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
+import LoggerUtil from "../../utils/debugger/LoggerUtil"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -45,14 +47,24 @@ const CreateRoomMolecules = () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
     const resultVideoId = UrlParamsUtil.getVideoId(videoUrl)
 
-    const roomId = await FirebaseStoreUtil.createShareRoom(
-      user.uid,
+    const createRoomFunc = FirebaseFunctionsUtil.createRoomFunc()
+
+    await createRoomFunc({
+      videoId: resultVideoId,
+      uid: user.uid,
       password,
       isPrivateRoom,
-      resultVideoId
-    )
+    })
+      .then((res) => {
+        LoggerUtil.debug(res.data.text)
 
-    router.push(`${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`)
+        router.push(
+          `${OurTubePath.SHARE_ROOM.replace("[id]", res.data.roomId)}`
+        )
+      })
+      .catch((error) => {
+        LoggerUtil.debug(error)
+      })
   }
 
   return (

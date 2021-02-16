@@ -16,6 +16,7 @@ import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import ControlsCurrentTimeRangeInputAtoms from "../atoms/controls/ControlsCurrentTimeRangeInputAtoms"
 import ControlsYouTubeTitleAtoms from "../atoms/controls/ControlsYouTubeTitleAtoms"
 import ControlsVolumeRangeInputAtoms from "../atoms/controls/ControlsVolumeRangeInputAtoms"
+import dynamic from "next/dynamic"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -204,4 +205,6 @@ const ControlsMolecules = ({
   )
 }
 
-export default ControlsMolecules
+export default dynamic(() => Promise.resolve(ControlsMolecules), {
+  ssr: false,
+})

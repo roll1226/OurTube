@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev:emulators": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=true next dev",
+    "dev:firebase": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "emulators": "firebase emulators:start"
   },
   "husky": {
     "hooks": {
@@ -22,6 +24,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@reduxjs/toolkit": "^1.5.0",
+    "cors": "^2.8.5",
     "firebase": "^8.2.3",
     "next": "10.0.5",
     "react": "17.0.1",
@@ -36,6 +39,7 @@
     "yt-player": "^3.5.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.10",
     "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/react-redux": "^7.1.16",

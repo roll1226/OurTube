@@ -40,4 +40,5 @@ export const GeneralText = styled.span<GeneralTextStyleProps>`
 
 export const GeneralTextParagraph = styled(GeneralText.withComponent("p"))`
   white-space: pre-wrap;
+  word-break: break-all;
 `

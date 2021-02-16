@@ -7,9 +7,7 @@ import { Provider, useDispatch } from "react-redux"
 import createStore from "../ducks/createStore"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import LoggerUtil from "../utils/debugger/LoggerUtil"
-import FirebaseAuthenticationUtil, {
-  firebaseAuth,
-} from "../utils/lib/FirebaseAuthenticationUtil"
+import { firebaseAuth } from "../utils/lib/FirebaseAuthenticationUtil"
 import CircleAtoms from "../components/atoms/CircleAtoms"
 import { OurTubePath } from "../consts/PathConsts"
 import authSlice from "../ducks/auth/slice"
@@ -91,7 +89,7 @@ const AppBackground = () => {
       />
 
       <DarkGreenCircle
-        color={GeneralColorStyle.ThinGreen}
+        color={GeneralColorStyle.DarkGreen}
         size={900}
         path={nowPathname}
         scale={1}
