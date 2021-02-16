@@ -11,7 +11,11 @@ class FirebaseFunctionsUtil {
    * @param videoId
    */
   public static createRoomFunc() {
-    return firebaseFunctions.httpsCallable("apiService/api/setYouTubeTitle")
+    return firebaseFunctions.httpsCallable("apiService/api/creatRoom")
+  }
+
+  public static getYouTubeTitle() {
+    return firebaseFunctions.httpsCallable("apiService/api/getYouTubeTitle")
   }
 }
 

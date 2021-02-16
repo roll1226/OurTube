@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import {
   faPause,
   faPlay,
@@ -17,6 +18,8 @@ import ControlsCurrentTimeRangeInputAtoms from "../atoms/controls/ControlsCurren
 import ControlsYouTubeTitleAtoms from "../atoms/controls/ControlsYouTubeTitleAtoms"
 import ControlsVolumeRangeInputAtoms from "../atoms/controls/ControlsVolumeRangeInputAtoms"
 import dynamic from "next/dynamic"
+import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
+import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -66,6 +69,7 @@ export type Props = {
   mute: () => void
   isMute: boolean
   volumeValue: number
+  videoId: string
 }
 
 /**
@@ -141,11 +145,25 @@ const ControlsMolecules = ({
   isMute,
   volumeValue,
   changeVolume,
+  videoId,
 }: Props) => {
   const [isVolumeHover, setIsVolumeHover] = useState(false)
+  const [youTubeTitle, setYouTubeTitle] = useState("")
   const isOpenVolumeControl = (isHover: boolean, isMute: boolean) => {
     if (!isMute) setIsVolumeHover(isHover)
   }
+  const getYouTubeTitle = FirebaseFunctionsUtil.getYouTubeTitle()
+
+  useEffect(() => {
+    const getTitle = async () => {
+      if (videoId)
+        await getYouTubeTitle({ videoId }).then((res) => {
+          setYouTubeTitle(res.data.youTubeTitle)
+        })
+    }
+
+    getTitle()
+  }, [videoId])
 
   return (
     <ControlsContainer>
@@ -186,9 +204,7 @@ const ControlsMolecules = ({
 
           <GeneralSpacer horizontal={28} />
 
-          <ControlsYouTubeTitleAtoms
-            title={"ホゲホゲホゲホゲホゲホゲホゲゲホゲホゲホゲホゲホゲゲホ"}
-          />
+          <ControlsYouTubeTitleAtoms title={youTubeTitle} />
 
           <GeneralSpacer horizontal={40} />
         </ControlItemsWrap>

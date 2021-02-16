@@ -56,13 +56,15 @@ const ControlsYouTubeTitleAtoms = ({ title }: Props) => {
   return (
     <YouTubeTitleContainer>
       <YouTUbeTitleMoveWrap ref={ref} titleWidth={titleWidth}>
-        <GeneralText
-          fontSize={24}
-          fontColor={GeneralColorStyle.Black}
-          style={{ whiteSpace: "nowrap" }}
-        >
-          {title}
-        </GeneralText>
+        {title && (
+          <GeneralText
+            fontSize={24}
+            fontColor={GeneralColorStyle.Black}
+            style={{ whiteSpace: "nowrap" }}
+          >
+            {title}
+          </GeneralText>
+        )}
       </YouTUbeTitleMoveWrap>
     </YouTubeTitleContainer>
   )

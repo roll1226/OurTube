@@ -403,6 +403,7 @@ const ShareRoom = () => {
         currentTimeValue={currentTime}
         volumeValue={volume}
         changeVolume={(range) => changeVolume(range)}
+        videoId={videoId}
       />
     </ShareRoomContainer>
   )

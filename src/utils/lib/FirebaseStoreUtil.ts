@@ -5,6 +5,8 @@ import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"
+import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
+import LoggerUtil from "../debugger/LoggerUtil"
 import {
   changeUserConverter,
   ChangeUser,
@@ -274,6 +276,15 @@ class FirebaseStoreUtil {
       comment,
       createdAt: FirebaseStoreUtil.getTimeStamp(),
     })
+  }
+
+  public static youTubeList(roomId: string, videoId: string) {
+    return fireStore
+      .collection("lives")
+      .doc(roomId)
+      .collection("youTubeLive")
+      .withConverter(youTubeListConverter)
+      .doc(videoId)
   }
 }
 
