@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
 import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
-import FirebaseInitUtil from "./FIrebaseInitUtil"
+import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"

@@ -1,4 +1,4 @@
-import FirebaseInitUtil from "./FIrebaseInitUtil"
+import FirebaseInitUtil from "./FirebaseInitUtil"
 
 export const firebaseFunctions = FirebaseInitUtil.firebaseFunctions()
 
