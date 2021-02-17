@@ -1,12 +1,11 @@
-import { Timestamp } from "@google-cloud/firestore"
 import firebase from "firebase/app"
 import "firebase/firestore"
 
 export class JoinFlag {
   constructor(
-    readonly createdAt: Timestamp,
+    readonly createdAt: firebase.firestore.FieldValue,
     readonly flagCnt: number,
-    readonly updatedAt: Timestamp
+    readonly updatedAt: firebase.firestore.FieldValue
   ) {}
 }
 

@@ -1,13 +1,12 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
-import { Timestamp } from "@google-cloud/firestore"
 
 export class ChatModel {
   constructor(
     readonly comment: string,
     readonly name: string,
     readonly uid: string,
-    readonly createdAt: Timestamp
+    readonly createdAt: firebase.firestore.FieldValue
   ) {}
 }
 

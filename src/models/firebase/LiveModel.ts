@@ -1,6 +1,5 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
-import { Timestamp } from "@google-cloud/firestore"
 
 export class LiveModel {
   constructor(
@@ -12,8 +11,8 @@ export class LiveModel {
     readonly hostId: string,
     readonly currentTime: number,
     readonly listCnt: number,
-    readonly createdAt: Timestamp,
-    readonly updatedAt: Timestamp
+    readonly createdAt: firebase.firestore.FieldValue,
+    readonly updatedAt: firebase.firestore.FieldValue
   ) {}
 }
 

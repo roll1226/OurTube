@@ -8,6 +8,7 @@ const GeneralColorStyle = {
   ColoredWhite: "#fffbfa",
   Twitter: "#1AA1F2",
   Grey: "#C4C4C4",
+  Error: "#FD5454",
 }
 
 export default GeneralColorStyle

@@ -3,7 +3,7 @@ import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import YouTubeCardAtoms from "../../atoms/commentAndSendUrl/YouTubeCardAtoms"
 
 const YouTubeListContainer = styled.div`
-  margin: 16px 28px;
+  margin: 16px 24px;
   padding: 0 4px;
   width: 344px;
   height: 408px;

@@ -193,7 +193,7 @@ class FirebaseStoreUtil {
    * get timestamp
    */
   public static getTimeStamp() {
-    return firebase.firestore.Timestamp.now()
+    return firebase.firestore.FieldValue.serverTimestamp()
   }
 
   /**
@@ -303,11 +303,26 @@ class FirebaseStoreUtil {
       .doc(videoId)
       .get()
 
-    const isData = youTube.exists
+    if (youTube.exists) return youTube.data().title
+    else {
+      const getTitleFunc = FirebaseFunctionsUtil.getYouTubeTitle()
 
-    return isData ? youTube.data().title : ""
+      getTitleFunc({ videoId })
+        .then((res) => {
+          return res.data.youTubeTitle
+        })
+        .catch((e) => {
+          LoggerUtil.debug("get youTube title error log", e)
+          return ""
+        })
+    }
   }
 
+  /**
+   * select youTube video
+   * @param roomId
+   * @param playNow
+   */
   public static async selectYouTubeVideo(roomId: string, playNow: number) {
     await FirebaseStoreUtil.liveInfo(roomId).update({
       playNow,

@@ -1,9 +1,127 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2021, 2, 28);
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUserAuthenticated(userID) {
+      return request.auth != null && request.auth.uid == userID;
+    }
+
+    function incomingData() {
+      return request.resource.data;
+    }
+
+    function exitingQuestions(roomID) {
+      return exists(/databases/$(database)/documents/lives/$(roomID));
+    }
+
+    match /users/{userID} {
+      allow read: if isAuthenticated();
+
+      allow create: if isUserAuthenticated(userID) &&
+        incomingData().name is string &&
+        incomingData().name.size() > 0 &&
+        incomingData().name.size() <= 20 &&
+        incomingData().createdAt is timestamp &&
+        incomingData().createdAt == request.time &&
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
+    }
+
+    match /lives/{roomID} {
+      allow read: if isAuthenticated();
+
+      allow create: if isAuthenticated() &&
+        incomingData().currentTime is string &&
+        incomingData().currentTime == 0 &&
+        incomingData().hostId is string &&
+        incomingData().hostId == request.auth.uid &&
+        incomingData().listCnt is number &&
+        incomingData().listCnt == 0 &&
+        incomingData().password is string &&
+        incomingData().privateRoom is bool &&
+        incomingData().play is bool &&
+        incomingData().play == true &&
+        incomingData().playNow is number &&
+        incomingData().playNow == 0 &&
+        incomingData().videoId is list &&
+        incomingData().videoId.size() == 1 &&
+        incomingData().createdAt is timestamp &&
+        incomingData().createdAt == request.time &&
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
+
+      allow update: if isAuthenticated() &&
+        exitingQuestions(roomID) &&
+        incomingData().currentTime is number &&
+        incomingData().listCnt is number &&
+        incomingData().play is bool &&
+        incomingData().playNow is number &&
+        incomingData().videoId is list &&
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
+
+
+      match /changeUsers/user {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().name is string &&
+          incomingData().name.size() == 0 &&
+          incomingData().changeCnt is number &&
+          incomingData().changeCnt == 0 &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time &&
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time;
+
+        allow update: if isAuthenticated() &&
+          incomingData().name is string &&
+          incomingData().changeCnt is number &&
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time;
+      }
+
+      match /joinFlag/flag {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().flagCnt is number &&
+          incomingData().flagCnt == 0 &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time &&
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time;
+
+        allow update: if isAuthenticated() &&
+          incomingData().flagCnt is number &&
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time;
+      }
+
+      match /youTubeList/{youTubeID} {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().title is string &&
+          incomingData().image is string &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
+      }
+
+      match /chat/{chatID} {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().name is string &&
+          incomingData().comment is string &&
+          incomingData().uid is string &&
+          incomingData().uid == request.auth.uid &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
+      }
     }
   }
 }

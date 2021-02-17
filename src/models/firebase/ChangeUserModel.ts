@@ -1,13 +1,12 @@
-import { Timestamp } from "@google-cloud/firestore"
 import firebase from "firebase/app"
 import "firebase/firestore"
 
 export class ChangeUser {
   constructor(
     readonly name: string,
-    readonly createdAt: Timestamp,
+    readonly createdAt: firebase.firestore.FieldValue,
     readonly changeCnt: number,
-    readonly updatedAt: Timestamp
+    readonly updatedAt: firebase.firestore.FieldValue
   ) {}
 }
 

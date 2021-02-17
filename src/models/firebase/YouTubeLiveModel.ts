@@ -1,12 +1,11 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
-import { Timestamp } from "@google-cloud/firestore"
 
 export class YouTubeListModel {
   constructor(
     readonly title: string,
     readonly image: string,
-    readonly createdAt: Timestamp
+    readonly createdAt: firebase.firestore.FieldValue
   ) {}
 }
 

@@ -20,7 +20,6 @@ import ControlsVolumeRangeInputAtoms from "../atoms/controls/ControlsVolumeRange
 import dynamic from "next/dynamic"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
-import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -158,19 +157,12 @@ const ControlsMolecules = ({
     if (!isMute) setIsVolumeHover(isHover)
   }
 
-  const getYouTubeTitle = FirebaseFunctionsUtil.getYouTubeTitle()
-
   useEffect(() => {
     const getTitle = async () => {
       if (!videoId) return setYouTubeTitle("")
 
       const title = await FirebaseStoreUtil.getYouTubeTitle(roomId, videoId)
-      if (title) setYouTubeTitle(title)
-      else {
-        getYouTubeTitle({ videoId }).then((res) => {
-          setYouTubeTitle(res.data.youTubeTitle)
-        })
-      }
+      setYouTubeTitle(title)
     }
 
     getTitle()

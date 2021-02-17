@@ -1,12 +1,11 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
-import { Timestamp } from "@google-cloud/firestore"
 
 export class UserModel {
   constructor(
     readonly name: string,
-    readonly createdAt: Timestamp,
-    readonly updatedAt: Timestamp
+    readonly createdAt: firebase.firestore.FieldValue,
+    readonly updatedAt: firebase.firestore.FieldValue
   ) {}
 }
 
