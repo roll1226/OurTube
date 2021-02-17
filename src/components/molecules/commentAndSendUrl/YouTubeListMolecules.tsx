@@ -26,9 +26,14 @@ export type Props = {
     videoId: string
   }[]
   nowVideoId: string
+  stopIntervalCurrentTime: () => void
 }
 
-const YouTubeListMolecules = ({ youTubes, nowVideoId }: Props) => {
+const YouTubeListMolecules = ({
+  youTubes,
+  nowVideoId,
+  stopIntervalCurrentTime,
+}: Props) => {
   return (
     <YouTubeListContainer>
       {youTubes.map((youTube, index) => (
@@ -39,6 +44,7 @@ const YouTubeListMolecules = ({ youTubes, nowVideoId }: Props) => {
           image={youTube.image}
           videoId={youTube.videoId}
           nowVideoId={nowVideoId}
+          stopIntervalCurrentTime={stopIntervalCurrentTime}
         />
       ))}
     </YouTubeListContainer>

@@ -39,7 +39,6 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
       .orderBy("createdAt", "asc")
       .onSnapshot((comments) => {
         if (!comments.size) return
-
         comments.docChanges().forEach((comment) => {
           if (comment.type === "added") {
             const commentData = comment.doc.data()

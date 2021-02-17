@@ -89,7 +89,8 @@ const ShareRoom = () => {
 
     getJoinFlag.onSnapshot(
       async (flag) => {
-        LoggerUtil.debug(flag)
+        if (flag.metadata.hasPendingWrites) return
+
         if (initJoinFlag) {
           initJoinFlagCnt++
           if (initJoinFlagCnt >= 2) initJoinFlag = false
@@ -115,21 +116,53 @@ const ShareRoom = () => {
 
     getChangeUser.onSnapshot(
       async (users) => {
+        stopIntervalCurrentTime()
+        event.target.pauseVideo()
+        if (users.metadata.hasPendingWrites) return
+        LoggerUtil.debug(`chake`, users.metadata.hasPendingWrites)
+
         const changeUser = users.data()
         const liveInfo = await FirebaseStoreUtil.liveInfo(roomId).get()
         const userId = getCurrentUser()
-        if (isPlay !== null && changeUser.name === userId) return
+        if (isPlay !== null && changeUser.name === userId) {
+          if (isPlay && liveInfo.data().play) {
+            startIntervalCurrentTime()
+            event.target.playVideo()
+            return
+          }
+        }
 
         const playNow = liveInfo.data().playNow
 
-        if (isPlay !== null && changeUser.name === "setYouTubePlayerBot")
-          return setListCnt(liveInfo.data().listCnt)
+        if (isPlay !== null && changeUser.name === "setYouTubePlayerBot") {
+          if (isPlay && liveInfo.data().play) {
+            startIntervalCurrentTime()
+            event.target.playVideo()
+            setListCnt(liveInfo.data().listCnt)
+            return
+          }
+        }
+
+        if (isPlay !== null && changeUser.name === "selectYouTubeVideoBot") {
+          setListCnt(liveInfo.data().listCnt)
+          setCurrentTime(liveInfo.data().currentTime)
+          setIsPlayYouTube(liveInfo.data().play)
+          setVideoId(liveInfo.data().videoId[playNow])
+          setTimeout(() => {
+            startIntervalCurrentTime()
+            event.target.playVideo()
+          }, 300)
+          // isSelectYouTubeVideo = true
+          return
+        }
 
         LoggerUtil.debug("おいかさい", liveInfo.data().playNow)
         setListCnt(liveInfo.data().listCnt)
         setPlayNow(liveInfo.data().playNow)
         setVideoId(liveInfo.data().videoId[playNow])
-        changeVideoStatus(liveInfo.data(), event)
+
+        if (!users.metadata.hasPendingWrites)
+          changeVideoStatus(liveInfo.data(), event)
       },
       (error) => {
         LoggerUtil.debug(`error log: ${error}`)
@@ -150,7 +183,6 @@ const ShareRoom = () => {
     isPlay === null ? setCurrentTime(0) : setCurrentTime(liveInfo.currentTime)
     isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
-    stopIntervalCurrentTime()
     event.target.seekTo(liveInfo.currentTime)
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!liveInfo.play) return event.target.pauseVideo()
@@ -161,7 +193,7 @@ const ShareRoom = () => {
     setTimeout(() => {
       event.target.playVideo()
       startIntervalCurrentTime()
-    }, 500)
+    }, 300)
   }
 
   /**
@@ -244,7 +276,7 @@ const ShareRoom = () => {
     const uid = getCurrentUser()
     FirebaseStoreUtil.setLivePlay(roomId, false, uid, nowCurrentTime)
     setCurrentTime(nowCurrentTime)
-    clearInterval(intervalCurrentTime)
+    stopIntervalCurrentTime()
   }
 
   /**
@@ -376,6 +408,8 @@ const ShareRoom = () => {
           isPlayYouTube={isPlayYouTube}
           _onReady={_onReady}
           changeState={changeState}
+          isPlay={isPlayYouTube}
+          currentTime={currentTime}
         />
       </ContentWrap>
 
@@ -387,6 +421,7 @@ const ShareRoom = () => {
           }
           sendYouTubeUrl={setStoreVideoId}
           nowVideoId={videoId}
+          stopIntervalCurrentTime={stopIntervalCurrentTime}
         />
       </ContentWrap>
 

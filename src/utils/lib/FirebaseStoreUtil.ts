@@ -330,7 +330,7 @@ class FirebaseStoreUtil {
       play: true,
       currentTime: 0,
     })
-    await FirebaseStoreUtil.setChangeUser(roomId, "")
+    await FirebaseStoreUtil.setChangeUser(roomId, "selectYouTubeVideoBot")
   }
 }
 

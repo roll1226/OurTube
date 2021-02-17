@@ -25,6 +25,7 @@ export type Props = {
   sendYouTubeUrl: () => void
   isActive: boolean
   nowVideoId: string
+  stopIntervalCurrentTime: () => void
 }
 
 const youTubeList = []
@@ -35,6 +36,7 @@ const UrlSendMolecules = ({
   sendYouTubeUrl,
   isActive = true,
   nowVideoId,
+  stopIntervalCurrentTime,
 }: Props) => {
   const [youTubesList, setYouTubeList] = useState([])
   const router = useRouter()
@@ -69,7 +71,11 @@ const UrlSendMolecules = ({
 
   return (
     <UrlSendContainer isActive={isActive}>
-      <YouTubeListMolecules youTubes={youTubeList} nowVideoId={nowVideoId} />
+      <YouTubeListMolecules
+        youTubes={youTubeList}
+        nowVideoId={nowVideoId}
+        stopIntervalCurrentTime={stopIntervalCurrentTime}
+      />
 
       <SendTextMolecules
         text={youTubeUrl}

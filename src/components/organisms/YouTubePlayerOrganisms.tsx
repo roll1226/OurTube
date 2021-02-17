@@ -45,6 +45,8 @@ export type Props = {
   isPlayYouTube: boolean
   _onReady: (event: YouTubePlayer) => void
   changeState: (event: YouTubePlayer) => void
+  isPlay: boolean
+  currentTime: number
 }
 
 const YouTubePlayerOrganisms = ({
@@ -54,6 +56,8 @@ const YouTubePlayerOrganisms = ({
   isPlayYouTube,
   _onReady,
   changeState,
+  isPlay,
+  currentTime,
 }: Props) => {
   /**
    * consts
@@ -80,7 +84,7 @@ const YouTubePlayerOrganisms = ({
         <YouTubePlayWrap
           onClick={clickYouTube}
           img={
-            isInitThumbnail && videoId
+            isInitThumbnail && videoId && !isPlay && currentTime === 0
               ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
               : ""
           }

@@ -55,6 +55,7 @@ export type Props = {
   videoId: string
   nowVideoId: string
   videoNumber: number
+  stopIntervalCurrentTime: () => void
 }
 
 const YouTubeCardAtoms = ({
@@ -63,6 +64,7 @@ const YouTubeCardAtoms = ({
   videoId,
   nowVideoId,
   videoNumber,
+  stopIntervalCurrentTime,
 }: Props) => {
   const router = useRouter()
   const { id } = router.query
@@ -79,6 +81,7 @@ const YouTubeCardAtoms = ({
 
   const selectYouTubeVide = () => {
     if (isNowVideo()) return
+    stopIntervalCurrentTime()
     FirebaseStoreUtil.selectYouTubeVideo(roomId, videoNumber)
   }
 

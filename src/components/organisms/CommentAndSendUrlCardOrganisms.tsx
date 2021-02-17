@@ -20,6 +20,7 @@ export type Props = {
   changeYouTubeUrl: (event: ChangeEvent<HTMLInputElement>) => void
   sendYouTubeUrl: () => void
   nowVideoId: string
+  stopIntervalCurrentTime: () => void
 }
 
 const CommentAndSendUrlCardOrganisms = ({
@@ -27,6 +28,7 @@ const CommentAndSendUrlCardOrganisms = ({
   changeYouTubeUrl,
   sendYouTubeUrl,
   nowVideoId,
+  stopIntervalCurrentTime,
 }: Props) => {
   const [isCommentActive, setIsCommentActive] = useState(true)
   const [isSendUrl, setIsSendUrl] = useState(false)
@@ -61,6 +63,7 @@ const CommentAndSendUrlCardOrganisms = ({
         changeYouTubeUrl={changeYouTubeUrl}
         sendYouTubeUrl={sendYouTubeUrl}
         nowVideoId={nowVideoId}
+        stopIntervalCurrentTime={stopIntervalCurrentTime}
       />
     </CardAtoms>
   )
