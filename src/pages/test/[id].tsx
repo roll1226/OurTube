@@ -18,7 +18,7 @@ const TestYouTube = () => {
 
   return (
     <Test>
-      <CommentAndSendUrlCardOrganisms roomId={roomId} />
+      <CommentAndSendUrlCardOrganisms />
     </Test>
   )
 }

@@ -5,17 +5,23 @@ export const firebaseFunctions = FirebaseInitUtil.firebaseFunctions()
 class FirebaseFunctionsUtil {
   /**
    * create share room functions
-   * @param uid
-   * @param password
-   * @param isPrivateRoom
-   * @param videoId
    */
   public static createRoomFunc() {
     return firebaseFunctions.httpsCallable("apiService/api/creatRoom")
   }
 
+  /**
+   * get youTube title
+   */
   public static getYouTubeTitle() {
     return firebaseFunctions.httpsCallable("apiService/api/getYouTubeTitle")
+  }
+
+  /**
+   * add youTUbe url
+   */
+  public static addYouTubeUrl() {
+    return firebaseFunctions.httpsCallable("apiService/api/addYouTubeUrl")
   }
 }
 

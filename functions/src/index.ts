@@ -156,4 +156,62 @@ app.post("/api/getYouTubeTitle", (req, res) => {
   }
 })
 
+app.post("/api/addYouTubeUrl", (req, res) => {
+  try {
+    const videoId = req.body.data.videoId
+    const roomId = req.body.data.roomId
+    const youTubeVideoUrl = `${youTubeUrl}${videoId}`
+
+    request(youTubeVideoUrl, async (e, resHtml, html) => {
+      if (e) {
+        console.error(e)
+      }
+      try {
+        const $ = cheerio.load(html)
+
+        const youTubeImage = $("meta[property='og:image']").attr("content")
+        const youTubeTitle = $("meta[property='og:title']").attr("content")
+
+        const timeStamp = admin.firestore.FieldValue.serverTimestamp()
+
+        const livesStore = fireStore.collection("lives")
+
+        await livesStore
+          .doc(roomId)
+          .collection("youTubeList")
+          .doc(videoId)
+          .set({
+            title: youTubeTitle,
+            image: youTubeImage,
+            createdAt: timeStamp,
+          })
+
+        res.status(200)
+        res.json({
+          result: {
+            text: "create youTube list collection",
+            status: 200,
+          },
+        })
+      } catch (error) {
+        res.status(500)
+        res.json({
+          result: {
+            text: error,
+            status: 500,
+          },
+        })
+      }
+    })
+  } catch (error) {
+    res.status(500)
+    res.json({
+      result: {
+        text: error,
+        status: 500,
+      },
+    })
+  }
+})
+
 export const apiService = functions.https.onRequest(app)

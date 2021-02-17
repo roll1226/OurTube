@@ -81,7 +81,7 @@ const YouTubePlayerOrganisms = ({
           onClick={clickYouTube}
           img={
             isInitThumbnail && videoId
-              ? `http://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+              ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
               : ""
           }
         >

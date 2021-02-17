@@ -7,12 +7,12 @@ import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticatio
 import CommentsListMolecules from "./CommentsListMolecules"
 import dynamic from "next/dynamic"
 import LoggerUtil from "../../../utils/debugger/LoggerUtil"
+import { useRouter } from "next/router"
 
 const commentsList = []
 let user: firebase.User | null = null
 
 export type Props = {
-  roomId: string
   isActive: boolean
 }
 
@@ -27,9 +27,12 @@ const CommentsContainer = styled.div<{ isActive: boolean }>`
     `};
 `
 
-const CommentsMolecules = ({ roomId, isActive = true }: Props) => {
+const CommentsMolecules = ({ isActive = true }: Props) => {
   const [comment, setComment] = useState("")
   const [commentsListSave, setCommentsListSave] = useState([])
+  const router = useRouter()
+  const { id } = router.query
+  const roomId = id as string
 
   useEffect(() => {
     FirebaseStoreUtil.chat(roomId)

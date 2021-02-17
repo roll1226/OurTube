@@ -7,6 +7,7 @@ import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"
 import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
 import LoggerUtil from "../debugger/LoggerUtil"
+import FirebaseFunctionsUtil from "./FirebaseFunctions"
 import {
   changeUserConverter,
   ChangeUser,
@@ -157,6 +158,9 @@ class FirebaseStoreUtil {
       })
     }
     await FirebaseStoreUtil.setChangeUser(liveUid, name)
+
+    const addYouTubeUrl = FirebaseFunctionsUtil.addYouTubeUrl()
+    await addYouTubeUrl({ roomId: liveUid, videoId })
   }
 
   /**
@@ -278,13 +282,40 @@ class FirebaseStoreUtil {
     })
   }
 
-  public static youTubeList(roomId: string, videoId: string) {
+  /***
+   * youtube list
+   */
+  public static youTubeList(roomId: string) {
     return fireStore
       .collection("lives")
       .doc(roomId)
-      .collection("youTubeLive")
+      .collection("youTubeList")
       .withConverter(youTubeListConverter)
+  }
+
+  /**
+   * get youTube title
+   * @param roomId
+   * @param videoId
+   */
+  public static async getYouTubeTitle(roomId: string, videoId: string) {
+    const youTube = await FirebaseStoreUtil.youTubeList(roomId)
       .doc(videoId)
+      .get()
+
+    const isData = youTube.exists
+
+    return isData ? youTube.data().title : ""
+  }
+
+  public static async selectYouTubeVideo(roomId: string, playNow: number) {
+    await FirebaseStoreUtil.liveInfo(roomId).update({
+      playNow,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+      play: true,
+      currentTime: 0,
+    })
+    await FirebaseStoreUtil.setChangeUser(roomId, "")
   }
 }
 

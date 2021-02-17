@@ -381,12 +381,12 @@ const ShareRoom = () => {
 
       <ContentWrap position={"right"}>
         <CommentAndSendUrlCardOrganisms
-          roomId={roomId}
           youTubeUrl={newVideoId}
           changeYouTubeUrl={(event: ChangeEvent<HTMLInputElement>) =>
             setNewVideoId(event.target.value)
           }
           sendYouTubeUrl={setStoreVideoId}
+          nowVideoId={videoId}
         />
       </ContentWrap>
 

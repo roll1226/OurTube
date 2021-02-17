@@ -16,17 +16,17 @@ const TabsContainer = styled.div`
 `
 
 export type Props = {
-  roomId: string
   youTubeUrl: string
   changeYouTubeUrl: (event: ChangeEvent<HTMLInputElement>) => void
   sendYouTubeUrl: () => void
+  nowVideoId: string
 }
 
 const CommentAndSendUrlCardOrganisms = ({
-  roomId,
   youTubeUrl,
   changeYouTubeUrl,
   sendYouTubeUrl,
+  nowVideoId,
 }: Props) => {
   const [isCommentActive, setIsCommentActive] = useState(true)
   const [isSendUrl, setIsSendUrl] = useState(false)
@@ -53,13 +53,14 @@ const CommentAndSendUrlCardOrganisms = ({
           onClick={() => selectTab(false)}
         />
       </TabsContainer>
-      <CommentsMolecules isActive={isCommentActive} roomId={roomId} />
+      <CommentsMolecules isActive={isCommentActive} />
 
       <UrlSendMolecules
         isActive={isSendUrl}
         youTubeUrl={youTubeUrl}
         changeYouTubeUrl={changeYouTubeUrl}
         sendYouTubeUrl={sendYouTubeUrl}
+        nowVideoId={nowVideoId}
       />
     </CardAtoms>
   )

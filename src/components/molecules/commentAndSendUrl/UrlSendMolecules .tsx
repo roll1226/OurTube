@@ -3,6 +3,10 @@ import styled, { css } from "styled-components"
 import SendTextMolecules from "./SendTextMolecules"
 import YouTubeListMolecules from "./YouTubeListMolecules"
 import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
+import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
+import LoggerUtil from "../../../utils/debugger/LoggerUtil"
+import { useRouter } from "next/router"
 
 const UrlSendContainer = styled.div<{ isActive: boolean }>`
   width: 100%;
@@ -20,17 +24,52 @@ export type Props = {
   changeYouTubeUrl: (event: ChangeEvent<HTMLInputElement>) => void
   sendYouTubeUrl: () => void
   isActive: boolean
+  nowVideoId: string
 }
+
+const youTubeList = []
 
 const UrlSendMolecules = ({
   youTubeUrl,
   changeYouTubeUrl,
   sendYouTubeUrl,
   isActive = true,
+  nowVideoId,
 }: Props) => {
+  const [youTubesList, setYouTubeList] = useState([])
+  const router = useRouter()
+  const { id } = router.query
+  const roomId = id as string
+
+  useEffect(() => {
+    FirebaseStoreUtil.youTubeList(roomId)
+      .orderBy("createdAt", "asc")
+      .onSnapshot((youTubes) => {
+        youTubes.docChanges().forEach((youTube) => {
+          if (youTube.type === "added") {
+            const youTubeData = youTube.doc.data()
+
+            youTubeList.push({
+              title: youTubeData.title,
+              image: youTubeData.image,
+              videoId: youTube.doc.id,
+            })
+            setYouTubeList([
+              ...youTubeList,
+              {
+                title: youTubeData.title,
+                image: youTubeData.image,
+                videoId: youTube.doc.id,
+              },
+            ])
+          }
+        })
+      })
+  }, [roomId])
+
   return (
     <UrlSendContainer isActive={isActive}>
-      <YouTubeListMolecules />
+      <YouTubeListMolecules youTubes={youTubeList} nowVideoId={nowVideoId} />
 
       <SendTextMolecules
         text={youTubeUrl}
