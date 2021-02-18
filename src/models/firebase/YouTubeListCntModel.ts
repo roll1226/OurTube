@@ -1,25 +1,25 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-export class JoinFlag {
+export class YouTubeListCntMode {
   constructor(
     readonly createdAt: firebase.firestore.FieldValue,
-    readonly uid: string
+    readonly cnt: number
   ) {}
 }
 
-export const joinFlagConverter = {
-  toFirestore(post: JoinFlag): firebase.firestore.DocumentData {
+export const youTubeListCntConverter = {
+  toFirestore(post: YouTubeListCntMode): firebase.firestore.DocumentData {
     return {
       createdAt: post.createdAt,
-      uid: post.uid,
+      cnt: post.cnt,
     }
   },
   fromFirestore(
     snapshot: firebase.firestore.QueryDocumentSnapshot,
     options: firebase.firestore.SnapshotOptions
-  ): JoinFlag {
+  ): YouTubeListCntMode {
     const data = snapshot.data(options)!
-    return new JoinFlag(data.createdAt, data.uid)
+    return new YouTubeListCntMode(data.createdAt, data.cnt)
   },
 }

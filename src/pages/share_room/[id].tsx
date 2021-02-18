@@ -13,6 +13,7 @@ import { LiveModel } from "../../models/firebase/LiveModel"
 import ControlsMolecules from "../../components/molecules/ControlsMolecules"
 import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAndSendUrlCardOrganisms"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
+import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -44,8 +45,8 @@ export type YouTubePlayer = {
 
 let isPlay: boolean | null = null
 let intervalCurrentTime
-const youTubeVideoNextNum = 0
-const youTubeVideoListNum = 0
+// const youTubeVideoNextNum = 0
+// const youTubeVideoListNum = 0
 
 let testBoolean = false
 
@@ -121,7 +122,7 @@ const ShareRoom = () => {
       .limit(1)
       .onSnapshot(
         async (users) => {
-          // if (users.metadata.hasPendingWrites) return
+          // if (!users.metadata.hasPendingWrites) return
           if (testBoolean) return (testBoolean = false)
           testBoolean = true
           users.docChanges().forEach(async (user) => {
@@ -152,22 +153,22 @@ const ShareRoom = () => {
                 }
               }
 
-              if (
-                isPlay !== null &&
-                changeUser.name === "selectYouTubeVideoBot"
-              ) {
-                // stopIntervalCurrentTime()
-                setListCnt(liveInfo.data().listCnt)
-                setCurrentTime(liveInfo.data().currentTime)
-                setIsPlayYouTube(liveInfo.data().play)
-                setPlayNow(liveInfo.data().playNow)
-                setVideoId(getStoreVideoId)
-                setTimeout(() => {
-                  // startIntervalCurrentTime()
-                  event.target.playVideo()
-                }, 300)
-                return
-              }
+              // if (
+              //   isPlay !== null &&
+              //   changeUser.name === "selectYouTubeVideoBot"
+              // ) {
+              //   // stopIntervalCurrentTime()
+              //   setListCnt(liveInfo.data().listCnt)
+              //   setCurrentTime(liveInfo.data().currentTime)
+              //   setIsPlayYouTube(liveInfo.data().play)
+              //   setPlayNow(liveInfo.data().playNow)
+              //   setVideoId(getStoreVideoId)
+              //   setTimeout(() => {
+              //     // startIntervalCurrentTime()
+              //     event.target.playVideo()
+              //   }, 300)
+              //   return
+              // }
 
               LoggerUtil.debug("おいかさい", liveInfo.data().playNow)
 
@@ -202,7 +203,6 @@ const ShareRoom = () => {
     isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
     // stopIntervalCurrentTime()
-    event.target.seekTo(liveInfo.currentTime)
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!liveInfo.play || !getStoreVideoId) return event.target.pauseVideo()
 
@@ -210,6 +210,7 @@ const ShareRoom = () => {
     setIsInitThumbnail(false)
     setCurrentTime(liveInfo.currentTime)
     setTimeout(() => {
+      event.target.seekTo(liveInfo.currentTime)
       event.target.playVideo()
       // startIntervalCurrentTime()
     }, 300)
@@ -406,26 +407,48 @@ const ShareRoom = () => {
   /**
    * set store video id
    */
-  const setStoreVideoId = () => {
+  const setStoreVideoId = async () => {
     const nextListCnt = listCnt + 1
     const resultVideoId = UrlParamsUtil.getVideoId(newVideoId)
     LoggerUtil.debug(nextListCnt, listCnt)
 
+    const youTubeData = await FetchYouTubeUtil.fetchVideo(resultVideoId)
+
+    if (youTubeData.status === 400) return
+
     if (listCnt === 0) {
-      FirebaseStoreUtil.setVideoId(roomId, resultVideoId, nextListCnt, "", true)
+      FirebaseStoreUtil.setVideoId(
+        roomId,
+        resultVideoId,
+        nextListCnt,
+        "",
+        youTubeData.title,
+        youTubeData.image,
+        true
+      )
       setNewVideoId("")
       return
     }
 
     if (listCnt === playNow) {
-      FirebaseStoreUtil.setVideoId(roomId, resultVideoId, nextListCnt, "", true)
+      FirebaseStoreUtil.setVideoId(
+        roomId,
+        resultVideoId,
+        nextListCnt,
+        "",
+        youTubeData.title,
+        youTubeData.image,
+        true
+      )
       setNewVideoId("")
     } else if (listCnt > playNow) {
       FirebaseStoreUtil.setVideoId(
         roomId,
         resultVideoId,
         nextListCnt,
-        "setYouTubePlayerBot"
+        "setYouTubePlayerBot",
+        youTubeData.title,
+        youTubeData.image
       )
       setNewVideoId("")
     } else {

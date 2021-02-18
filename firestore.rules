@@ -63,7 +63,6 @@ service cloud.firestore {
         incomingData().updatedAt is timestamp &&
         incomingData().updatedAt == request.time;
 
-
       match /changeUsers/{changeID} {
         allow read: if isAuthenticated();
 
@@ -102,6 +101,17 @@ service cloud.firestore {
           incomingData().uid == request.auth.uid &&
           incomingData().createdAt is timestamp &&
           incomingData().createdAt == request.time;
+      }
+
+      match /youTubeListCnt/{youTubeListCntID} {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().cnt is number &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
+
+        allow delete: if isAuthenticated();
       }
     }
   }

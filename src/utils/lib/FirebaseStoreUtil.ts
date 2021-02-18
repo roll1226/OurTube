@@ -1,14 +1,14 @@
 import firebase from "firebase/app"
 import { liveConverter } from "../../models/firebase/LiveModel"
-import { joinFlagConverter } from "../../models/firebase/JoinFlag"
+import { joinFlagConverter } from "../../models/firebase/JoinFlagModel"
 import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"
 import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
 import LoggerUtil from "../debugger/LoggerUtil"
-import FirebaseFunctionsUtil from "./FirebaseFunctions"
 import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
+import FetchYouTubeUtil from "./FetchYouTubeUtil"
 
 const fireStore = FirebaseInitUtil.fireStore()
 
@@ -132,6 +132,8 @@ class FirebaseStoreUtil {
     videoId: string,
     listCnt: number,
     name: string,
+    title: string,
+    image: string,
     play?: boolean
   ) {
     if (play) {
@@ -149,18 +151,16 @@ class FirebaseStoreUtil {
       })
     }
     await FirebaseStoreUtil.setChangeUser(liveUid, name)
-
-    const addYouTubeUrl = FirebaseFunctionsUtil.addYouTubeUrl()
-    await addYouTubeUrl({ roomId: liveUid, videoId })
+    await FirebaseStoreUtil.setYouTubeList(liveUid, videoId, title, image)
   }
 
-  public static async fixPlayCnt(roomId: string, playNow: number) {
-    await FirebaseStoreUtil.liveInfo(roomId).update({
-      playNow,
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
-    })
-    await FirebaseStoreUtil.setChangeUser(liveUid, "")
-  }
+  // public static async fixPlayCnt(roomId: string, playNow: number) {
+  //   await FirebaseStoreUtil.liveInfo(roomId).update({
+  //     playNow,
+  //     updatedAt: FirebaseStoreUtil.getTimeStamp(),
+  //   })
+  //   await FirebaseStoreUtil.setChangeUser(roomId, "")
+  // }
 
   /**
    * join flag
@@ -290,6 +290,25 @@ class FirebaseStoreUtil {
   }
 
   /**
+   * @param roomId
+   * @param videoId
+   * @param title
+   * @param image
+   */
+  public static async setYouTubeList(
+    roomId: string,
+    videoId: string,
+    title: string,
+    image: string
+  ) {
+    await FirebaseStoreUtil.youTubeList(roomId).doc(videoId).set({
+      title,
+      image,
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+  }
+
+  /**
    * get youTube title
    * @param roomId
    * @param videoId
@@ -301,16 +320,10 @@ class FirebaseStoreUtil {
 
     if (youTube.exists) return youTube.data().title
     else {
-      const getTitleFunc = FirebaseFunctionsUtil.getYouTubeTitle()
+      const youTubeData = await FetchYouTubeUtil.fetchVideo(videoId)
 
-      getTitleFunc({ videoId })
-        .then((res) => {
-          return res.data.youTubeTitle
-        })
-        .catch((e) => {
-          LoggerUtil.debug("get youTube title error log", e)
-          return ""
-        })
+      if (youTubeData.status === 200) return youTubeData.title
+      else return ""
     }
   }
 

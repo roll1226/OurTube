@@ -18,6 +18,7 @@ import {
 import { OurTubePath } from "../../consts/PathConsts"
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
+import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -46,6 +47,10 @@ const CreateRoomMolecules = () => {
   const createShareRoom = async () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
     const resultVideoId = UrlParamsUtil.getVideoId(videoUrl)
+    const youTubeVideo = await FetchYouTubeUtil.fetchVideo(resultVideoId)
+
+    LoggerUtil.debug(youTubeVideo.status)
+    if (youTubeVideo.status === 400) return
 
     const createRoomFunc = FirebaseFunctionsUtil.createRoomFunc()
 
@@ -55,8 +60,16 @@ const CreateRoomMolecules = () => {
       password,
       isPrivateRoom,
     })
-      .then((res) => {
+      .then(async (res) => {
         LoggerUtil.debug(res.data.text)
+        const roomId = res.data.roomId
+
+        await FirebaseStoreUtil.setYouTubeList(
+          roomId,
+          resultVideoId,
+          youTubeVideo.title,
+          youTubeVideo.image
+        )
 
         router.push(
           `${OurTubePath.SHARE_ROOM.replace("[id]", res.data.roomId)}`
