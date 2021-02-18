@@ -56,18 +56,14 @@ app.post("/api/creatRoom", (req, res) => {
 
         const roomId = liveRoom.id
 
-        await livesStore.doc(roomId).collection("changeUsers").doc("user").set({
-          changeCnt: 0,
+        await livesStore.doc(roomId).collection("changeUsers").add({
           name: "",
           createdAt: timeStamp,
-          updatedAt: timeStamp,
         })
 
-        await livesStore.doc(roomId).collection("joinFlag").doc("flag").set({
-          flagCnt: 0,
-          createdAt: timeStamp,
-          updatedAt: timeStamp,
-        })
+        // await livesStore.doc(roomId).collection("joinFlag").add({
+        //   createdAt: timeStamp,
+        // })
 
         await livesStore
           .doc(roomId)

@@ -4,8 +4,7 @@ import "firebase/firestore"
 export class JoinFlag {
   constructor(
     readonly createdAt: firebase.firestore.FieldValue,
-    readonly flagCnt: number,
-    readonly updatedAt: firebase.firestore.FieldValue
+    readonly uid: string
   ) {}
 }
 
@@ -13,8 +12,7 @@ export const joinFlagConverter = {
   toFirestore(post: JoinFlag): firebase.firestore.DocumentData {
     return {
       createdAt: post.createdAt,
-      flagCnt: post.flagCnt,
-      updatedAt: post.updatedAt,
+      uid: post.uid,
     }
   },
   fromFirestore(
@@ -22,6 +20,6 @@ export const joinFlagConverter = {
     options: firebase.firestore.SnapshotOptions
   ): JoinFlag {
     const data = snapshot.data(options)!
-    return new JoinFlag(data.createdAt, data.flagCnt, data.updatedAt)
+    return new JoinFlag(data.createdAt, data.uid)
   },
 }

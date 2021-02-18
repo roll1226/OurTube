@@ -86,6 +86,8 @@ const YouTubePlayerOrganisms = ({
           img={
             isInitThumbnail && videoId && !isPlay && currentTime === 0
               ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
+              : !videoId
+              ? "https://firebasestorage.googleapis.com/v0/b/our-tubes.appspot.com/o/not_video.jpg?alt=media&token=689d2cf6-59e9-4287-a05f-1fb3640dddd8"
               : ""
           }
         >

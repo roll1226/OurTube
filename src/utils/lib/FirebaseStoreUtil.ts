@@ -1,6 +1,6 @@
 import firebase from "firebase/app"
-import { liveConverter, LiveModel } from "../../models/firebase/LiveModel"
-import { joinFlagConverter, JoinFlag } from "../../models/firebase/JoinFlag"
+import { liveConverter } from "../../models/firebase/LiveModel"
+import { joinFlagConverter } from "../../models/firebase/JoinFlag"
 import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
@@ -8,10 +8,7 @@ import { chatConverter } from "../../models/firebase/ChatModel"
 import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
 import LoggerUtil from "../debugger/LoggerUtil"
 import FirebaseFunctionsUtil from "./FirebaseFunctions"
-import {
-  changeUserConverter,
-  ChangeUser,
-} from "../../models/firebase/ChangeUserModel"
+import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
 
 const fireStore = FirebaseInitUtil.fireStore()
 
@@ -22,9 +19,7 @@ class FirebaseStoreUtil {
    * @param liveUid
    * @return live info
    */
-  public static liveInfo(
-    liveUid: string
-  ): firebase.firestore.DocumentReference<LiveModel> {
+  public static liveInfo(liveUid: string) {
     return fireStore
       .collection("lives")
       .withConverter(liveConverter)
@@ -49,7 +44,7 @@ class FirebaseStoreUtil {
       await FirebaseStoreUtil.liveInfo(liveUid).update({
         play,
         currentTime,
-        playNow,
+        playNow: FirebaseStoreUtil.setCount(1),
         updatedAt: FirebaseStoreUtil.getTimeStamp(),
       })
     } else {
@@ -87,10 +82,9 @@ class FirebaseStoreUtil {
    * @param name
    */
   public static async setChangeUser(liveUid: string, name: string) {
-    await FirebaseStoreUtil.changeUser(liveUid).update({
+    await FirebaseStoreUtil.changeUser(liveUid).add({
       name,
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
-      changeCnt: FirebaseStoreUtil.setCount(1),
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
     })
   }
 
@@ -98,15 +92,12 @@ class FirebaseStoreUtil {
    * change user
    * @param liveUid
    */
-  public static changeUser(
-    liveUid: string
-  ): firebase.firestore.DocumentReference<ChangeUser> {
+  public static changeUser(liveUid: string) {
     return fireStore
       .collection("lives")
       .doc(liveUid)
-      .collection("changeUsers")
       .withConverter(changeUserConverter)
-      .doc("user")
+      .collection("changeUsers")
   }
 
   /**
@@ -118,10 +109,10 @@ class FirebaseStoreUtil {
   public static async setPlayNow(
     liveUid: string,
     currentTime: number,
-    playNow: number
+    nextCnt: number
   ) {
     await FirebaseStoreUtil.liveInfo(liveUid).update({
-      playNow,
+      playNow: nextCnt,
       currentTime,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
@@ -163,29 +154,34 @@ class FirebaseStoreUtil {
     await addYouTubeUrl({ roomId: liveUid, videoId })
   }
 
+  public static async fixPlayCnt(roomId: string, playNow: number) {
+    await FirebaseStoreUtil.liveInfo(roomId).update({
+      playNow,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+    await FirebaseStoreUtil.setChangeUser(liveUid, "")
+  }
+
   /**
    * join flag
    * @param liveUid
    */
-  public static joinFlag(
-    liveUid: string
-  ): firebase.firestore.DocumentReference<JoinFlag> {
+  public static joinFlag(liveUid: string) {
     return fireStore
       .collection("lives")
       .doc(liveUid)
-      .collection("joinFlag")
       .withConverter(joinFlagConverter)
-      .doc("flag")
+      .collection("joinFlag")
   }
 
   /**
    * set join flag
-   * @param liveUid
+   * @param roomId
    */
-  public static async setJoinFlag(liveUid: string) {
-    await FirebaseStoreUtil.joinFlag(liveUid).update({
-      flagCnt: FirebaseStoreUtil.setCount(1),
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+  public static async setJoinFlag(roomId: string, userId: string) {
+    await FirebaseStoreUtil.joinFlag(roomId).add({
+      uid: userId,
+      createdAt: FirebaseStoreUtil.getTimeStamp(),
     })
   }
 
