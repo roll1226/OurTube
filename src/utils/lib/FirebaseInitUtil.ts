@@ -2,6 +2,7 @@ import firebase from "firebase/app"
 import "firebase/firestore"
 import "firebase/auth"
 import "firebase/functions"
+import "firebase/database"
 import { env } from "../../env/DotEnv"
 
 const isEmulator = () => {
@@ -16,6 +17,7 @@ if (!firebase.apps.length) {
     firebase.auth().useEmulator("http://localhost:9099")
     firebase.functions().useEmulator("localhost", 5001)
     firebase.firestore().useEmulator("localhost", 8080)
+    firebase.database().useEmulator("localhost", 9000)
   }
 } else {
   firebase.app()
@@ -41,6 +43,13 @@ class FirebaseInitUtil {
    */
   public static firebaseFunctions() {
     return firebase.functions()
+  }
+
+  /**
+   * firebase realtime database
+   */
+  public static firebaseDatabase() {
+    return firebase.database()
   }
 
   /**

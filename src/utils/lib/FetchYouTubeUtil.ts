@@ -10,7 +10,7 @@ class FetchYouTubeUtil {
     if (json.items[0]) {
       return {
         title: json.items[0].snippet.title,
-        image: json.items[0].snippet.thumbnails.standard.url,
+        image: json.items[0].snippet.thumbnails.default.url,
         status: 200,
       }
     } else {

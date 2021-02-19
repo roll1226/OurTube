@@ -9,6 +9,9 @@ import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
 import LoggerUtil from "../debugger/LoggerUtil"
 import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
 import FetchYouTubeUtil from "./FetchYouTubeUtil"
+import { youTubeListCntConverter } from "../../models/firebase/YouTubeListCntModel"
+import FirebaseFunctionsUtil from "./FirebaseFunctions"
+import FirebaseDatabaseUtil from "./FirebaseDatabaseUtil"
 
 const fireStore = FirebaseInitUtil.fireStore()
 
@@ -154,14 +157,6 @@ class FirebaseStoreUtil {
     await FirebaseStoreUtil.setYouTubeList(liveUid, videoId, title, image)
   }
 
-  // public static async fixPlayCnt(roomId: string, playNow: number) {
-  //   await FirebaseStoreUtil.liveInfo(roomId).update({
-  //     playNow,
-  //     updatedAt: FirebaseStoreUtil.getTimeStamp(),
-  //   })
-  //   await FirebaseStoreUtil.setChangeUser(roomId, "")
-  // }
-
   /**
    * join flag
    * @param liveUid
@@ -290,6 +285,7 @@ class FirebaseStoreUtil {
   }
 
   /**
+   * set youTube list
    * @param roomId
    * @param videoId
    * @param title
@@ -340,6 +336,73 @@ class FirebaseStoreUtil {
       currentTime: 0,
     })
     await FirebaseStoreUtil.setChangeUser(roomId, "selectYouTubeVideoBot")
+  }
+
+  /**
+   * sign in state from room
+   * @param roomId
+   * @param userId
+   */
+  public static signInState(roomId: string) {
+    return fireStore.collection("lives").doc(roomId).collection("status")
+  }
+
+  /**
+   * set room sign in state
+   * @param roomId
+   * @param userId
+   */
+  public static setRoomSignInState(roomId: string, userId: string) {
+    const userStatusFireStoreRef = fireStore.doc(
+      `/lives/${roomId}/status/${userId}`
+    )
+    const userStatusDatabaseRef = FirebaseDatabaseUtil.signInState(
+      roomId,
+      userId
+    )
+
+    const isOfflineForDatabase = {
+      state: "offline",
+      lastChanged: firebase.database.ServerValue.TIMESTAMP,
+    }
+
+    const isOnlineForDatabase = {
+      state: "online",
+      lastChanged: firebase.database.ServerValue.TIMESTAMP,
+    }
+
+    const isOfflineForFireStore = {
+      state: "offline",
+      lastChanged: FirebaseStoreUtil.getTimeStamp(),
+    }
+
+    const isOnlineForFireStore = {
+      state: "online",
+      lastChanged: FirebaseStoreUtil.getTimeStamp(),
+    }
+
+    FirebaseDatabaseUtil.connectedDB().on("value", (snapshot) => {
+      if (snapshot.val() == false) {
+        userStatusFireStoreRef.set(isOfflineForFireStore)
+        return
+      }
+
+      userStatusDatabaseRef
+        .onDisconnect()
+        .set(isOfflineForDatabase)
+        .then(() => {
+          userStatusDatabaseRef.set(isOnlineForDatabase)
+          userStatusFireStoreRef.set(isOnlineForFireStore)
+        })
+    })
+  }
+
+  public static youTubeListCnt(roomId: string) {
+    return fireStore
+      .collection("lives")
+      .doc(roomId)
+      .collection("youTubeListCnt")
+      .withConverter(youTubeListCntConverter)
   }
 }
 

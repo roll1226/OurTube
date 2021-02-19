@@ -43,7 +43,7 @@ service cloud.firestore {
         incomingData().password is string &&
         incomingData().privateRoom is bool &&
         incomingData().play is bool &&
-        incomingData().play == true &&
+        incomingData().play == false &&
         incomingData().playNow is number &&
         incomingData().playNow == 0 &&
         incomingData().videoId is list &&
@@ -77,6 +77,7 @@ service cloud.firestore {
 
         allow create: if isAuthenticated() &&
           incomingData().uid is string &&
+          incomingData().uid == request.auth.uid &&
           incomingData().createdAt is timestamp &&
           incomingData().createdAt == request.time;
       }
@@ -103,15 +104,16 @@ service cloud.firestore {
           incomingData().createdAt == request.time;
       }
 
-      match /youTubeListCnt/{youTubeListCntID} {
-        allow read: if isAuthenticated();
+      match /status/{userID} {
+        allow read: isAuthenticated();
 
-        allow create: if isAuthenticated() &&
-          incomingData().cnt is number &&
-          incomingData().createdAt is timestamp &&
-          incomingData().createdAt == request.time;
+        allow update: isUserAuthenticated(userID) &&
+          incomingData().state is string &&
+          incomingData().matches('online|offline')
+          incomingData().lastChanged is timestamp &&
+          incomingData().lastChanged == request.time;
 
-        allow delete: if isAuthenticated();
+        allow delete: isUserAuthenticated(userID);
       }
     }
   }

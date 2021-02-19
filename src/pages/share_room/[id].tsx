@@ -14,6 +14,7 @@ import ControlsMolecules from "../../components/molecules/ControlsMolecules"
 import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAndSendUrlCardOrganisms"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
+import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -48,12 +49,18 @@ let intervalCurrentTime
 // const youTubeVideoNextNum = 0
 // const youTubeVideoListNum = 0
 
-let testBoolean = false
-
 const ShareRoom = () => {
   const router = useRouter()
   const { id } = router.query
   const roomId = id as string
+
+  const authUser = useFirebaseAuthentication()
+
+  useEffect(() => {
+    if (!authUser) return
+    FirebaseStoreUtil.setRoomSignInState(roomId, authUser.uid)
+    FirebaseStoreUtil.setJoinFlag(roomId, authUser.uid)
+  }, [authUser, roomId])
 
   /**
    * use state
@@ -71,13 +78,14 @@ const ShareRoom = () => {
   const [playNow, setPlayNow] = useState(0)
   const [videoId, setVideoId] = useState("")
   const [newVideoId, setNewVideoId] = useState("")
+  const [signInId, setSignInId] = useState("")
 
   /**
    * get current user
    */
   const getCurrentUser = () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
-    return user.uid
+    return user ? user.uid : ""
   }
 
   /**
@@ -105,7 +113,7 @@ const ShareRoom = () => {
 
               FirebaseStoreUtil.setLiveCurrentTime(
                 roomId,
-                event.target.getCurrentTime(),
+                event.target.getCurrentTime() + 2,
                 `${flag.doc.data().uid}SetJoinRoomUser`,
                 joinFlagYouTubePlayer
               )
@@ -122,9 +130,6 @@ const ShareRoom = () => {
       .limit(1)
       .onSnapshot(
         async (users) => {
-          // if (!users.metadata.hasPendingWrites) return
-          if (testBoolean) return (testBoolean = false)
-          testBoolean = true
           users.docChanges().forEach(async (user) => {
             if (user.type === "added") {
               stopIntervalCurrentTime()
@@ -133,6 +138,19 @@ const ShareRoom = () => {
               const playNow = liveInfo.data().playNow
               const getStoreVideoId = liveInfo.data().videoId[playNow]
               const uid = getCurrentUser()
+              setSignInId(uid)
+
+              // if (isPlay !== null && changeUser.name === uid) {
+              //   if (liveInfo.data().play) {
+              //     // setTimeout(() => {
+              //     await event.target.playVideo()
+              //     startIntervalCurrentTime()
+              //     // }, 300)
+              //     return
+              //   } else {
+              //     event.target.pauseVideo()
+              //   }
+              // }
 
               if (
                 isPlay !== null &&
@@ -179,14 +197,11 @@ const ShareRoom = () => {
               changeVideoStatus(liveInfo.data(), event, getStoreVideoId)
             }
           })
-          testBoolean = false
         },
         (error) => {
           LoggerUtil.debug(`error log: ${error}`)
         }
       )
-    const uid = getCurrentUser()
-    FirebaseStoreUtil.setJoinFlag(roomId, uid)
   }
 
   /**
@@ -202,6 +217,7 @@ const ShareRoom = () => {
     isPlay === null ? setCurrentTime(0) : setCurrentTime(liveInfo.currentTime)
     isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
+    event.target.seekTo(liveInfo.currentTime)
     // stopIntervalCurrentTime()
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!liveInfo.play || !getStoreVideoId) return event.target.pauseVideo()
@@ -210,10 +226,8 @@ const ShareRoom = () => {
     setIsInitThumbnail(false)
     setCurrentTime(liveInfo.currentTime)
     setTimeout(() => {
-      event.target.seekTo(liveInfo.currentTime)
       event.target.playVideo()
-      // startIntervalCurrentTime()
-    }, 300)
+    }, 350)
   }
 
   /**
@@ -265,13 +279,23 @@ const ShareRoom = () => {
       case YouTube.PlayerState.ENDED: {
         setIsInitThumbnail(true)
         setIsPlayYouTube(false)
+        stopIntervalCurrentTime()
         setCurrentTime(0)
         event.target.seekTo(0)
+        event.target.pauseVideo()
 
-        if (testBoolean) return
+        const signInUser = await FirebaseStoreUtil.signInState(roomId)
+          .orderBy("lastChanged", "desc")
+          .where("state", "==", "online")
+          .limit(1)
+          .get()
+
+        if (signInUser.docs[0].id !== signInId) return
+        LoggerUtil.debug("hobdhobho")
 
         const nextCnt = playNow + 1
         if (listCnt === nextCnt) {
+          setVideoId("")
           await FirebaseStoreUtil.setLivePlay(roomId, false, "", 0, nextCnt)
         } else if (listCnt > nextCnt) {
           await FirebaseStoreUtil.setPlayNow(roomId, 0, nextCnt)
@@ -297,9 +321,9 @@ const ShareRoom = () => {
     // await youTubeEvent.target.playVideo()
     // await youTubeEvent.target.seekTo(currentTime)
 
-    const uid = getCurrentUser()
+    // const uid = getCurrentUser()
 
-    FirebaseStoreUtil.setLivePlay(roomId, true, uid, currentTime)
+    FirebaseStoreUtil.setLivePlay(roomId, true, signInId, currentTime)
     // startIntervalCurrentTime()
   }
 
@@ -312,8 +336,8 @@ const ShareRoom = () => {
     setIsPlayYouTube(false)
     await youTubeEvent.target.pauseVideo()
     const nowCurrentTime = youTubeEvent.target.getCurrentTime()
-    const uid = getCurrentUser()
-    FirebaseStoreUtil.setLivePlay(roomId, false, uid, nowCurrentTime)
+    // const uid = getCurrentUser()
+    FirebaseStoreUtil.setLivePlay(roomId, false, signInId, nowCurrentTime)
     setCurrentTime(nowCurrentTime)
     // stopIntervalCurrentTime()
   }
@@ -333,11 +357,11 @@ const ShareRoom = () => {
     setCurrentTime(rangeCurrentTime)
     youTubeEvent.target.seekTo(rangeCurrentTime)
     const isPlayNow = youTubeEvent.target.getPlayerState()
-    const uid = getCurrentUser()
+    // const uid = getCurrentUser()
     FirebaseStoreUtil.setLiveCurrentTime(
       roomId,
       rangeCurrentTime,
-      uid,
+      signInId,
       isPlayNow === 1 ? true : false
     )
     if (!isPlayYouTube) return
