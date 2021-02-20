@@ -1,5 +1,5 @@
 import firebase from "firebase/app"
-import { liveConverter } from "../../models/firebase/LiveModel"
+import { roomConverter } from "../../models/firebase/RoomModel"
 import { joinFlagConverter } from "../../models/firebase/JoinFlagModel"
 import FirebaseInitUtil from "./FirebaseInitUtil"
 import { UserConverter } from "../../models/firebase/UsersModel"
@@ -9,8 +9,6 @@ import { youTubeListConverter } from "../../models/firebase/YouTubeLiveModel"
 import LoggerUtil from "../debugger/LoggerUtil"
 import { changeUserConverter } from "../../models/firebase/ChangeUserModel"
 import FetchYouTubeUtil from "./FetchYouTubeUtil"
-import { youTubeListCntConverter } from "../../models/firebase/YouTubeListCntModel"
-import FirebaseFunctionsUtil from "./FirebaseFunctions"
 import FirebaseDatabaseUtil from "./FirebaseDatabaseUtil"
 import { statusConverter } from "../../models/firebase/StatusModel"
 
@@ -20,73 +18,73 @@ class FirebaseStoreUtil {
   /**
    * live info
    *
-   * @param liveUid
+   * @param roomId
    * @return live info
    */
-  public static liveInfo(liveUid: string) {
+  public static room(roomId: string) {
     return fireStore
-      .collection("lives")
-      .withConverter(liveConverter)
-      .doc(liveUid)
+      .collection("rooms")
+      .withConverter(roomConverter)
+      .doc(roomId)
   }
 
   /**
    * set live play
-   * @param liveUid
+   * @param roomId
    * @param play
    * @param name
    * @param currentTime
    */
   public static async setLivePlay(
-    liveUid: string,
+    roomId: string,
     play: boolean,
     name: string,
     currentTime: number,
     playNow?: number
   ) {
     if (playNow) {
-      await FirebaseStoreUtil.liveInfo(liveUid).update({
+      await FirebaseStoreUtil.room(roomId).update({
         play,
         currentTime,
         playNow: FirebaseStoreUtil.setCount(1),
         updatedAt: FirebaseStoreUtil.getTimeStamp(),
       })
     } else {
-      await FirebaseStoreUtil.liveInfo(liveUid).update({
+      await FirebaseStoreUtil.room(roomId).update({
         play,
         currentTime,
         updatedAt: FirebaseStoreUtil.getTimeStamp(),
       })
     }
-    await FirebaseStoreUtil.setChangeUser(liveUid, name)
+    await FirebaseStoreUtil.setChangeUser(roomId, name)
   }
 
   /**
    * set live current time
-   * @param liveUid
+   * @param roomId
    * @param currentTime
    */
   public static async setLiveCurrentTime(
-    liveUid: string,
+    roomId: string,
     currentTime: number,
     name: string,
     play: boolean
   ) {
-    await FirebaseStoreUtil.liveInfo(liveUid).update({
+    await FirebaseStoreUtil.room(roomId).update({
       currentTime,
       play,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
-    await FirebaseStoreUtil.setChangeUser(liveUid, name)
+    await FirebaseStoreUtil.setChangeUser(roomId, name)
   }
 
   /**
    * set change user
-   * @param liveUid
+   * @param roomId
    * @param name
    */
-  public static async setChangeUser(liveUid: string, name: string) {
-    await FirebaseStoreUtil.changeUser(liveUid).add({
+  public static async setChangeUser(roomId: string, name: string) {
+    await FirebaseStoreUtil.changeUser(roomId).add({
       name,
       createdAt: FirebaseStoreUtil.getTimeStamp(),
     })
@@ -94,45 +92,45 @@ class FirebaseStoreUtil {
 
   /**
    * change user
-   * @param liveUid
+   * @param roomId
    */
-  public static changeUser(liveUid: string) {
+  public static changeUser(roomId: string) {
     return fireStore
-      .collection("lives")
-      .doc(liveUid)
+      .collection("rooms")
+      .doc(roomId)
       .withConverter(changeUserConverter)
       .collection("changeUsers")
   }
 
   /**
    * set play now
-   * @param liveUid
+   * @param roomId
    * @param currentTime
    * @param playNow
    */
   public static async setPlayNow(
-    liveUid: string,
+    roomId: string,
     currentTime: number,
     nextCnt: number
   ) {
-    await FirebaseStoreUtil.liveInfo(liveUid).update({
+    await FirebaseStoreUtil.room(roomId).update({
       playNow: nextCnt,
       currentTime,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
-    await FirebaseStoreUtil.setChangeUser(liveUid, "")
+    await FirebaseStoreUtil.setChangeUser(roomId, "")
   }
 
   /**
    * set video id
-   * @param liveUid
+   * @param roomId
    * @param videoId
    * @param listCnt
    * @param name
    * @param play
    */
   public static async setVideoId(
-    liveUid: string,
+    roomId: string,
     videoId: string,
     listCnt: number,
     name: string,
@@ -141,31 +139,31 @@ class FirebaseStoreUtil {
     play?: boolean
   ) {
     if (play) {
-      await FirebaseStoreUtil.liveInfo(liveUid).update({
+      await FirebaseStoreUtil.room(roomId).update({
         listCnt,
         videoId: FirebaseStoreUtil.setArrayValue(videoId),
         updatedAt: FirebaseStoreUtil.getTimeStamp(),
         play,
       })
     } else {
-      await FirebaseStoreUtil.liveInfo(liveUid).update({
+      await FirebaseStoreUtil.room(roomId).update({
         listCnt,
         videoId: FirebaseStoreUtil.setArrayValue(videoId),
         updatedAt: FirebaseStoreUtil.getTimeStamp(),
       })
     }
-    await FirebaseStoreUtil.setChangeUser(liveUid, name)
-    await FirebaseStoreUtil.setYouTubeList(liveUid, videoId, title, image)
+    await FirebaseStoreUtil.setChangeUser(roomId, name)
+    await FirebaseStoreUtil.setYouTubeList(roomId, videoId, title, image)
   }
 
   /**
    * join flag
-   * @param liveUid
+   * @param roomId
    */
-  public static joinFlag(liveUid: string) {
+  public static joinFlag(roomId: string) {
     return fireStore
-      .collection("lives")
-      .doc(liveUid)
+      .collection("rooms")
+      .doc(roomId)
       .withConverter(joinFlagConverter)
       .collection("joinFlag")
   }
@@ -255,7 +253,7 @@ class FirebaseStoreUtil {
    */
   public static chat(roomId: string) {
     return fireStore
-      .collection("lives")
+      .collection("rooms")
       .doc(roomId)
       .collection("chat")
       .withConverter(chatConverter)
@@ -287,7 +285,7 @@ class FirebaseStoreUtil {
    */
   public static youTubeList(roomId: string) {
     return fireStore
-      .collection("lives")
+      .collection("rooms")
       .doc(roomId)
       .collection("youTubeList")
       .withConverter(youTubeListConverter)
@@ -338,7 +336,7 @@ class FirebaseStoreUtil {
    * @param playNow
    */
   public static async selectYouTubeVideo(roomId: string, playNow: number) {
-    await FirebaseStoreUtil.liveInfo(roomId).update({
+    await FirebaseStoreUtil.room(roomId).update({
       playNow,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
       play: true,
@@ -354,7 +352,7 @@ class FirebaseStoreUtil {
    */
   public static signInState(roomId: string) {
     return fireStore
-      .collection("lives")
+      .collection("rooms")
       .doc(roomId)
       .collection("status")
       .withConverter(statusConverter)
@@ -367,7 +365,7 @@ class FirebaseStoreUtil {
    */
   public static setRoomSignInState(roomId: string, userId: string) {
     const userStatusFireStoreRef = fireStore.doc(
-      `/lives/${roomId}/status/${userId}`
+      `/rooms/${roomId}/status/${userId}`
     )
     const userStatusDatabaseRef = FirebaseDatabaseUtil.signInState(
       roomId,

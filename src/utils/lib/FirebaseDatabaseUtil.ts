@@ -9,7 +9,7 @@ class FirebaseDatabaseUtil {
    * @param userId
    */
   public static signInState(roomId: string, userId: string) {
-    return database.ref(`/lives/${roomId}/status/${userId}`)
+    return database.ref(`/rooms/${roomId}/status/${userId}`)
   }
 
   public static connectedDB() {

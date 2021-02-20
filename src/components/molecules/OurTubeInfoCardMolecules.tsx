@@ -33,6 +33,20 @@ const moveTime = (width: number) => {
     return 16
   } else if (601 <= width && width <= 800) {
     return 20
+  } else if (801 <= width && width <= 1000) {
+    return 24
+  } else if (1001 <= width && width <= 1200) {
+    return 28
+  } else if (1201 <= width && width <= 1400) {
+    return 32
+  } else if (1401 <= width && width <= 1600) {
+    return 36
+  } else if (1601 <= width && width <= 1800) {
+    return 40
+  } else if (1801 <= width && width <= 2000) {
+    return 44
+  } else {
+    return 48
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "rules": {
     ".write": false,
-    "lives": {
+    "rooms": {
       "$roomID": {
         "status": {
           "$userID": {

@@ -37,7 +37,7 @@ service cloud.firestore {
         incomingData().updatedAt == request.time;
     }
 
-    match /lives/{roomID} {
+    match /rooms/{roomID} {
       allow read: if isAuthenticated();
 
       allow create: if isAuthenticated() &&

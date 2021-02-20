@@ -12,7 +12,6 @@ import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCardMolecules"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
-import LoggerUtil from "../../utils/debugger/LoggerUtil"
 
 const RoomCardWrap = styled.div`
   padding: 8px;
@@ -44,7 +43,7 @@ const JoinedRoomOrganisms = () => {
 
       for (let index = 0; index < joinedRoomsList.length; index++) {
         const roomId = joinedRoomsList[index]
-        const room = await FirebaseStoreUtil.liveInfo(roomId).get()
+        const room = await FirebaseStoreUtil.room(roomId).get()
         const roomData = {
           id: roomId,
           roomName: room.data().roomName,

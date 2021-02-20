@@ -9,7 +9,7 @@ import YouTubePlayerOrganisms from "../../components/organisms/YouTubePlayerOrga
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
-import { LiveModel } from "../../models/firebase/LiveModel"
+import { RoomModel } from "../../models/firebase/RoomModel"
 import ControlsMolecules from "../../components/molecules/ControlsMolecules"
 import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAndSendUrlCardOrganisms"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
@@ -17,6 +17,7 @@ import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
+import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -136,7 +137,7 @@ const ShareRoom = () => {
             if (user.type === "added") {
               stopIntervalCurrentTime()
               const changeUser = user.doc.data()
-              const liveInfo = await FirebaseStoreUtil.liveInfo(roomId).get()
+              const liveInfo = await FirebaseStoreUtil.room(roomId).get()
               const playNow = liveInfo.data().playNow
               const getStoreVideoId = liveInfo.data().videoId[playNow]
               const uid = getCurrentUser()
@@ -177,7 +178,7 @@ const ShareRoom = () => {
    * @param liveInfo
    */
   const changeVideoStatus = async (
-    liveInfo: LiveModel,
+    liveInfo: RoomModel,
     event: YouTubePlayer,
     getStoreVideoId: string | undefined
   ) => {
@@ -506,6 +507,8 @@ const ShareRoom = () => {
         changeVolume={(range) => changeVolume(range)}
         videoId={videoId}
       />
+
+      <SearchYouTubeModalOrganisms />
     </ShareRoomContainer>
   )
 }

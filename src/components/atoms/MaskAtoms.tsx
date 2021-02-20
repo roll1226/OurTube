@@ -3,7 +3,7 @@ import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import ColorUtil from "../../utils/color/ColorUtil"
 
-const Mask = styled.div<{ isOpen: boolean }>`
+const MaskContainer = styled.div<{ isOpen: boolean }>`
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -23,6 +23,16 @@ const Mask = styled.div<{ isOpen: boolean }>`
     `}
 `
 
+const Mask = styled.div`
+  position: absolute;
+  z-index: 31;
+  width: 100vw;
+  height: 100vh;
+  background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.2)};
+  top: 0;
+  left: 0;
+`
+
 export type Props = {
   children: ReactNode
   isOpen: boolean
@@ -31,9 +41,10 @@ export type Props = {
 
 const MaskAtoms = ({ children, isOpen = false, onClick }: Props) => {
   return (
-    <Mask onClick={onClick} isOpen={isOpen}>
+    <MaskContainer isOpen={isOpen}>
+      <Mask onClick={onClick} />
       {children}
-    </Mask>
+    </MaskContainer>
   )
 }
 

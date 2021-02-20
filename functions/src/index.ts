@@ -23,7 +23,7 @@ app.post("/api/creatRoom", async (req, res) => {
     const password = req.body.data.password
     const isPrivateRoom = req.body.data.isPrivateRoom
 
-    const livesStore = fireStore.collection("lives")
+    const livesStore = fireStore.collection("rooms")
 
     const liveRoom = await livesStore.add({
       currentTime: 0,
@@ -75,12 +75,12 @@ app.post("/api/creatRoom", async (req, res) => {
 // ルームにいるユーザのSignIn状態を監視
 exports.onUserStatusChanged = functions
   .region("asia-northeast1")
-  .database.ref("/lives/{roomId}/status/{uid}")
+  .database.ref("/rooms/{roomId}/status/{uid}")
   .onUpdate(async (change, context) => {
     const eventStatus = change.after.val()
 
     const userStatusFireStoreRef = fireStore
-      .collection("lives")
+      .collection("rooms")
       .doc(context.params.roomId)
       .collection("status")
       .doc(context.params.uid)

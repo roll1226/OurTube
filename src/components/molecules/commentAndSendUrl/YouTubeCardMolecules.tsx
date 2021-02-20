@@ -38,18 +38,6 @@ const YouTubeCardContainer = styled.div<{ isNowVideo: boolean }>`
     `}
 `
 
-// const YouTubeContainer = styled.div`
-//   width: 132px;
-//   height: 69.56px;
-// `
-
-// const YouTubeImage = styled.img`
-//   width: 132px;
-//   height: 69.56px;
-//   object-fit: cover;
-//   border-radius: 8px;
-// `
-
 export type Props = {
   title: string
   image: string

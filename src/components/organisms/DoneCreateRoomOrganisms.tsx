@@ -12,6 +12,12 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import LinkCopyButtonMolecules from "../molecules/LinkCopyButtonMolecules"
 import { useRouter } from "next/router"
+import styled from "styled-components"
+
+const DoneCreateRoomCard = styled.div`
+  position: relative;
+  z-index: 33;
+`
 
 export type Props = {
   roomId: string
@@ -28,34 +34,38 @@ const DoneCreateRoomOrganisms = ({ roomId, isOpen }: Props) => {
   return (
     <>
       <MaskAtoms isOpen={isOpen}>
-        <CardAtoms width={480}>
-          <GeneralText fontSize={GeneralFontSize.SIZE_36}>作成完了</GeneralText>
-          <GeneralSpacer vertical={20} />
+        <DoneCreateRoomCard>
+          <CardAtoms width={480}>
+            <GeneralText fontSize={GeneralFontSize.SIZE_36}>
+              作成完了
+            </GeneralText>
+            <GeneralSpacer vertical={20} />
 
-          <IconAtoms
-            style={{ width: 120, color: GeneralColorStyle.DarkGreen }}
-            icon={faCheckCircle}
-          />
+            <IconAtoms
+              style={{ width: 120, color: GeneralColorStyle.DarkGreen }}
+              icon={faCheckCircle}
+            />
 
-          <GeneralSpacer vertical={36} />
+            <GeneralSpacer vertical={36} />
 
-          <ButtonAtoms
-            bgColor={GeneralColorStyle.ThinGreen}
-            text={"ルームに移動"}
-            fontColor={GeneralColorStyle.White}
-            icon={
-              <IconAtoms
-                style={{ width: 28, color: GeneralColorStyle.White }}
-                icon={faCouch}
-              />
-            }
-            onClick={joinRoom}
-          />
+            <ButtonAtoms
+              bgColor={GeneralColorStyle.ThinGreen}
+              text={"ルームに移動"}
+              fontColor={GeneralColorStyle.White}
+              icon={
+                <IconAtoms
+                  style={{ width: 28, color: GeneralColorStyle.White }}
+                  icon={faCouch}
+                />
+              }
+              onClick={joinRoom}
+            />
 
-          <GeneralSpacer vertical={8} />
+            <GeneralSpacer vertical={8} />
 
-          <LinkCopyButtonMolecules roomId={roomId} />
-        </CardAtoms>
+            <LinkCopyButtonMolecules roomId={roomId} />
+          </CardAtoms>
+        </DoneCreateRoomCard>
       </MaskAtoms>
     </>
   )

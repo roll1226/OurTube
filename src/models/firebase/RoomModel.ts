@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-export class LiveModel {
+export class RoomModel {
   constructor(
     readonly videoId: Array<string>,
     readonly playNow: number,
@@ -17,8 +17,8 @@ export class LiveModel {
   ) {}
 }
 
-export const liveConverter = {
-  toFirestore(post: LiveModel): firebase.firestore.DocumentData {
+export const roomConverter = {
+  toFirestore(post: RoomModel): firebase.firestore.DocumentData {
     return {
       videoId: post.videoId,
       playNow: post.playNow,
@@ -36,9 +36,9 @@ export const liveConverter = {
   fromFirestore(
     snapshot: firebase.firestore.QueryDocumentSnapshot,
     options: firebase.firestore.SnapshotOptions
-  ): LiveModel {
+  ): RoomModel {
     const data = snapshot.data(options)!
-    return new LiveModel(
+    return new RoomModel(
       data.videoId,
       data.playNow,
       data.privateRoom,

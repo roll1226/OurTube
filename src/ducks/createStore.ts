@@ -5,12 +5,14 @@ import counterSlice, { initialState as counterState } from "./test/slice"
 import toastSlice, { initialState as toastState } from "./toast/slice"
 import loaderSlice, { initialState as LoaderState } from "./loader/slice"
 import modalSlice, { initialState as ModalState } from "./modal/slice"
+import searchSlice, { initialState as SearchState } from "./search/slice"
 
 const rootReducer = combineReducers({
   counter: counterSlice.reducer,
   toast: toastSlice.reducer,
   loader: loaderSlice.reducer,
   modal: modalSlice.reducer,
+  search: searchSlice.reducer,
 })
 
 const preloadedState = () => {
@@ -19,6 +21,7 @@ const preloadedState = () => {
     toast: toastState,
     loader: LoaderState,
     modal: ModalState,
+    search: SearchState,
   }
 }
 
