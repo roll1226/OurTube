@@ -9,6 +9,7 @@ import ColorUtil from "../../../utils/color/ColorUtil"
 import { ItemShadow } from "../../../styles/shadow/GeneralShadowStyle"
 import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
+import YouTubeThumbnailAtoms from "../../atoms/YouTubeThumbnailAtoms"
 
 const YouTubeCardContainer = styled.div<{ isNowVideo: boolean }>`
   margin: 4px 0;
@@ -37,17 +38,17 @@ const YouTubeCardContainer = styled.div<{ isNowVideo: boolean }>`
     `}
 `
 
-const YouTubeContainer = styled.div`
-  width: 132px;
-  height: 69.56px;
-`
+// const YouTubeContainer = styled.div`
+//   width: 132px;
+//   height: 69.56px;
+// `
 
-const YouTubeImage = styled.img`
-  width: 132px;
-  height: 69.56px;
-  object-fit: cover;
-  border-radius: 8px;
-`
+// const YouTubeImage = styled.img`
+//   width: 132px;
+//   height: 69.56px;
+//   object-fit: cover;
+//   border-radius: 8px;
+// `
 
 export type Props = {
   title: string
@@ -58,7 +59,7 @@ export type Props = {
   stopIntervalCurrentTime: () => void
 }
 
-const YouTubeCardAtoms = ({
+const YouTubeCardMolecules = ({
   title,
   image,
   videoId,
@@ -92,9 +93,12 @@ const YouTubeCardAtoms = ({
         onClick={selectYouTubeVide}
       >
         <GeneralSpacer horizontal={8} />
-        <YouTubeContainer>
-          <YouTubeImage src={image} alt={title} />
-        </YouTubeContainer>
+        <YouTubeThumbnailAtoms
+          src={image}
+          alt={title}
+          width={132}
+          height={69.56}
+        />
 
         <GeneralSpacer horizontal={8} />
 
@@ -110,4 +114,4 @@ const YouTubeCardAtoms = ({
   )
 }
 
-export default YouTubeCardAtoms
+export default YouTubeCardMolecules

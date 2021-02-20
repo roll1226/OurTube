@@ -15,9 +15,10 @@ const timestamp = admin.firestore.FieldValue.serverTimestamp()
 const app: express.Express = express()
 app.use(cors())
 
+// ルーム作成
 app.post("/api/creatRoom", async (req, res) => {
   try {
-    const videoId = req.body.data.videoId
+    const roomName = req.body.data.roomName
     const uid = req.body.data.uid
     const password = req.body.data.password
     const isPrivateRoom = req.body.data.isPrivateRoom
@@ -27,12 +28,13 @@ app.post("/api/creatRoom", async (req, res) => {
     const liveRoom = await livesStore.add({
       currentTime: 0,
       hostId: uid,
-      listCnt: 1,
-      password: isPrivateRoom ? password : "",
+      listCnt: 0,
+      password: isPrivateRoom && password ? password : "",
       privateRoom: isPrivateRoom,
       play: false,
       playNow: 0,
-      videoId: [videoId],
+      videoId: [],
+      roomName,
       createdAt: timestamp,
       updatedAt: timestamp,
     })
@@ -63,31 +65,7 @@ app.post("/api/creatRoom", async (req, res) => {
   }
 })
 
-// app.post("/api/deleteYouTubeListCnt", async (req, res) => {
-//   const roomId = req.body.data.roomId
-
-//   setTimeout(async () => {
-//     const youTubeListCnt = fireStore
-//       .collection("lives")
-//       .doc(roomId)
-//       .collection("youTubeListCnt")
-
-//     const deleteDoc = await youTubeListCnt.get()
-
-//     deleteDoc.forEach(async (doc) => {
-//       await youTubeListCnt.doc(doc.id).delete()
-//     })
-
-//     res.status(200)
-//     res.json({
-//       result: {
-//         text: "delete youTubeListCnt",
-//         status: 200,
-//       },
-//     })
-//   }, 1000)
-// })
-
+// ルームにいるユーザのSignIn状態を監視
 exports.onUserStatusChanged = functions
   .region("asia-northeast1")
   .database.ref("/lives/{roomId}/status/{uid}")
@@ -111,25 +89,5 @@ exports.onUserStatusChanged = functions
 
     return userStatusFireStoreRef.set(eventStatus)
   })
-
-// export const onCreate = functions.firestore
-//   .document("/lives/{roomId}/youTubeListCnt/{youTubeListCntId}")
-//   .onCreate(async (snapshot, context) => {
-//     // do anything
-//     console.log(`user ${context.params.roomId} created.`)
-
-//     const youTubeListCnt = fireStore
-//       .collection("lives")
-//       .doc(context.params.roomId)
-//       .collection("youTubeListCnt")
-
-//     const deleteDoc = await youTubeListCnt.get()
-
-//     setTimeout(() => {
-//       deleteDoc.forEach(async (doc) => {
-//         doc.exists && youTubeListCnt.doc(doc.id).delete()
-//       })
-//     }, 3000)
-//   })
 
 export const apiService = functions.https.onRequest(app)

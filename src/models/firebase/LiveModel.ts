@@ -11,6 +11,7 @@ export class LiveModel {
     readonly hostId: string,
     readonly currentTime: number,
     readonly listCnt: number,
+    readonly roomName: string,
     readonly createdAt: firebase.firestore.FieldValue,
     readonly updatedAt: firebase.firestore.FieldValue
   ) {}
@@ -27,6 +28,7 @@ export const liveConverter = {
       hostId: post.hostId,
       currentTime: post.currentTime,
       listCnt: post.listCnt,
+      roomName: post.roomName,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     }
@@ -45,6 +47,7 @@ export const liveConverter = {
       data.hostId,
       data.currentTime,
       data.listCnt,
+      data.roomName,
       data.createdAt,
       data.updatedAt
     )

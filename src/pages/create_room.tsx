@@ -3,6 +3,8 @@ import styled, { keyframes } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
 import CreateRoomMolecules from "../components/molecules/CreateRoomMolecules"
 import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
+import JoinedRoomMolecules from "../components/molecules/JoinedRoomMolecules"
+import { GeneralSpacer } from "../styles/spacer/GeneralSpacerStyle"
 
 const CreateRoomContainer = styled.div`
   width: 100vw;
@@ -32,11 +34,13 @@ const CreateRoom = () => {
         url={"/"}
         top={false}
       />
-
       <AccountHeadMolecules />
-
       <CreateRoomCard>
         <CreateRoomMolecules />
+      </CreateRoomCard>
+      <GeneralSpacer horizontal={64} />
+      <CreateRoomCard>
+        <JoinedRoomMolecules />
       </CreateRoomCard>
     </CreateRoomContainer>
   )

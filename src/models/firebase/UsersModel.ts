@@ -4,6 +4,7 @@ import "firebase/firestore"
 export class UserModel {
   constructor(
     readonly name: string,
+    readonly joinedRooms: Array<string>,
     readonly createdAt: firebase.firestore.FieldValue,
     readonly updatedAt: firebase.firestore.FieldValue
   ) {}
@@ -13,6 +14,7 @@ export const UserConverter = {
   toFirestore(post: UserModel): firebase.firestore.DocumentData {
     return {
       name: post.name,
+      joinedRooms: post.joinedRooms,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     }
@@ -22,6 +24,11 @@ export const UserConverter = {
     options: firebase.firestore.SnapshotOptions
   ): UserModel {
     const data = snapshot.data(options)!
-    return new UserModel(data.name, data.createdAt, data.updatedAt)
+    return new UserModel(
+      data.name,
+      data.joinedRooms,
+      data.createdAt,
+      data.updatedAt
+    )
   },
 }

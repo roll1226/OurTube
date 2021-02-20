@@ -6,9 +6,7 @@ import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import CheckboxAtoms from "../atoms/CheckboxAtoms"
 import styled from "styled-components"
-import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
-import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import { useRouter } from "next/router"
 import {
   GeneralFontSize,
@@ -18,7 +16,6 @@ import {
 import { OurTubePath } from "../../consts/PathConsts"
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
-import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -28,12 +25,12 @@ const PasswordWrap = styled.div`
 
 const CreateRoomMolecules = () => {
   const router = useRouter()
-  const [videoUrl, setVideoUrl] = useState("")
+  const [roomName, setRoomName] = useState("")
   const [password, setPassword] = useState("")
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
 
-  const insertVideoId = (event: ChangeEvent<HTMLInputElement>) => {
-    setVideoUrl(event.target.value)
+  const insertRoomName = (event: ChangeEvent<HTMLInputElement>) => {
+    setRoomName(event.target.value)
   }
 
   const insertPassword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,16 +43,11 @@ const CreateRoomMolecules = () => {
 
   const createShareRoom = async () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
-    const resultVideoId = UrlParamsUtil.getVideoId(videoUrl)
-    const youTubeVideo = await FetchYouTubeUtil.fetchVideo(resultVideoId)
-
-    LoggerUtil.debug(youTubeVideo.status)
-    if (youTubeVideo.status === 400) return
 
     const createRoomFunc = FirebaseFunctionsUtil.createRoomFunc()
 
     await createRoomFunc({
-      videoId: resultVideoId,
+      roomName,
       uid: user.uid,
       password,
       isPrivateRoom,
@@ -64,16 +56,7 @@ const CreateRoomMolecules = () => {
         LoggerUtil.debug(res.data.text)
         const roomId = res.data.roomId
 
-        await FirebaseStoreUtil.setYouTubeList(
-          roomId,
-          resultVideoId,
-          youTubeVideo.title,
-          youTubeVideo.image
-        )
-
-        router.push(
-          `${OurTubePath.SHARE_ROOM.replace("[id]", res.data.roomId)}`
-        )
+        router.push(`${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`)
       })
       .catch((error) => {
         LoggerUtil.debug(error)
@@ -82,7 +65,7 @@ const CreateRoomMolecules = () => {
 
   return (
     <>
-      <CardAtoms width={500} height={500}>
+      <CardAtoms width={440} height={480}>
         <GeneralText
           fontSize={GeneralFontSize.SIZE_36}
           fontColor={GeneralColorStyle.DarkGreen}
@@ -95,10 +78,12 @@ const CreateRoomMolecules = () => {
 
         <InputAtoms
           width={360}
-          placeholder={"初回の動画URL"}
+          placeholder={"ルーム名(50文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
-          value={videoUrl}
-          onChange={insertVideoId}
+          value={roomName}
+          onChange={insertRoomName}
+          isError={roomName.length > 50}
+          errorText={"ルーム名は50文字以内です。"}
         />
 
         <GeneralSpacer vertical={32} />
@@ -129,7 +114,7 @@ const CreateRoomMolecules = () => {
           text={"ルームを作成する"}
           fontColor={GeneralColorStyle.White}
           onClick={createShareRoom}
-          disabled={videoUrl ? false : true}
+          disabled={!roomName || roomName.length > 50 ? true : false}
         />
       </CardAtoms>
     </>

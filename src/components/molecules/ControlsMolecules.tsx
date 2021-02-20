@@ -166,7 +166,7 @@ const ControlsMolecules = ({
     }
 
     getTitle()
-  }, [videoId])
+  }, [videoId, roomId])
 
   return (
     <ControlsContainer>

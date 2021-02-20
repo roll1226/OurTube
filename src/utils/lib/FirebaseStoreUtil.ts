@@ -12,6 +12,7 @@ import FetchYouTubeUtil from "./FetchYouTubeUtil"
 import { youTubeListCntConverter } from "../../models/firebase/YouTubeListCntModel"
 import FirebaseFunctionsUtil from "./FirebaseFunctions"
 import FirebaseDatabaseUtil from "./FirebaseDatabaseUtil"
+import { statusConverter } from "../../models/firebase/StatusModel"
 
 const fireStore = FirebaseInitUtil.fireStore()
 
@@ -234,10 +235,18 @@ class FirebaseStoreUtil {
 
     await FirebaseStoreUtil.users(user.uid).set({
       name,
+      joinedRooms: [],
       createdAt: FirebaseStoreUtil.getTimeStamp(),
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
     await user.updateProfile({ displayName: name })
+  }
+
+  public static async setUserJoinedRoom(roomId: string, userId: string) {
+    await FirebaseStoreUtil.users(userId).update({
+      joinedRooms: FirebaseStoreUtil.setArrayValue(roomId),
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
   }
 
   /**
@@ -344,7 +353,11 @@ class FirebaseStoreUtil {
    * @param userId
    */
   public static signInState(roomId: string) {
-    return fireStore.collection("lives").doc(roomId).collection("status")
+    return fireStore
+      .collection("lives")
+      .doc(roomId)
+      .collection("status")
+      .withConverter(statusConverter)
   }
 
   /**
@@ -397,12 +410,13 @@ class FirebaseStoreUtil {
     })
   }
 
-  public static youTubeListCnt(roomId: string) {
-    return fireStore
-      .collection("lives")
-      .doc(roomId)
-      .collection("youTubeListCnt")
-      .withConverter(youTubeListCntConverter)
+  public static async getSignInUserState(roomId: string) {
+    const signInUserState = await FirebaseStoreUtil.signInState(roomId)
+      .where("state", "==", "online")
+      .limit(1)
+      .get()
+
+    return signInUserState.docs[0].id
   }
 }
 

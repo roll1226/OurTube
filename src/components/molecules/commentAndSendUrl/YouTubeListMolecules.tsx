@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
-import YouTubeCardAtoms from "../../atoms/commentAndSendUrl/YouTubeCardAtoms"
+import YouTubeCardMolecules from "./YouTubeCardMolecules"
 
 const YouTubeListContainer = styled.div`
   margin: 16px 24px;
@@ -37,7 +37,7 @@ const YouTubeListMolecules = ({
   return (
     <YouTubeListContainer>
       {youTubes.map((youTube, index) => (
-        <YouTubeCardAtoms
+        <YouTubeCardMolecules
           key={index}
           videoNumber={index}
           title={youTube.title}

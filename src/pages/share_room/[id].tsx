@@ -15,6 +15,8 @@ import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAn
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
+import { useDispatch } from "react-redux"
+import toastSlice from "../../ducks/toast/slice"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -44,10 +46,7 @@ export type YouTubePlayer = {
   data: number
 }
 
-let isPlay: boolean | null = null
 let intervalCurrentTime
-// const youTubeVideoNextNum = 0
-// const youTubeVideoListNum = 0
 
 const ShareRoom = () => {
   const router = useRouter()
@@ -56,10 +55,13 @@ const ShareRoom = () => {
 
   const authUser = useFirebaseAuthentication()
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
     if (!authUser) return
     FirebaseStoreUtil.setRoomSignInState(roomId, authUser.uid)
     FirebaseStoreUtil.setJoinFlag(roomId, authUser.uid)
+    FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
   }, [authUser, roomId])
 
   /**
@@ -104,7 +106,7 @@ const ShareRoom = () => {
       .onSnapshot(
         async (flags) => {
           flags.docChanges().forEach(async (flag) => {
-            if (isPlay === null) return
+            // if (isPlay === null) return
 
             if (flag.type === "added") {
               let joinFlagYouTubePlayer = false
@@ -140,55 +142,21 @@ const ShareRoom = () => {
               const uid = getCurrentUser()
               setSignInId(uid)
 
-              // if (isPlay !== null && changeUser.name === uid) {
-              //   if (liveInfo.data().play) {
-              //     // setTimeout(() => {
-              //     await event.target.playVideo()
-              //     startIntervalCurrentTime()
-              //     // }, 300)
-              //     return
-              //   } else {
-              //     event.target.pauseVideo()
-              //   }
-              // }
-
               if (
-                isPlay !== null &&
                 changeUser.name.includes("SetJoinRoomUser") &&
                 changeUser.name !== `${uid}SetJoinRoomUser`
               )
                 return startIntervalCurrentTime()
 
-              if (
-                isPlay !== null &&
-                changeUser.name === "setYouTubePlayerBot"
-              ) {
-                if (isPlay && liveInfo.data().play) {
-                  // startIntervalCurrentTime()
+              if (changeUser.name === "setYouTubePlayerBot") {
+                if (liveInfo.data().play) {
                   event.target.playVideo()
                   setListCnt(liveInfo.data().listCnt)
                   return
                 }
               }
 
-              // if (
-              //   isPlay !== null &&
-              //   changeUser.name === "selectYouTubeVideoBot"
-              // ) {
-              //   // stopIntervalCurrentTime()
-              //   setListCnt(liveInfo.data().listCnt)
-              //   setCurrentTime(liveInfo.data().currentTime)
-              //   setIsPlayYouTube(liveInfo.data().play)
-              //   setPlayNow(liveInfo.data().playNow)
-              //   setVideoId(getStoreVideoId)
-              //   setTimeout(() => {
-              //     // startIntervalCurrentTime()
-              //     event.target.playVideo()
-              //   }, 300)
-              //   return
-              // }
-
-              LoggerUtil.debug("おいかさい", liveInfo.data().playNow)
+              LoggerUtil.debug("now play number", liveInfo.data().playNow)
 
               setListCnt(liveInfo.data().listCnt)
               setPlayNow(liveInfo.data().playNow)
@@ -214,20 +182,19 @@ const ShareRoom = () => {
     getStoreVideoId: string | undefined
   ) => {
     if (!event) return
-    isPlay === null ? setCurrentTime(0) : setCurrentTime(liveInfo.currentTime)
-    isPlay = liveInfo.play
+    // isPlay = liveInfo.play
     setIsPlayYouTube(liveInfo.play)
-    event.target.seekTo(liveInfo.currentTime)
     // stopIntervalCurrentTime()
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!liveInfo.play || !getStoreVideoId) return event.target.pauseVideo()
 
     setIsAnotherUser(true)
     setIsInitThumbnail(false)
+    // setTimeout(() => {
+    await event.target.playVideo()
+    await event.target.seekTo(liveInfo.currentTime)
     setCurrentTime(liveInfo.currentTime)
-    setTimeout(() => {
-      event.target.playVideo()
-    }, 350)
+    // }, 350)
   }
 
   /**
@@ -284,13 +251,11 @@ const ShareRoom = () => {
         event.target.seekTo(0)
         event.target.pauseVideo()
 
-        const signInUser = await FirebaseStoreUtil.signInState(roomId)
-          .orderBy("lastChanged", "desc")
-          .where("state", "==", "online")
-          .limit(1)
-          .get()
+        const signInUserState = await FirebaseStoreUtil.getSignInUserState(
+          roomId
+        )
 
-        if (signInUser.docs[0].id !== signInId) return
+        if (signInUserState !== signInId) return
         LoggerUtil.debug("hobdhobho")
 
         const nextCnt = playNow + 1
@@ -318,13 +283,7 @@ const ShareRoom = () => {
 
     setIsPlayYouTube(true)
     setIsInitThumbnail(false)
-    // await youTubeEvent.target.playVideo()
-    // await youTubeEvent.target.seekTo(currentTime)
-
-    // const uid = getCurrentUser()
-
     FirebaseStoreUtil.setLivePlay(roomId, true, signInId, currentTime)
-    // startIntervalCurrentTime()
   }
 
   /**
@@ -336,10 +295,8 @@ const ShareRoom = () => {
     setIsPlayYouTube(false)
     await youTubeEvent.target.pauseVideo()
     const nowCurrentTime = youTubeEvent.target.getCurrentTime()
-    // const uid = getCurrentUser()
     FirebaseStoreUtil.setLivePlay(roomId, false, signInId, nowCurrentTime)
     setCurrentTime(nowCurrentTime)
-    // stopIntervalCurrentTime()
   }
 
   /**
@@ -357,7 +314,7 @@ const ShareRoom = () => {
     setCurrentTime(rangeCurrentTime)
     youTubeEvent.target.seekTo(rangeCurrentTime)
     const isPlayNow = youTubeEvent.target.getPlayerState()
-    // const uid = getCurrentUser()
+
     FirebaseStoreUtil.setLiveCurrentTime(
       roomId,
       rangeCurrentTime,
@@ -465,6 +422,7 @@ const ShareRoom = () => {
         true
       )
       setNewVideoId("")
+      sendToast("動画を追加しました", "success")
     } else if (listCnt > playNow) {
       FirebaseStoreUtil.setVideoId(
         roomId,
@@ -475,9 +433,25 @@ const ShareRoom = () => {
         youTubeData.image
       )
       setNewVideoId("")
+      sendToast("動画を追加しました", "success")
     } else {
       LoggerUtil.debug("error")
+      sendToast("追加に失敗しました", "error")
     }
+  }
+
+  /**
+   * send toast
+   * @param text
+   * @param toastColor
+   */
+  const sendToast = (text: string, toastColor: "success" | "error") => {
+    dispatch(toastSlice.actions.setIsActive(true))
+    dispatch(toastSlice.actions.setText(text))
+    dispatch(toastSlice.actions.setToastColor(toastColor))
+    setTimeout(() => {
+      dispatch(toastSlice.actions.setIsActive(false))
+    }, 2000)
   }
 
   return (

@@ -37,7 +37,7 @@ const CommentsListMolecules = ({ comments }: Props) => {
         block: "end",
       })
     }
-  })
+  }, [comments])
 
   return (
     <CommentsListContainer>

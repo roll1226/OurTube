@@ -18,14 +18,21 @@ service cloud.firestore {
     }
 
     match /users/{userID} {
-      allow read: if isAuthenticated();
+      allow read: if isUserAuthenticated(userID);
 
       allow create: if isUserAuthenticated(userID) &&
         incomingData().name is string &&
         incomingData().name.size() > 0 &&
         incomingData().name.size() <= 20 &&
+        incomingData().joinedRooms is list &&
+        joinedRooms().joinedRooms.size() == 0 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
+
+      allow update: if isUserAuthenticated(userID) &&
+        incomingData().joinedRooms is list &&
         incomingData().updatedAt is timestamp &&
         incomingData().updatedAt == request.time;
     }
@@ -47,7 +54,10 @@ service cloud.firestore {
         incomingData().playNow is number &&
         incomingData().playNow == 0 &&
         incomingData().videoId is list &&
-        incomingData().videoId.size() == 1 &&
+        incomingData().videoId.size() == 0 &&
+        incomingData().roomName is string &&
+        incomingData().roomName.size() > 0 &&
+        incomingData().roomName.size() <= 50 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
@@ -109,7 +119,7 @@ service cloud.firestore {
 
         allow update: isUserAuthenticated(userID) &&
           incomingData().state is string &&
-          incomingData().matches('online|offline')
+          incomingData().matches('online|offline') &&
           incomingData().lastChanged is timestamp &&
           incomingData().lastChanged == request.time;
 
