@@ -16,6 +16,9 @@ import {
 import { OurTubePath } from "../../consts/PathConsts"
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
+import { useDispatch } from "react-redux"
+import toastSlice from "../../ducks/toast/slice"
+import modalSlice from "../../ducks/modal/slice"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -23,7 +26,8 @@ const PasswordWrap = styled.div`
   align-items: flex-start;
 `
 
-const CreateRoomMolecules = () => {
+const CreateRoomOrganisms = () => {
+  const dispatch = useDispatch()
   const router = useRouter()
   const [roomName, setRoomName] = useState("")
   const [password, setPassword] = useState("")
@@ -41,6 +45,28 @@ const CreateRoomMolecules = () => {
     setIsPrivateRoom((check) => !check)
   }
 
+  /**
+   * send toast
+   * @param text
+   * @param toastColor
+   */
+  const sendToast = (
+    text: string,
+    toastColor: "success" | "error",
+    roomId?: string
+  ) => {
+    dispatch(toastSlice.actions.setIsActive(true))
+    dispatch(toastSlice.actions.setText(text))
+    dispatch(toastSlice.actions.setToastColor(toastColor))
+    if (roomId) {
+      dispatch(modalSlice.actions.setRoomId(roomId))
+      dispatch(modalSlice.actions.setIsActive(true))
+    }
+    setTimeout(() => {
+      dispatch(toastSlice.actions.setIsActive(false))
+    }, 2000)
+  }
+
   const createShareRoom = async () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
 
@@ -56,9 +82,10 @@ const CreateRoomMolecules = () => {
         LoggerUtil.debug(res.data.text)
         const roomId = res.data.roomId
 
-        router.push(`${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`)
+        sendToast("ルームが作成されました", "success", roomId)
       })
       .catch((error) => {
+        sendToast("作成に失敗しました", "error")
         LoggerUtil.debug(error)
       })
   }
@@ -121,4 +148,4 @@ const CreateRoomMolecules = () => {
   )
 }
 
-export default CreateRoomMolecules
+export default CreateRoomOrganisms

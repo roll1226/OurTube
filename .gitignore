@@ -32,6 +32,7 @@ yarn-error.log*
 # dotenv environment variables file
 .env
 
+database-debug.log
 firestore-debug.log
 firebase-debug.log
 ui-debug.log

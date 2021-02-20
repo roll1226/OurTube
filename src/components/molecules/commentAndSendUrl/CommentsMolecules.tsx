@@ -65,6 +65,7 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
       sendUser.displayName,
       comment
     )
+    setComment("")
   }
 
   return (

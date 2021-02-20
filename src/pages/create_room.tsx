@@ -1,10 +1,12 @@
 import HeadAtoms from "../components/atoms/HeadAtoms"
 import styled, { keyframes } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
-import CreateRoomMolecules from "../components/molecules/CreateRoomMolecules"
+import CreateRoomOrganisms from "../components/organisms/CreateRoomOrganisms"
 import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
-import JoinedRoomMolecules from "../components/molecules/JoinedRoomMolecules"
+import JoinedRoomOrganisms from "../components/organisms/JoinedRoomOrganisms"
 import { GeneralSpacer } from "../styles/spacer/GeneralSpacerStyle"
+import DoneCreateRoomOrganisms from "../components/organisms/DoneCreateRoomOrganisms"
+import { useModalState } from "../ducks/modal/selectors"
 
 const CreateRoomContainer = styled.div`
   width: 100vw;
@@ -25,6 +27,8 @@ const CreateRoomCard = styled.div`
 `
 
 const CreateRoom = () => {
+  const modalState = useModalState().modal
+
   return (
     <CreateRoomContainer>
       <HeadAtoms
@@ -36,12 +40,19 @@ const CreateRoom = () => {
       />
       <AccountHeadMolecules />
       <CreateRoomCard>
-        <CreateRoomMolecules />
+        <CreateRoomOrganisms />
       </CreateRoomCard>
       <GeneralSpacer horizontal={64} />
       <CreateRoomCard>
-        <JoinedRoomMolecules />
+        <JoinedRoomOrganisms />
       </CreateRoomCard>
+
+      {modalState.roomId && (
+        <DoneCreateRoomOrganisms
+          roomId={modalState.roomId}
+          isOpen={modalState.isOpen}
+        />
+      )}
     </CreateRoomContainer>
   )
 }

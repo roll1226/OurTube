@@ -9,7 +9,7 @@ import {
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
-import YouTubeClickActionCardMolecules from "./YouTubeClickActionCardMolecules"
+import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCardMolecules"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
@@ -30,7 +30,7 @@ const RoomCardWrap = styled.div`
   }
 `
 
-const JoinedRoomMolecules = () => {
+const JoinedRoomOrganisms = () => {
   const authUser = useFirebaseAuthentication()
   const [joinedRooms, setJoinedRooms] = useState([])
 
@@ -89,4 +89,4 @@ const JoinedRoomMolecules = () => {
   )
 }
 
-export default JoinedRoomMolecules
+export default JoinedRoomOrganisms

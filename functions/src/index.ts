@@ -46,6 +46,13 @@ app.post("/api/creatRoom", async (req, res) => {
       createdAt: timestamp,
     })
 
+    await fireStore
+      .collection("users")
+      .doc(uid)
+      .update({
+        joinedRooms: admin.firestore.FieldValue.arrayUnion(roomId),
+      })
+
     res.status(200)
     res.json({
       result: {
