@@ -13,7 +13,7 @@ service cloud.firestore {
       return request.resource.data;
     }
 
-    function exitingQuestions(roomID) {
+    function exitingRooms(roomID) {
       return exists(/databases/$(database)/documents/rooms/$(roomID));
     }
 
@@ -64,7 +64,7 @@ service cloud.firestore {
         incomingData().updatedAt == request.time;
 
       allow update: if isAuthenticated() &&
-        exitingQuestions(roomID) &&
+        exitingRooms(roomID) &&
         incomingData().currentTime is number &&
         incomingData().listCnt is number &&
         incomingData().play is bool &&
