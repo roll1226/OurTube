@@ -4,6 +4,7 @@ import { ModalState } from "./type"
 export const initialState: ModalState = {
   roomId: "",
   isOpen: false,
+  loading: false,
 }
 
 const modalSlice = createSlice({
@@ -13,10 +14,15 @@ const modalSlice = createSlice({
     setRoomId: (state, action: PayloadAction<string>) => ({
       ...state,
       roomId: action.payload,
+      loading: false,
     }),
     setIsActive: (state, action: PayloadAction<boolean>) => ({
       ...state,
       isOpen: action.payload,
+    }),
+    setLoading: (state, action: PayloadAction<boolean>) => ({
+      ...state,
+      loading: action.payload,
     }),
   },
 })

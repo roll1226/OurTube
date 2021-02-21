@@ -1,17 +1,12 @@
 import CardAtoms from "../atoms/CardAtoms"
 import MaskAtoms from "../atoms/MaskAtoms"
-import ButtonAtoms from "../atoms/ButtonAtoms"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
-import IconAtoms from "../atoms/IconAtoms"
 import { faCopy } from "@fortawesome/free-solid-svg-icons"
-import { faCheckCircle } from "@fortawesome/free-regular-svg-icons"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import {
   GeneralFontSize,
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
-import LinkCopyButtonMolecules from "../molecules/LinkCopyButtonMolecules"
-import { useRouter } from "next/router"
 import SendTextMolecules from "../molecules/commentAndSendUrl/SendTextMolecules"
 import { useState, ChangeEvent } from "react"
 import { useDispatch } from "react-redux"

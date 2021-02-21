@@ -35,7 +35,7 @@ const LinkCopyButtonMolecules = ({ roomId }: Props) => {
 
   return (
     <CopyToClipboard
-      text={`${originUrl}/${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`}
+      text={`${originUrl}${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`}
       onCopy={copyLink}
     >
       <ButtonAtoms

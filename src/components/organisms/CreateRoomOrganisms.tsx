@@ -72,6 +72,8 @@ const CreateRoomOrganisms = () => {
 
     const createRoomFunc = FirebaseFunctionsUtil.createRoomFunc()
 
+    dispatch(modalSlice.actions.setLoading(true))
+
     await createRoomFunc({
       roomName,
       uid: user.uid,
@@ -88,6 +90,8 @@ const CreateRoomOrganisms = () => {
         sendToast("作成に失敗しました", "error")
         LoggerUtil.debug(error)
       })
+
+    dispatch(modalSlice.actions.setLoading(false))
   }
 
   return (

@@ -10,7 +10,6 @@ const MaskContainer = styled.div<{ isOpen: boolean }>`
   top: 0;
   left: 0;
   z-index: 30;
-  background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.2)};
 
   display: flex;
   justify-content: center;
@@ -21,6 +20,11 @@ const MaskContainer = styled.div<{ isOpen: boolean }>`
     css`
       display: none;
     `}
+`
+
+const ChildrenWrap = styled.div`
+  position: relative;
+  z-index: 33;
 `
 
 const Mask = styled.div`
@@ -43,7 +47,7 @@ const MaskAtoms = ({ children, isOpen = false, onClick }: Props) => {
   return (
     <MaskContainer isOpen={isOpen}>
       <Mask onClick={onClick} />
-      {children}
+      <ChildrenWrap>{children}</ChildrenWrap>
     </MaskContainer>
   )
 }

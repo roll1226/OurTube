@@ -11,6 +11,8 @@ import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import firebase from "firebase/app"
 import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
+import LoaderAnimationAtoms from "../../components/atoms/load/LoaderAnimationAtoms"
+import MaskAtoms from "../../components/atoms/MaskAtoms"
 
 const Test = styled.div`
   display: flex;
@@ -27,13 +29,19 @@ const TestYouTube = () => {
   const roomId = id as string
   const authUser = useFirebaseAuthentication()
 
-  useEffect(() => {
-    const test = async () => {
-      const result = await FetchYouTubeUtil.searchYouTubeVide("HIKAKIN")
-    }
-  }, [])
+  // useEffect(() => {
+  //   const test = async () => {
+  //     const result = await FetchYouTubeUtil.searchYouTubeVide("HIKAKIN")
+  //   }
+  // }, [])
 
-  return <Test></Test>
+  return (
+    <Test>
+      <MaskAtoms isOpen={true}>
+        <LoaderAnimationAtoms />
+      </MaskAtoms>
+    </Test>
+  )
 }
 
 export default TestYouTube
