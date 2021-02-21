@@ -30,7 +30,7 @@ app.post("/api/creatRoom", async (req, res) => {
       hostId: uid,
       listCnt: 0,
       password: isPrivateRoom && password ? password : "",
-      privateRoom: isPrivateRoom,
+      privateRoom: password ? isPrivateRoom : false,
       play: false,
       playNow: 0,
       videoId: [],

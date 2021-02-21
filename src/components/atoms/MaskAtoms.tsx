@@ -32,7 +32,7 @@ const Mask = styled.div`
   z-index: 31;
   width: 100vw;
   height: 100vh;
-  background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.2)};
+  background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.4)};
   top: 0;
   left: 0;
 `

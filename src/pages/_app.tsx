@@ -12,6 +12,8 @@ import CircleAtoms from "../components/atoms/CircleAtoms"
 import { OurTubePath } from "../consts/PathConsts"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
 import ToastCardMolecules from "../components/molecules/ToastCardMolecules"
+import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
+import { useModalState } from "../ducks/modal/selectors"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -48,30 +50,34 @@ const AppBackground = () => {
 
   const [nowPathname, setNowPathname] = useState("/")
 
-  // useEffect(() => {
-  //   firebaseAuth.onAuthStateChanged(async (user) => {
-  //     const pathname = router.pathname
+  useEffect(() => {
+    return firebaseAuth.onAuthStateChanged(async (user) => {
+      const pathname = router.pathname
 
-  //     if (!user) {
-  //       if (
-  //         pathname !== OurTubePath.TOP &&
-  //         pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-  //         pathname !== OurTubePath.CREATE_GUEST &&
-  //         pathname !== OurTubePath.ERROR
-  //       ) {
-  //         router.replace("/")
-  //         LoggerUtil.debug(router)
-  //       }
-  //     } else {
-  //       //   dispatch(authSlice.actions.settUser(user.isAnonymous))
-  //       const userName = await FirebaseStoreUtil.checkUserName(user.uid)
+      if (!user) {
+        if (
+          pathname !== OurTubePath.TOP &&
+          pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+          pathname !== OurTubePath.CREATE_GUEST &&
+          pathname !== OurTubePath.ERROR &&
+          pathname !== OurTubePath.SHARE_ROOM
+        ) {
+          router.replace("/")
+          LoggerUtil.debug(router)
+        }
+      } else {
+        const userName = await FirebaseStoreUtil.checkUserName(user.uid)
 
-  //       if (pathname === OurTubePath.SHARE_ROOM) return
-  //       if (userName) router.push(OurTubePath.CREATE_ROOM)
-  //       else router.push(OurTubePath.CREATE_ACCOUNT)
-  //     }
-  //   })
-  // }, [])
+        if (pathname === OurTubePath.SHARE_ROOM) return
+        if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
+        if (pathname === OurTubePath.CREATE_GUEST) return
+        if (pathname === OurTubePath.ERROR) return
+
+        if (userName) router.push(OurTubePath.CREATE_ROOM)
+        else router.push(OurTubePath.CREATE_ACCOUNT)
+      }
+    })
+  }, [])
 
   useEffect(() => {
     const pathname = router.pathname
@@ -97,6 +103,18 @@ const AppBackground = () => {
   )
 }
 
+const GlobalLoader = () => {
+  const modalState = useModalState().modal
+
+  return (
+    <>
+      {modalState.loading && (
+        <LoaderAnimationMaskMolecules isOpen={modalState.loading} />
+      )}
+    </>
+  )
+}
+
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Provider store={createStore()}>
@@ -108,6 +126,8 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       </ComponentContainer>
 
       <ToastCardMolecules />
+
+      <GlobalLoader />
     </Provider>
   )
 }

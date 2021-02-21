@@ -34,10 +34,10 @@ const InsertAccountNameMolecules = ({
           fontColor={GeneralColorStyle.DarkGreen}
           fontWeight={GeneralFontWeight.BOLD}
         >
-          アカウント作成
+          アカウント名を入力
         </GeneralText>
 
-        <GeneralSpacer vertical={24} />
+        <GeneralSpacer vertical={32} />
 
         <InputAtoms
           width={360}
@@ -49,7 +49,7 @@ const InsertAccountNameMolecules = ({
           errorText={"ユーザ名は20文字以内です。"}
         />
 
-        <GeneralSpacer vertical={24} />
+        <GeneralSpacer vertical={8} />
 
         <ButtonAtoms
           bgColor={GeneralColorStyle.DarkGreen}

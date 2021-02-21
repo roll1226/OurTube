@@ -7,7 +7,6 @@ import JoinedRoomOrganisms from "../components/organisms/JoinedRoomOrganisms"
 import { GeneralSpacer } from "../styles/spacer/GeneralSpacerStyle"
 import DoneCreateRoomOrganisms from "../components/organisms/DoneCreateRoomOrganisms"
 import { useModalState } from "../ducks/modal/selectors"
-import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
 
 const CreateRoomContainer = styled.div`
   width: 100vw;
@@ -53,10 +52,6 @@ const CreateRoom = () => {
           roomId={modalState.roomId}
           isOpen={modalState.isOpen}
         />
-      )}
-
-      {modalState.loading && (
-        <LoaderAnimationMaskMolecules isOpen={modalState.loading} />
       )}
     </CreateRoomContainer>
   )

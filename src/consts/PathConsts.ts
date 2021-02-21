@@ -4,6 +4,6 @@ export enum OurTubePath {
   CREATE_ROOM = "/create_room",
   SHARE_ROOM = "/share_room/[id]",
   INSERT_ROOM_PASSWORD = "/insert_room_password/[id]",
-  CREATE_GUEST = "/create_guest/[id]",
+  CREATE_GUEST = "/join_room_create_account/[id]",
   ERROR = "/_error",
 }

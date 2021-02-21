@@ -20,6 +20,8 @@ import toastSlice from "../../ducks/toast/slice"
 import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
 import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import modalSlice from "../../ducks/modal/slice"
+import { firebaseAuth } from "../../utils/lib/FirebaseAuthenticationUtil"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -53,23 +55,18 @@ export type YouTubePlayer = {
   data: number
 }
 
+let isPlay = null
 let intervalCurrentTime
 
 const ShareRoom = () => {
   const router = useRouter()
   const { id } = router.query
+  const queryPassword = router.query.p as string
   const roomId = id as string
 
   const authUser = useFirebaseAuthentication()
 
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (!authUser) return
-    FirebaseStoreUtil.setRoomSignInState(roomId, authUser.uid)
-    FirebaseStoreUtil.setJoinFlag(roomId, authUser.uid)
-    FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
-  }, [authUser, roomId])
 
   /**
    * use state
@@ -88,6 +85,51 @@ const ShareRoom = () => {
   const [videoId, setVideoId] = useState("")
   const [newVideoId, setNewVideoId] = useState("")
   const [signInId, setSignInId] = useState("")
+  const [password, setPassword] = useState("")
+
+  useEffect(() => {
+    dispatch(modalSlice.actions.setLoading(true))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (!authUser) return
+    if (!roomId) return
+    if (!queryPassword) return
+
+    const insertRoomInUser = (roomId: string, uid: string) => {
+      FirebaseStoreUtil.setRoomSignInState(roomId, uid)
+      FirebaseStoreUtil.setJoinFlag(roomId, uid)
+    }
+
+    const checkUser = async () => {
+      const userData = await FirebaseStoreUtil.getUserData(authUser.uid)
+
+      LoggerUtil.debug(userData.data())
+
+      if (userData.data().joinedRooms.includes(roomId)) {
+        insertRoomInUser(roomId, authUser.uid)
+      } else {
+        const room = await FirebaseStoreUtil.room(roomId).get()
+
+        if (room.data().privateRoom) {
+          if (room.data().hostId === authUser.uid) {
+            insertRoomInUser(roomId, authUser.uid)
+            await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
+          } else {
+            if (room.data().password !== queryPassword)
+              router.push(
+                `${OurTubePath.INSERT_ROOM_PASSWORD.replace("[id]", roomId)}`
+              )
+          }
+        } else {
+          insertRoomInUser(roomId, authUser.uid)
+          await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
+        }
+      }
+    }
+
+    checkUser()
+  }, [authUser, roomId, router, queryPassword])
 
   /**
    * get current user
@@ -102,11 +144,20 @@ const ShareRoom = () => {
    * @param event
    */
   const getRoomInfo = async (event) => {
+    isPlay = null
     if (!roomId) return
 
     const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
     const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
 
+    const userData = getCurrentUser()
+
+    if (!userData)
+      return router.replace(
+        `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
+          queryPassword ? `?p=${queryPassword}` : ""
+        }`
+      )
     getJoinFlag
       .orderBy("createdAt", "desc")
       .limit(1)
@@ -150,12 +201,13 @@ const ShareRoom = () => {
               setSignInId(uid)
 
               if (
+                isPlay &&
                 changeUser.name.includes("SetJoinRoomUser") &&
                 changeUser.name !== `${uid}SetJoinRoomUser`
               )
                 return startIntervalCurrentTime()
 
-              if (changeUser.name === "setYouTubePlayerBot") {
+              if (isPlay && changeUser.name === "setYouTubePlayerBot") {
                 if (room.data().play) {
                   event.target.playVideo()
                   setListCnt(room.data().listCnt)
@@ -165,6 +217,7 @@ const ShareRoom = () => {
 
               LoggerUtil.debug("now play number", room.data().playNow)
 
+              setPassword(room.data().password)
               setListCnt(room.data().listCnt)
               setPlayNow(room.data().playNow)
               setVideoId(getStoreVideoId)
@@ -188,8 +241,9 @@ const ShareRoom = () => {
     event: YouTubePlayer,
     getStoreVideoId: string | undefined
   ) => {
+    dispatch(modalSlice.actions.setLoading(false))
     if (!event) return
-    // isPlay = room.play
+    isPlay = room.play
     setIsPlayYouTube(room.play)
     // stopIntervalCurrentTime()
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
@@ -263,7 +317,6 @@ const ShareRoom = () => {
         )
 
         if (signInUserState !== signInId) return
-        LoggerUtil.debug("hobdhobho")
 
         const nextCnt = playNow + 1
         if (listCnt === nextCnt) {
@@ -396,8 +449,23 @@ const ShareRoom = () => {
    * set store video id
    */
   const setStoreVideoId = async () => {
-    const nextListCnt = listCnt + 1
     const resultVideoId = UrlParamsUtil.getVideoId(newVideoId)
+    const isVideId = await FirebaseStoreUtil.checkYouTubeVideoId(
+      roomId,
+      resultVideoId
+    )
+
+    if (isVideId) {
+      dispatch(toastSlice.actions.setText("すでにある動画です"))
+      dispatch(toastSlice.actions.setIsActive(true))
+      dispatch(toastSlice.actions.setToastColor("error"))
+      setTimeout(() => {
+        dispatch(toastSlice.actions.setIsActive(false))
+      }, 2000)
+      return
+    }
+
+    const nextListCnt = listCnt + 1
     LoggerUtil.debug(nextListCnt, listCnt)
 
     const youTubeData = await FetchYouTubeUtil.fetchVideo(resultVideoId)
@@ -487,7 +555,7 @@ const ShareRoom = () => {
 
         <GeneralSpacer vertical={8} />
 
-        <LinkCopyButtonMolecules roomId={roomId} />
+        <LinkCopyButtonMolecules roomId={roomId} password={password} />
       </ContentWrap>
 
       <ContentWrap position={"right"}>

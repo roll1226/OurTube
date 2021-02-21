@@ -19,9 +19,9 @@ import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCard
 import { useModalState } from "../../ducks/modal/selectors"
 import searchSlice from "../../ducks/search/slice"
 
-const RoomCardWrap = styled.div`
-  padding: 8px;
-  width: 100%;
+const SearchedYouTubeWrap = styled.div`
+  padding: 4px;
+  width: 90%;
   height: 360px;
   overflow: auto;
 
@@ -33,11 +33,6 @@ const RoomCardWrap = styled.div`
     border-radius: 24px;
     background: ${GeneralColorStyle.DarkBlue};
   }
-`
-
-const SearchCardWrap = styled.div`
-  position: relative;
-  z-index: 34;
 `
 
 const SearchYouTubeModalOrganisms = () => {
@@ -66,39 +61,39 @@ const SearchYouTubeModalOrganisms = () => {
   return (
     <>
       <MaskAtoms isOpen={modalState.isOpen} onClick={closeModal}>
-        <SearchCardWrap>
-          <CardAtoms width={400}>
-            <GeneralText fontSize={GeneralFontSize.SIZE_36}>
-              動画検索
-            </GeneralText>
-            <GeneralSpacer vertical={24} />
+        <CardAtoms width={500} isPadding={false}>
+          <GeneralSpacer vertical={28} />
 
-            {searchState.result.length !== 0 && (
-              <>
-                <RoomCardWrap>
-                  {searchState.result.map((video, index) => (
-                    <YouTubeClickActionCardMolecules
-                      key={index}
-                      text={video.title}
-                      videoId={video.id}
-                      icon={faCopy}
-                      youTubeUrl={video.url}
-                    />
-                  ))}
-                </RoomCardWrap>
-                <GeneralSpacer vertical={8} />
-              </>
-            )}
+          <GeneralText fontSize={GeneralFontSize.SIZE_36}>動画検索</GeneralText>
+          <GeneralSpacer vertical={24} />
 
-            <SendTextMolecules
-              placeholder={"動画検索"}
-              text={searchKeyword}
-              onChange={insertSearchKeyWord}
-              onClick={searchYouTube}
-            />
-            <GeneralSpacer vertical={-12} />
-          </CardAtoms>
-        </SearchCardWrap>
+          {searchState.result.length !== 0 && (
+            <>
+              <GeneralText fontSize={GeneralFontSize.SIZE_16}>
+                ここに場合はYouTube公式からコピーしてください
+              </GeneralText>
+              <SearchedYouTubeWrap>
+                {searchState.result.map((video, index) => (
+                  <YouTubeClickActionCardMolecules
+                    key={index}
+                    text={video.title}
+                    videoId={video.id}
+                    icon={faCopy}
+                    youTubeUrl={video.url}
+                  />
+                ))}
+              </SearchedYouTubeWrap>
+              <GeneralSpacer vertical={8} />
+            </>
+          )}
+
+          <SendTextMolecules
+            placeholder={"動画検索"}
+            text={searchKeyword}
+            onChange={insertSearchKeyWord}
+            onClick={searchYouTube}
+          />
+        </CardAtoms>
       </MaskAtoms>
     </>
   )

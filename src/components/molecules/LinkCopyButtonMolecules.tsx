@@ -11,9 +11,10 @@ import { OurTubePath } from "../../consts/PathConsts"
 
 export type Props = {
   roomId: string
+  password?: string
 }
 
-const LinkCopyButtonMolecules = ({ roomId }: Props) => {
+const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
   const dispatch = useDispatch()
 
   const [originUrl, setOriginUrl] = useState("")
@@ -35,7 +36,9 @@ const LinkCopyButtonMolecules = ({ roomId }: Props) => {
 
   return (
     <CopyToClipboard
-      text={`${originUrl}${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}`}
+      text={`${originUrl}${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}${
+        password ? `?p=${password}` : ""
+      }`}
       onCopy={copyLink}
     >
       <ButtonAtoms

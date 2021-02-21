@@ -6,6 +6,8 @@ import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
 import { OurTubePath } from "../consts/PathConsts"
+import { useDispatch } from "react-redux"
+import modalSlice from "../ducks/modal/slice"
 
 const CreateAccountContainer = styled.div`
   width: 100vw;
@@ -27,14 +29,17 @@ const InsertAccountNameCard = styled.div`
 const CreateAccount = () => {
   const [userName, setUserName] = useState("")
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const insetAccountName = (event: ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value)
   }
 
   const saveUserName = async () => {
+    dispatch(modalSlice.actions.setLoading(true))
     await FirebaseStoreUtil.createUserName(userName)
     router.replace(OurTubePath.CREATE_ROOM)
+    dispatch(modalSlice.actions.setLoading(false))
   }
 
   return (

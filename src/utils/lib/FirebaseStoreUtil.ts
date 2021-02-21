@@ -210,6 +210,20 @@ class FirebaseStoreUtil {
   }
 
   /**
+   * get user data
+   * @param uid
+   */
+  public static async getUserData(uid: string) {
+    const userData = await fireStore
+      .collection("users")
+      .withConverter(UserConverter)
+      .doc(uid)
+      .get()
+
+    return userData
+  }
+
+  /**
    * check user name
    * 新規ユーザーかどうか
    * @param uid
@@ -408,6 +422,10 @@ class FirebaseStoreUtil {
     })
   }
 
+  /**
+   * get sign in use state
+   * @param roomId
+   */
   public static async getSignInUserState(roomId: string) {
     const signInUserState = await FirebaseStoreUtil.signInState(roomId)
       .where("state", "==", "online")
@@ -415,6 +433,14 @@ class FirebaseStoreUtil {
       .get()
 
     return signInUserState.docs[0].id
+  }
+
+  public static async checkYouTubeVideoId(roomId: string, videoId: string) {
+    const isVideoId = await FirebaseStoreUtil.youTubeList(roomId)
+      .doc(videoId)
+      .get()
+
+    return isVideoId.exists
   }
 }
 
