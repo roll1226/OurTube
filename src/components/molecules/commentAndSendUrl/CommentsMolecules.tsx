@@ -5,7 +5,6 @@ import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticationUtil"
 import CommentsListMolecules from "./CommentsListMolecules"
 import dynamic from "next/dynamic"
-import LoggerUtil from "../../../utils/debugger/LoggerUtil"
 import { useRouter } from "next/router"
 
 export type Props = {

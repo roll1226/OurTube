@@ -1,11 +1,8 @@
 import { useRouter } from "next/router"
-import InsertRoomPasswordAndGuestMaskOrganisms from "../../components/organisms/InsertRoomPasswordAndGuestMaskOrganisms"
 import HeadAtoms from "../../components/atoms/HeadAtoms"
 import { OurTubePath } from "../../consts/PathConsts"
 import { ChangeEvent, useState, useEffect } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
-import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 import MaskAtoms from "../../components/atoms/MaskAtoms"
 import CardAtoms from "../../components/atoms/CardAtoms"
@@ -23,7 +20,6 @@ import InputAtoms from "../../components/atoms/InputAtoms"
 import ButtonAtoms from "../../components/atoms/ButtonAtoms"
 
 const JoinRoomCreateAccount = () => {
-  const dispatch = useDispatch()
   const router = useRouter()
   const { id } = router.query
   const queryPassword = router.query.p as string

@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components"
+import styled, { keyframes } from "styled-components"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import { HoverItem } from "../../../styles/shadow/GeneralShadowStyle"
 

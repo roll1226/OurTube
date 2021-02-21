@@ -7,7 +7,8 @@
     "dev:firebase": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false next dev",
     "build": "next build",
     "start": "next start",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "husky": {
     "hooks": {

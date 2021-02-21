@@ -8,3 +8,5 @@ start:
 	yarn start
 emulators:
 	yarn emulators
+deploy-functions:
+	yarn deploy:functions

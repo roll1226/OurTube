@@ -21,7 +21,6 @@ import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTub
 import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
-import { firebaseAuth } from "../../utils/lib/FirebaseAuthenticationUtil"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
