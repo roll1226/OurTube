@@ -153,14 +153,6 @@ const ShareRoom = () => {
     const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
     const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
 
-    const userData = getCurrentUser()
-
-    if (!userData)
-      return router.replace(
-        `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
-          queryPassword ? `?p=${queryPassword}` : ""
-        }`
-      )
     getJoinFlag
       .orderBy("createdAt", "desc")
       .limit(1)
@@ -202,6 +194,13 @@ const ShareRoom = () => {
               const getStoreVideoId = room.data().videoId[playNow]
               const uid = getCurrentUser()
               setSignInId(uid)
+
+              if (!uid)
+                return router.replace(
+                  `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
+                    queryPassword ? `?p=${queryPassword}` : ""
+                  }`
+                )
 
               if (
                 isPlay &&
