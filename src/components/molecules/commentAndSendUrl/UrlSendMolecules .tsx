@@ -28,7 +28,7 @@ export type Props = {
   stopIntervalCurrentTime: () => void
 }
 
-const youTubeList = []
+let youTubeList = []
 
 const UrlSendMolecules = ({
   youTubeUrl,
@@ -44,7 +44,8 @@ const UrlSendMolecules = ({
   const roomId = id as string
 
   useEffect(() => {
-    FirebaseStoreUtil.youTubeList(roomId)
+    youTubeList = []
+    const unsubscribe = FirebaseStoreUtil.youTubeList(roomId)
       .orderBy("createdAt", "asc")
       .onSnapshot((youTubes) => {
         youTubes.docChanges().forEach((youTube) => {
@@ -67,6 +68,7 @@ const UrlSendMolecules = ({
           }
         })
       })
+    return () => unsubscribe()
   }, [roomId])
 
   return (

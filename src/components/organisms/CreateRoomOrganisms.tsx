@@ -6,9 +6,7 @@ import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import CheckboxAtoms from "../atoms/CheckboxAtoms"
 import styled from "styled-components"
-import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
-import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import { useRouter } from "next/router"
 import {
   GeneralFontSize,
@@ -18,6 +16,9 @@ import {
 import { OurTubePath } from "../../consts/PathConsts"
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
+import { useDispatch } from "react-redux"
+import toastSlice from "../../ducks/toast/slice"
+import modalSlice from "../../ducks/modal/slice"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -25,14 +26,15 @@ const PasswordWrap = styled.div`
   align-items: flex-start;
 `
 
-const CreateRoomMolecules = () => {
+const CreateRoomOrganisms = () => {
+  const dispatch = useDispatch()
   const router = useRouter()
-  const [videoUrl, setVideoUrl] = useState("")
+  const [roomName, setRoomName] = useState("")
   const [password, setPassword] = useState("")
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
 
-  const insertVideoId = (event: ChangeEvent<HTMLInputElement>) => {
-    setVideoUrl(event.target.value)
+  const insertRoomName = (event: ChangeEvent<HTMLInputElement>) => {
+    setRoomName(event.target.value)
   }
 
   const insertPassword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -43,33 +45,58 @@ const CreateRoomMolecules = () => {
     setIsPrivateRoom((check) => !check)
   }
 
+  /**
+   * send toast
+   * @param text
+   * @param toastColor
+   */
+  const sendToast = (
+    text: string,
+    toastColor: "success" | "error",
+    roomId?: string
+  ) => {
+    dispatch(toastSlice.actions.setIsActive(true))
+    dispatch(toastSlice.actions.setText(text))
+    dispatch(toastSlice.actions.setToastColor(toastColor))
+    if (roomId) {
+      dispatch(modalSlice.actions.setRoomId(roomId))
+      dispatch(modalSlice.actions.setIsActive(true))
+    }
+    setTimeout(() => {
+      dispatch(toastSlice.actions.setIsActive(false))
+    }, 2000)
+  }
+
   const createShareRoom = async () => {
     const user = FirebaseAuthenticationUtil.getCurrentUser()
-    const resultVideoId = UrlParamsUtil.getVideoId(videoUrl)
 
     const createRoomFunc = FirebaseFunctionsUtil.createRoomFunc()
 
+    dispatch(modalSlice.actions.setLoading(true))
+
     await createRoomFunc({
-      videoId: resultVideoId,
+      roomName,
       uid: user.uid,
       password,
       isPrivateRoom,
     })
-      .then((res) => {
+      .then(async (res) => {
         LoggerUtil.debug(res.data.text)
+        const roomId = res.data.roomId
 
-        router.push(
-          `${OurTubePath.SHARE_ROOM.replace("[id]", res.data.roomId)}`
-        )
+        sendToast("ルームが作成されました", "success", roomId)
       })
       .catch((error) => {
+        sendToast("作成に失敗しました", "error")
         LoggerUtil.debug(error)
       })
+
+    dispatch(modalSlice.actions.setLoading(false))
   }
 
   return (
     <>
-      <CardAtoms width={500} height={500}>
+      <CardAtoms width={440} height={480}>
         <GeneralText
           fontSize={GeneralFontSize.SIZE_36}
           fontColor={GeneralColorStyle.DarkGreen}
@@ -82,10 +109,12 @@ const CreateRoomMolecules = () => {
 
         <InputAtoms
           width={360}
-          placeholder={"初回の動画URL"}
+          placeholder={"ルーム名(50文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
-          value={videoUrl}
-          onChange={insertVideoId}
+          value={roomName}
+          onChange={insertRoomName}
+          isError={roomName.length > 50}
+          errorText={"ルーム名は50文字以内です。"}
         />
 
         <GeneralSpacer vertical={32} />
@@ -116,11 +145,11 @@ const CreateRoomMolecules = () => {
           text={"ルームを作成する"}
           fontColor={GeneralColorStyle.White}
           onClick={createShareRoom}
-          disabled={videoUrl ? false : true}
+          disabled={!roomName || roomName.length > 50 ? true : false}
         />
       </CardAtoms>
     </>
   )
 }
 
-export default CreateRoomMolecules
+export default CreateRoomOrganisms

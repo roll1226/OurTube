@@ -35,7 +35,7 @@ const CardContainer = styled.div<{
     css`
       height: ${height}px;
     `}
-  background: ${({ bgColor }) => bgColor}
+  background: ${({ bgColor }) => bgColor};
 `
 
 const CardAtoms = ({

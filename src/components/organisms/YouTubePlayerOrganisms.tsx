@@ -1,6 +1,6 @@
 import { MouseEvent } from "react"
 import YouTube, { Options } from "react-youtube"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import ControlsButtonAtoms from "../atoms/controls/ControlsButtonAtoms"
 import { faPlay } from "@fortawesome/free-solid-svg-icons"
 
@@ -10,7 +10,7 @@ const YouTubeContainer = styled.div`
   height: 408px;
 `
 
-const YouTubePlayWrap = styled.div<{ img: string }>`
+const YouTubePlayWrap = styled.div<{ img: string; videoId: string }>`
   position: absolute;
   z-index: 2;
   width: 724px;
@@ -22,7 +22,12 @@ const YouTubePlayWrap = styled.div<{ img: string }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+
+  ${({ videoId }) =>
+    videoId &&
+    css`
+      cursor: pointer;
+    `}
 `
 
 const YouTubePlayer = styled(YouTube)`
@@ -86,8 +91,11 @@ const YouTubePlayerOrganisms = ({
           img={
             isInitThumbnail && videoId && !isPlay && currentTime === 0
               ? `http://img.youtube.com/vi/${videoId}/sddefault.jpg`
+              : !videoId
+              ? "https://firebasestorage.googleapis.com/v0/b/our-tubes.appspot.com/o/signIn%2Fnot_video.jpg?alt=media&token=1a95534e-881c-489a-98fb-9dcca5ce766f"
               : ""
           }
+          videoId={videoId}
         >
           {videoId && !isPlayYouTube && (
             <ControlsButtonAtoms size={92} icon={faPlay} />

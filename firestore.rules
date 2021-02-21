@@ -13,24 +13,31 @@ service cloud.firestore {
       return request.resource.data;
     }
 
-    function exitingQuestions(roomID) {
-      return exists(/databases/$(database)/documents/lives/$(roomID));
+    function exitingRooms(roomID) {
+      return exists(/databases/$(database)/documents/rooms/$(roomID));
     }
 
     match /users/{userID} {
-      allow read: if isAuthenticated();
+      allow read: if isUserAuthenticated(userID);
 
       allow create: if isUserAuthenticated(userID) &&
         incomingData().name is string &&
         incomingData().name.size() > 0 &&
         incomingData().name.size() <= 20 &&
+        incomingData().joinedRooms is list &&
+        incomingData().joinedRooms.size() == 0 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
         incomingData().updatedAt == request.time;
+
+      allow update: if isUserAuthenticated(userID) &&
+        incomingData().joinedRooms is list &&
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
     }
 
-    match /lives/{roomID} {
+    match /rooms/{roomID} {
       allow read: if isAuthenticated();
 
       allow create: if isAuthenticated() &&
@@ -43,59 +50,46 @@ service cloud.firestore {
         incomingData().password is string &&
         incomingData().privateRoom is bool &&
         incomingData().play is bool &&
-        incomingData().play == true &&
+        incomingData().play == false &&
         incomingData().playNow is number &&
         incomingData().playNow == 0 &&
         incomingData().videoId is list &&
-        incomingData().videoId.size() == 1 &&
+        incomingData().videoId.size() == 0 &&
+        incomingData().roomName is string &&
+        incomingData().roomName.size() > 0 &&
+        incomingData().roomName.size() <= 50 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
         incomingData().updatedAt == request.time;
 
       allow update: if isAuthenticated() &&
-        exitingQuestions(roomID) &&
+        exitingRooms(roomID) &&
         incomingData().currentTime is number &&
         incomingData().listCnt is number &&
         incomingData().play is bool &&
         incomingData().playNow is number &&
         incomingData().videoId is list &&
-        incomingData().updatedAt is timestamp;
+        incomingData().updatedAt is timestamp &&
+        incomingData().updatedAt == request.time;
 
-
-      match /changeUsers/user {
+      match /changeUsers/{changeID} {
         allow read: if isAuthenticated();
 
         allow create: if isAuthenticated() &&
           incomingData().name is string &&
-          incomingData().name.size() == 0 &&
-          incomingData().changeCnt is number &&
-          incomingData().changeCnt == 0 &&
           incomingData().createdAt is timestamp &&
-          incomingData().createdAt == request.time &&
-          incomingData().updatedAt is timestamp &&
-          incomingData().updatedAt == request.time;
-
-        allow update: if isAuthenticated() &&
-          incomingData().name is string &&
-          incomingData().changeCnt is number &&
-          incomingData().updatedAt is timestamp;
+          incomingData().createdAt == request.time;
       }
 
-      match /joinFlag/flag {
+      match /joinFlag/{flagID} {
         allow read: if isAuthenticated();
 
         allow create: if isAuthenticated() &&
-          incomingData().flagCnt is number &&
-          incomingData().flagCnt == 0 &&
+          incomingData().uid is string &&
+          incomingData().uid == request.auth.uid &&
           incomingData().createdAt is timestamp &&
-          incomingData().createdAt == request.time &&
-          incomingData().updatedAt is timestamp &&
-          incomingData().updatedAt == request.time;
-
-        allow update: if isAuthenticated() &&
-          incomingData().flagCnt is number &&
-          incomingData().updatedAt is timestamp;
+          incomingData().createdAt == request.time;
       }
 
       match /youTubeList/{youTubeID} {
@@ -104,7 +98,8 @@ service cloud.firestore {
         allow create: if isAuthenticated() &&
           incomingData().title is string &&
           incomingData().image is string &&
-          incomingData().createdAt is timestamp;
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
       }
 
       match /chat/{chatID} {
@@ -115,7 +110,24 @@ service cloud.firestore {
           incomingData().comment is string &&
           incomingData().uid is string &&
           incomingData().uid == request.auth.uid &&
-          incomingData().createdAt is timestamp;
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
+      }
+
+      match /status/{userID} {
+        allow read: if isAuthenticated();
+
+        allow create: if isAuthenticated() &&
+          incomingData().state is string &&
+          incomingData().lastChanged is timestamp &&
+          incomingData().lastChanged == request.time;
+
+        allow update: if isUserAuthenticated(userID) &&
+          incomingData().state is string &&
+          incomingData().lastChanged is timestamp &&
+          incomingData().lastChanged == request.time;
+
+        allow delete: if isUserAuthenticated(userID);
       }
     }
   }

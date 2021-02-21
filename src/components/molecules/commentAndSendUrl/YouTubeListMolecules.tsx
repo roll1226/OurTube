@@ -1,12 +1,16 @@
 import styled from "styled-components"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
-import YouTubeCardAtoms from "../../atoms/commentAndSendUrl/YouTubeCardAtoms"
+import YouTubeCardMolecules from "./YouTubeCardMolecules"
+import {
+  GeneralText,
+  GeneralFontSize,
+} from "../../../styles/typography/GeneralTextStyle"
 
 const YouTubeListContainer = styled.div`
   margin: 16px 24px;
   padding: 0 4px;
   width: 344px;
-  height: 408px;
+  height: 360px;
   overflow: auto;
 
   &::-webkit-scrollbar {
@@ -37,7 +41,7 @@ const YouTubeListMolecules = ({
   return (
     <YouTubeListContainer>
       {youTubes.map((youTube, index) => (
-        <YouTubeCardAtoms
+        <YouTubeCardMolecules
           key={index}
           videoNumber={index}
           title={youTube.title}
@@ -47,6 +51,14 @@ const YouTubeListMolecules = ({
           stopIntervalCurrentTime={stopIntervalCurrentTime}
         />
       ))}
+
+      {!youTubes.length && (
+        <>
+          <GeneralText fontSize={GeneralFontSize.SIZE_16}>
+            動画はまだありません
+          </GeneralText>
+        </>
+      )}
     </YouTubeListContainer>
   )
 }

@@ -2,18 +2,27 @@ import { Store, combineReducers } from "redux"
 import logger from "redux-logger"
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit"
 import counterSlice, { initialState as counterState } from "./test/slice"
-import authSlice from "./auth/slice"
-import { initialState as AuthState } from "./auth/slice"
+import toastSlice, { initialState as toastState } from "./toast/slice"
 import loaderSlice, { initialState as LoaderState } from "./loader/slice"
+import modalSlice, { initialState as ModalState } from "./modal/slice"
+import searchSlice, { initialState as SearchState } from "./search/slice"
 
 const rootReducer = combineReducers({
   counter: counterSlice.reducer,
-  auth: authSlice.reducer,
+  toast: toastSlice.reducer,
   loader: loaderSlice.reducer,
+  modal: modalSlice.reducer,
+  search: searchSlice.reducer,
 })
 
 const preloadedState = () => {
-  return { counter: counterState, auth: AuthState, loader: LoaderState }
+  return {
+    counter: counterState,
+    toast: toastState,
+    loader: LoaderState,
+    modal: ModalState,
+    search: SearchState,
+  }
 }
 
 export type StoreState = ReturnType<typeof preloadedState>

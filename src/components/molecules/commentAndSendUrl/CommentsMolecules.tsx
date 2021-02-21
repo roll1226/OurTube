@@ -1,16 +1,11 @@
 import { useEffect, useState, ChangeEvent } from "react"
-import firebase from "firebase/app"
 import SendTextMolecules from "./SendTextMolecules"
 import styled, { css } from "styled-components"
 import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticationUtil"
 import CommentsListMolecules from "./CommentsListMolecules"
 import dynamic from "next/dynamic"
-import LoggerUtil from "../../../utils/debugger/LoggerUtil"
 import { useRouter } from "next/router"
-
-const commentsList = []
-let user: firebase.User | null = null
 
 export type Props = {
   isActive: boolean
@@ -29,37 +24,30 @@ const CommentsContainer = styled.div<{ isActive: boolean }>`
 
 const CommentsMolecules = ({ isActive = true }: Props) => {
   const [comment, setComment] = useState("")
-  const [commentsListSave, setCommentsListSave] = useState([])
+  const [comments, setComments] = useState([])
   const router = useRouter()
   const { id } = router.query
   const roomId = id as string
 
   useEffect(() => {
-    FirebaseStoreUtil.chat(roomId)
+    const unsubscribe = FirebaseStoreUtil.chat(roomId)
       .orderBy("createdAt", "asc")
       .onSnapshot((comments) => {
         if (!comments.size) return
-        comments.docChanges().forEach((comment) => {
-          if (comment.type === "added") {
-            const commentData = comment.doc.data()
-            if (!user) user = FirebaseAuthenticationUtil.getCurrentUser()
 
-            commentsList.push({
-              comment: commentData.comment,
-              name: commentData.name,
-              isMyComment: commentData.uid === user.uid ? true : false,
-            })
-            setCommentsListSave([
-              ...commentsList,
-              {
-                comment: commentData.comment,
-                name: user.displayName,
-                isMyComment: commentData.uid === user.uid ? true : false,
-              },
-            ])
-          }
+        const user = FirebaseAuthenticationUtil.getCurrentUser()
+
+        const msgs = []
+        comments.forEach((comment) => {
+          msgs.push({
+            ...comment.data(),
+            isMyComment: comment.data().uid === user.uid ? true : false,
+          })
         })
+        setComments(msgs)
       })
+
+    return () => unsubscribe()
   }, [roomId])
 
   const changeComment = (event: ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +55,8 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
   }
 
   const sendMessage = async () => {
-    LoggerUtil.debug(commentsListSave)
+    if (!comment) return
+
     const sendUser = FirebaseAuthenticationUtil.getCurrentUser()
     await FirebaseStoreUtil.createComment(
       roomId,
@@ -80,7 +69,7 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
 
   return (
     <CommentsContainer isActive={isActive}>
-      <CommentsListMolecules comments={commentsList} />
+      <CommentsListMolecules comments={comments} />
 
       <SendTextMolecules
         text={comment}

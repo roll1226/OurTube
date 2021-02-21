@@ -8,14 +8,22 @@ const SignInContainer = styled.div`
   flex-direction: column;
 `
 
-const SignInContainerOrganisms = () => {
+export type Props = {
+  googleSignInClick: () => void
+  twitterSignInClick: () => void
+}
+
+const SignInContainerOrganisms = ({
+  googleSignInClick,
+  twitterSignInClick,
+}: Props) => {
   return (
     <SignInContainer>
-      <GoogleSignInButtonMolecules />
+      <GoogleSignInButtonMolecules googleSignInClick={googleSignInClick} />
 
       <GeneralSpacer vertical={12} />
 
-      <TwitterSignInButtonMolecules />
+      <TwitterSignInButtonMolecules twitterSignInClick={twitterSignInClick} />
     </SignInContainer>
   )
 }

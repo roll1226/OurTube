@@ -2,6 +2,11 @@ import { ChangeEvent } from "react"
 import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { CardShadow } from "../../styles/shadow/GeneralShadowStyle"
+import {
+  GeneralText,
+  GeneralFontSize,
+  GeneralFontWeight,
+} from "../../styles/typography/GeneralTextStyle"
 
 const InputContainer = styled.input<{
   width: number
@@ -28,6 +33,11 @@ const InputContainer = styled.input<{
   }
 `
 
+const ErrorTextWrap = styled.div<{ width: number }>`
+  width: ${({ width }) => width + 16}px;
+  text-align: left;
+`
+
 export type Props = {
   width: number
   placeholder: string
@@ -35,6 +45,8 @@ export type Props = {
   outlineColor: string
   disabled?: boolean
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  errorText?: string
+  isError?: boolean
 }
 
 const InputAtoms = ({
@@ -44,18 +56,34 @@ const InputAtoms = ({
   outlineColor,
   disabled = false,
   onChange,
+  errorText,
+  isError = false,
 }: Props) => {
   return (
-    <InputContainer
-      type="text"
-      width={width}
-      outlineColor={outlineColor}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      disabledStyle={disabled}
-    />
+    <>
+      <InputContainer
+        type="text"
+        width={width}
+        outlineColor={isError ? GeneralColorStyle.Error : outlineColor}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        disabled={disabled}
+        disabledStyle={disabled}
+      />
+
+      {isError && (
+        <ErrorTextWrap width={width}>
+          <GeneralText
+            fontSize={GeneralFontSize.SIZE_16}
+            fontColor={GeneralColorStyle.Error}
+            fontWeight={GeneralFontWeight.BOLD}
+          >
+            {errorText}
+          </GeneralText>
+        </ErrorTextWrap>
+      )}
+    </>
   )
 }
 

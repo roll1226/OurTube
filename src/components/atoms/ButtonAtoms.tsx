@@ -14,7 +14,7 @@ export type Props = {
   fontColor: string
   disabled?: boolean
   icon?: JSX.Element
-  onClick: () => void
+  onClick?: () => void
 }
 
 const ButtonContainer = styled.button<{

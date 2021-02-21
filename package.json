@@ -1,5 +1,5 @@
 {
-  "name": "sharevi_next",
+  "name": "ourtube",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,11 @@
     "dev:firebase": "NEXT_PUBLIC_USE_FIREBASE_EMULATOR=false next dev",
     "build": "next build",
     "start": "next start",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:rule-firestore": "firebase deploy --only firestore:rules",
+    "deploy:rule-database": "firebase deploy --only database",
+    "deploy:rule-storage": "firebase deploy --only storage"
   },
   "husky": {
     "hooks": {
@@ -28,6 +32,7 @@
     "firebase": "^8.2.3",
     "next": "10.0.5",
     "react": "17.0.1",
+    "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "17.0.1",
     "react-player": "^2.8.2",
     "react-redux": "^7.2.2",

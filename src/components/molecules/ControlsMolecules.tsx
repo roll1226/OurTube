@@ -20,6 +20,8 @@ import ControlsVolumeRangeInputAtoms from "../atoms/controls/ControlsVolumeRange
 import dynamic from "next/dynamic"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
+import { useDispatch } from "react-redux"
+import modalSlice from "../../ducks/modal/slice"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -78,17 +80,32 @@ export type Props = {
  * @param play
  * @param pause
  */
-const PlayBtn = (isPlay: boolean, play: () => void, pause: () => void) => {
+const PlayBtn = (
+  isPlay: boolean,
+  play: () => void,
+  pause: () => void,
+  videoId: string
+) => {
   if (isPlay) {
     return (
       <>
-        <ControlsButtonAtoms size={48} icon={faPause} onClick={pause} />
+        <ControlsButtonAtoms
+          size={48}
+          icon={faPause}
+          onClick={pause}
+          isActive={videoId ? true : false}
+        />
       </>
     )
   } else {
     return (
       <>
-        <ControlsButtonAtoms size={48} icon={faPlay} onClick={play} />
+        <ControlsButtonAtoms
+          size={48}
+          icon={faPlay}
+          onClick={play}
+          isActive={videoId ? true : false}
+        />
       </>
     )
   }
@@ -151,6 +168,7 @@ const ControlsMolecules = ({
   const { id } = router.query
   const roomId = id as string
 
+  const dispatch = useDispatch()
   const [isVolumeHover, setIsVolumeHover] = useState(false)
   const [youTubeTitle, setYouTubeTitle] = useState("")
   const isOpenVolumeControl = (isHover: boolean, isMute: boolean) => {
@@ -166,7 +184,11 @@ const ControlsMolecules = ({
     }
 
     getTitle()
-  }, [videoId])
+  }, [videoId, roomId])
+
+  const openSearchModal = () => {
+    dispatch(modalSlice.actions.setIsActive(true))
+  }
 
   return (
     <ControlsContainer>
@@ -174,7 +196,7 @@ const ControlsMolecules = ({
         <ControlItemsWrap>
           <GeneralSpacer horizontal={40} />
 
-          {PlayBtn(isPlayYouTube, play, pause)}
+          {PlayBtn(isPlayYouTube, play, pause, videoId)}
 
           <GeneralSpacer horizontal={28} />
 
@@ -203,7 +225,11 @@ const ControlsMolecules = ({
         </ControlItemsWrap>
 
         <ControlItemsWrap>
-          <ControlsButtonAtoms size={48} icon={faSearch} />
+          <ControlsButtonAtoms
+            size={48}
+            icon={faSearch}
+            onClick={openSearchModal}
+          />
 
           <GeneralSpacer horizontal={28} />
 
@@ -218,6 +244,7 @@ const ControlsMolecules = ({
           changeCurrentTime={changeCurrentTime}
           mouseDownCurrentTime={mouseDownCurrentTime}
           mouseUpCurrentTime={mouseUpCurrentTime}
+          videoId={videoId}
         />
       </ControlsWrap>
     </ControlsContainer>

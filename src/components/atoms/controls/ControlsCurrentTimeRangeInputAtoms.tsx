@@ -1,12 +1,12 @@
 import { ChangeEvent, MouseEvent } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import {
   HoverItem,
   ControlHover,
 } from "../../../styles/shadow/GeneralShadowStyle"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 
-const CurrentTimeRangeInput = styled.input`
+const CurrentTimeRangeInput = styled.input<{ isActive: boolean }>`
   margin: 0;
   position: absolute;
   left: 0;
@@ -52,6 +52,12 @@ const CurrentTimeRangeInput = styled.input`
   &:active::-webkit-slider-thumb {
     box-shadow: ${HoverItem};
   }
+
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      cursor: default;
+    `}
 `
 
 const CurrentTimeTimeColor = styled.div<{
@@ -74,6 +80,7 @@ export type Props = {
   mouseUpCurrentTime: (
     range: MouseEvent<HTMLInputElement, globalThis.MouseEvent>
   ) => void
+  videoId: string
 }
 
 const ControlsCurrentTimeRangeInputAtoms = ({
@@ -82,6 +89,7 @@ const ControlsCurrentTimeRangeInputAtoms = ({
   changeCurrentTime,
   mouseDownCurrentTime,
   mouseUpCurrentTime,
+  videoId,
 }: Props) => {
   return (
     <>
@@ -94,6 +102,8 @@ const ControlsCurrentTimeRangeInputAtoms = ({
         onChange={changeCurrentTime}
         onMouseDown={mouseDownCurrentTime}
         onMouseUp={mouseUpCurrentTime}
+        isActive={videoId ? false : true}
+        disabled={videoId ? false : true}
       />
       <CurrentTimeTimeColor
         currentTime={currentTimeValue}

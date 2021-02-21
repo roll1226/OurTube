@@ -1,0 +1,25 @@
+{
+  "rules": {
+    ".write": false,
+    "rooms": {
+      "$roomID": {
+        "status": {
+          "$userID": {
+            ".read": "auth != null",
+            ".write": "$userID === auth.uid",
+            ".validate": "newData.hasChildren(['state', 'lastChanged'])",
+            "state": {
+              ".validate": "newData.isString() && 0 < newData.val().length"
+            },
+            "lastChanged": {
+              ".validate": "newData.isNumber() && 0 < newData.val()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,8 @@
 import styled, { css, keyframes } from "styled-components"
-import { GeneralText } from "../../../styles/typography/GeneralTextStyle"
+import {
+  GeneralText,
+  GeneralFontSize,
+} from "../../../styles/typography/GeneralTextStyle"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import { useState, useRef, useEffect } from "react"
 import { InsetShadow } from "../../../styles/shadow/GeneralShadowStyle"
@@ -58,7 +61,7 @@ const ControlsYouTubeTitleAtoms = ({ title }: Props) => {
       <YouTUbeTitleMoveWrap ref={ref} titleWidth={titleWidth}>
         {title && (
           <GeneralText
-            fontSize={24}
+            fontSize={GeneralFontSize.SIZE_24}
             fontColor={GeneralColorStyle.Black}
             style={{ whiteSpace: "nowrap" }}
           >

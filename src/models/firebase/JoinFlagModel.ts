@@ -1,27 +1,25 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-export class JoinFlag {
+export class JoinFlagModel {
   constructor(
     readonly createdAt: firebase.firestore.FieldValue,
-    readonly flagCnt: number,
-    readonly updatedAt: firebase.firestore.FieldValue
+    readonly uid: string
   ) {}
 }
 
 export const joinFlagConverter = {
-  toFirestore(post: JoinFlag): firebase.firestore.DocumentData {
+  toFirestore(post: JoinFlagModel): firebase.firestore.DocumentData {
     return {
       createdAt: post.createdAt,
-      flagCnt: post.flagCnt,
-      updatedAt: post.updatedAt,
+      uid: post.uid,
     }
   },
   fromFirestore(
     snapshot: firebase.firestore.QueryDocumentSnapshot,
     options: firebase.firestore.SnapshotOptions
-  ): JoinFlag {
+  ): JoinFlagModel {
     const data = snapshot.data(options)!
-    return new JoinFlag(data.createdAt, data.flagCnt, data.updatedAt)
+    return new JoinFlagModel(data.createdAt, data.uid)
   },
 }

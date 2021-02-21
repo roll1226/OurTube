@@ -5,7 +5,6 @@ import ButtonAtoms from "../atoms/ButtonAtoms"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import OurTubeLogoAtoms, { LogoColor } from "../atoms/svg/OurTubeLogoAtoms"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
-import styled from "styled-components"
 import {
   GeneralFontSize,
   GeneralFontWeight,
@@ -17,11 +16,6 @@ export type Props = {
   insetAccountName: (event: ChangeEvent<HTMLInputElement>) => void
   saveUserName: () => void
 }
-
-const ErrorTextWrap = styled.div`
-  width: 388px;
-  text-align: left;
-`
 
 const InsertAccountNameMolecules = ({
   userName,
@@ -40,36 +34,22 @@ const InsertAccountNameMolecules = ({
           fontColor={GeneralColorStyle.DarkGreen}
           fontWeight={GeneralFontWeight.BOLD}
         >
-          アカウント作成
+          アカウント名を入力
         </GeneralText>
 
-        <GeneralSpacer vertical={24} />
+        <GeneralSpacer vertical={32} />
 
         <InputAtoms
           width={360}
           placeholder={"アカウント作成(20文字以内)"}
-          outlineColor={
-            userName.length > 20
-              ? GeneralColorStyle.Error
-              : GeneralColorStyle.DarkGreen
-          }
+          outlineColor={GeneralColorStyle.DarkGreen}
           value={userName}
           onChange={insetAccountName}
+          isError={userName.length > 20}
+          errorText={"ユーザ名は20文字以内です。"}
         />
 
-        {userName.length > 20 && (
-          <ErrorTextWrap>
-            <GeneralText
-              fontSize={GeneralFontSize.SIZE_16}
-              fontColor={GeneralColorStyle.Error}
-              fontWeight={GeneralFontWeight.BOLD}
-            >
-              ユーザ名は20文字以内です。
-            </GeneralText>
-          </ErrorTextWrap>
-        )}
-
-        <GeneralSpacer vertical={24} />
+        <GeneralSpacer vertical={8} />
 
         <ButtonAtoms
           bgColor={GeneralColorStyle.DarkGreen}

@@ -5,11 +5,17 @@ import OurTubeLogoAtoms, {
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import styled from "styled-components"
 import SignInContainerOrganisms from "../components/organisms/SignInContainerOrganisms"
+import FirebaseAuthenticationUtil from "../utils/lib/FirebaseAuthenticationUtil"
+import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
+import { useRouter } from "next/router"
+import { OurTubePath } from "../consts/PathConsts"
 import {
   GeneralText,
   GeneralFontSize,
   GeneralFontWeight,
 } from "../styles/typography/GeneralTextStyle"
+import { useDispatch } from "react-redux"
+import modalSlice from "../ducks/modal/slice"
 
 const TopPageContainer = styled.div`
   position: relative;
@@ -39,6 +45,28 @@ const SignInContainer = styled.div`
 `
 
 const TopPage = () => {
+  const router = useRouter()
+  const dispatch = useDispatch()
+
+  const isNameStore = async (uid: string) => {
+    const isName = await FirebaseStoreUtil.checkUserName(uid)
+    if (isName) router.push(OurTubePath.CREATE_ROOM)
+    else router.push(OurTubePath.CREATE_ACCOUNT)
+  }
+
+  const googleSignInClick = async () => {
+    dispatch(modalSlice.actions.setLoading(true))
+    const { user } = await FirebaseAuthenticationUtil.signInForGoogle()
+    isNameStore(user.uid)
+    dispatch(modalSlice.actions.setLoading(false))
+  }
+  const twitterSignInClick = async () => {
+    dispatch(modalSlice.actions.setLoading(true))
+    const { user } = await FirebaseAuthenticationUtil.signInForTwitter()
+    isNameStore(user.uid)
+    dispatch(modalSlice.actions.setLoading(false))
+  }
+
   return (
     <TopPageContainer>
       <HeadAtoms
@@ -71,7 +99,10 @@ const TopPage = () => {
       </TopMessageContainer>
 
       <SignInContainer>
-        <SignInContainerOrganisms />
+        <SignInContainerOrganisms
+          googleSignInClick={googleSignInClick}
+          twitterSignInClick={twitterSignInClick}
+        />
       </SignInContainer>
     </TopPageContainer>
   )

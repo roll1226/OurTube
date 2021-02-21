@@ -4,25 +4,20 @@ export const firebaseFunctions = FirebaseInitUtil.firebaseFunctions()
 
 class FirebaseFunctionsUtil {
   /**
-   * create share room functions
+   * create share room function
    */
   public static createRoomFunc() {
     return firebaseFunctions.httpsCallable("apiService/api/creatRoom")
   }
 
   /**
-   * get youTube title
+   * delete youTube list cnt function
    */
-  public static getYouTubeTitle() {
-    return firebaseFunctions.httpsCallable("apiService/api/getYouTubeTitle")
-  }
-
-  /**
-   * add youTUbe url
-   */
-  public static addYouTubeUrl() {
-    return firebaseFunctions.httpsCallable("apiService/api/addYouTubeUrl")
-  }
+  // public static deleteYouTubeListCntFunc() {
+  //   return firebaseFunctions.httpsCallable(
+  //     "apiService/api/deleteYouTubeListCnt"
+  //   )
+  // }
 }
 
 export default FirebaseFunctionsUtil

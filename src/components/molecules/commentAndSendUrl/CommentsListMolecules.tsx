@@ -2,11 +2,15 @@ import { useRef, useEffect } from "react"
 import styled from "styled-components"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import CommentAtoms from "../../atoms/commentAndSendUrl/CommentAtoms"
+import {
+  GeneralFontSize,
+  GeneralText,
+} from "../../../styles/typography/GeneralTextStyle"
 
 const CommentsListContainer = styled.div`
   margin: 16px 28px;
   width: 344px;
-  height: 408px;
+  height: 360px;
   overflow: auto;
 
   &::-webkit-scrollbar {
@@ -37,7 +41,7 @@ const CommentsListMolecules = ({ comments }: Props) => {
         block: "end",
       })
     }
-  })
+  }, [comments])
 
   return (
     <CommentsListContainer>
@@ -49,6 +53,14 @@ const CommentsListMolecules = ({ comments }: Props) => {
           comment={comment.comment}
         />
       ))}
+
+      {!comments.length && (
+        <>
+          <GeneralText fontSize={GeneralFontSize.SIZE_16}>
+            コメントはまだありません
+          </GeneralText>
+        </>
+      )}
       <span ref={commentEndRef} />
     </CommentsListContainer>
   )

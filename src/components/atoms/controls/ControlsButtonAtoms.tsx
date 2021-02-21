@@ -1,12 +1,15 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import IconAtoms from "../IconAtoms"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
 import { DefaultAnimation } from "../../../styles/animation/GeneralAnimationStyle"
 import { ControlHover } from "../../../styles/shadow/GeneralShadowStyle"
 
-const ControlsButtonContainer = styled.button<{ size: number }>`
+const ControlsButtonContainer = styled.button<{
+  size: number
+  isActive: boolean
+}>`
   padding: 0;
   display: flex;
   flex-direction: row;
@@ -22,12 +25,22 @@ const ControlsButtonContainer = styled.button<{ size: number }>`
   position: relative;
   z-index: 6;
 
-  &:hover {
-    box-shadow: ${ControlHover};
-  }
-
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
+
+  ${({ isActive }) =>
+    !isActive &&
+    css`
+      cursor: default;
+    `}
+
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      &:hover {
+        box-shadow: ${ControlHover};
+      }
+    `}
 `
 
 export type Props = {
@@ -35,11 +48,18 @@ export type Props = {
   iconSize?: number
   icon: IconProp
   onClick?: () => void
+  isActive?: boolean
 }
 
-const ControlsButtonAtoms = ({ size, iconSize, icon, onClick }: Props) => {
+const ControlsButtonAtoms = ({
+  size,
+  iconSize,
+  icon,
+  onClick,
+  isActive = true,
+}: Props) => {
   return (
-    <ControlsButtonContainer size={size} onClick={onClick}>
+    <ControlsButtonContainer size={size} onClick={onClick} isActive={isActive}>
       <IconAtoms
         style={{
           width: iconSize ? iconSize : size / 2 - 2,
