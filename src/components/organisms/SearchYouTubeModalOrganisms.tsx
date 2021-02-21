@@ -54,6 +54,7 @@ const SearchYouTubeModalOrganisms = () => {
     if (!searchKeyword) return
     dispatch(asyncSearchYouTube(searchKeyword))
     LoggerUtil.debug(searchState.result)
+    setSearchKeyword("")
   }
 
   const closeModal = () => {
@@ -95,6 +96,7 @@ const SearchYouTubeModalOrganisms = () => {
               onChange={insertSearchKeyWord}
               onClick={searchYouTube}
             />
+            <GeneralSpacer vertical={-12} />
           </CardAtoms>
         </SearchCardWrap>
       </MaskAtoms>
