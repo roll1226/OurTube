@@ -14,7 +14,7 @@ service cloud.firestore {
     }
 
     function exitingQuestions(roomID) {
-      return exists(/databases/$(database)/documents/lives/$(roomID));
+      return exists(/databases/$(database)/documents/rooms/$(roomID));
     }
 
     match /users/{userID} {
@@ -25,7 +25,7 @@ service cloud.firestore {
         incomingData().name.size() > 0 &&
         incomingData().name.size() <= 20 &&
         incomingData().joinedRooms is list &&
-        joinedRooms().joinedRooms.size() == 0 &&
+        incomingData().joinedRooms.size() == 0 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
@@ -115,15 +115,14 @@ service cloud.firestore {
       }
 
       match /status/{userID} {
-        allow read: isAuthenticated();
+        allow read: if isAuthenticated();
 
-        allow update: isUserAuthenticated(userID) &&
+        allow update: if isUserAuthenticated(userID) &&
           incomingData().state is string &&
-          incomingData().matches('online|offline') &&
           incomingData().lastChanged is timestamp &&
           incomingData().lastChanged == request.time;
 
-        allow delete: isUserAuthenticated(userID);
+        allow delete: if isUserAuthenticated(userID);
       }
     }
   }

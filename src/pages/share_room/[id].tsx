@@ -93,7 +93,6 @@ const ShareRoom = () => {
   useEffect(() => {
     if (!authUser) return
     if (!roomId) return
-    if (!queryPassword) return
 
     const insertRoomInUser = (roomId: string, uid: string) => {
       FirebaseStoreUtil.setRoomSignInState(roomId, uid)
