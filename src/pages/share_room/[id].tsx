@@ -21,6 +21,10 @@ import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTub
 import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
+import {
+  GeneralText,
+  GeneralFontSize,
+} from "../../styles/typography/GeneralTextStyle"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -46,7 +50,7 @@ const ContentWrap = styled.div<{ position: "left" | "right" }>`
 
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
 `
 
 export type YouTubePlayer = {
@@ -85,6 +89,7 @@ const ShareRoom = () => {
   const [newVideoId, setNewVideoId] = useState("")
   const [signInId, setSignInId] = useState("")
   const [password, setPassword] = useState("")
+  const [roomTitle, setRoomTitle] = useState("")
 
   useEffect(() => {
     dispatch(modalSlice.actions.setLoading(true))
@@ -215,6 +220,7 @@ const ShareRoom = () => {
 
               LoggerUtil.debug("now play number", room.data().playNow)
 
+              setRoomTitle(room.data().roomName)
               setPassword(room.data().password)
               setListCnt(room.data().listCnt)
               setPlayNow(room.data().playNow)
@@ -540,6 +546,12 @@ const ShareRoom = () => {
       <AccountHeadMolecules />
 
       <ContentWrap position={"left"}>
+        <GeneralText fontSize={GeneralFontSize.SIZE_24}>
+          {roomTitle}
+        </GeneralText>
+
+        <GeneralSpacer vertical={8} />
+
         <YouTubePlayerOrganisms
           clickYouTube={clickYouTube}
           isInitThumbnail={isInitThumbnail}
