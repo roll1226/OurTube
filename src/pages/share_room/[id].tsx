@@ -18,6 +18,8 @@ import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
 import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
+import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
+import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 
 const ShareRoomContainer = styled.div`
   width: 100vw;
@@ -40,6 +42,10 @@ const ContentWrap = styled.div<{ position: "left" | "right" }>`
     css`
       margin-right: 40px;
     `}
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `
 
 export type YouTubePlayer = {
@@ -95,7 +101,7 @@ const ShareRoom = () => {
    * get live info
    * @param event
    */
-  const getLiveInfo = async (event) => {
+  const getRoomInfo = async (event) => {
     if (!roomId) return
 
     const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
@@ -137,9 +143,9 @@ const ShareRoom = () => {
             if (user.type === "added") {
               stopIntervalCurrentTime()
               const changeUser = user.doc.data()
-              const liveInfo = await FirebaseStoreUtil.room(roomId).get()
-              const playNow = liveInfo.data().playNow
-              const getStoreVideoId = liveInfo.data().videoId[playNow]
+              const room = await FirebaseStoreUtil.room(roomId).get()
+              const playNow = room.data().playNow
+              const getStoreVideoId = room.data().videoId[playNow]
               const uid = getCurrentUser()
               setSignInId(uid)
 
@@ -150,20 +156,20 @@ const ShareRoom = () => {
                 return startIntervalCurrentTime()
 
               if (changeUser.name === "setYouTubePlayerBot") {
-                if (liveInfo.data().play) {
+                if (room.data().play) {
                   event.target.playVideo()
-                  setListCnt(liveInfo.data().listCnt)
+                  setListCnt(room.data().listCnt)
                   return
                 }
               }
 
-              LoggerUtil.debug("now play number", liveInfo.data().playNow)
+              LoggerUtil.debug("now play number", room.data().playNow)
 
-              setListCnt(liveInfo.data().listCnt)
-              setPlayNow(liveInfo.data().playNow)
+              setListCnt(room.data().listCnt)
+              setPlayNow(room.data().playNow)
               setVideoId(getStoreVideoId)
 
-              changeVideoStatus(liveInfo.data(), event, getStoreVideoId)
+              changeVideoStatus(room.data(), event, getStoreVideoId)
             }
           })
         },
@@ -175,26 +181,26 @@ const ShareRoom = () => {
 
   /**
    * change video status
-   * @param liveInfo
+   * @param room
    */
   const changeVideoStatus = async (
-    liveInfo: RoomModel,
+    room: RoomModel,
     event: YouTubePlayer,
     getStoreVideoId: string | undefined
   ) => {
     if (!event) return
-    // isPlay = liveInfo.play
-    setIsPlayYouTube(liveInfo.play)
+    // isPlay = room.play
+    setIsPlayYouTube(room.play)
     // stopIntervalCurrentTime()
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
-    if (!liveInfo.play || !getStoreVideoId) return event.target.pauseVideo()
+    if (!room.play || !getStoreVideoId) return event.target.pauseVideo()
 
     setIsAnotherUser(true)
     setIsInitThumbnail(false)
     // setTimeout(() => {
     await event.target.playVideo()
-    await event.target.seekTo(liveInfo.currentTime)
-    setCurrentTime(liveInfo.currentTime)
+    await event.target.seekTo(room.currentTime)
+    setCurrentTime(room.currentTime)
     // }, 350)
   }
 
@@ -206,7 +212,7 @@ const ShareRoom = () => {
     await event.target.mute()
     setVolume(event.target.getVolume())
     setYouTubeEvent(event)
-    getLiveInfo(event)
+    getRoomInfo(event)
   }
 
   /**
@@ -478,6 +484,10 @@ const ShareRoom = () => {
           isPlay={isPlayYouTube}
           currentTime={currentTime}
         />
+
+        <GeneralSpacer vertical={8} />
+
+        <LinkCopyButtonMolecules roomId={roomId} />
       </ContentWrap>
 
       <ContentWrap position={"right"}>
