@@ -109,12 +109,12 @@ const CreateRoomOrganisms = () => {
 
         <InputAtoms
           width={360}
-          placeholder={"ルーム名(50文字以内)"}
+          placeholder={"ルーム名(20文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
           value={roomName}
           onChange={insertRoomName}
-          isError={roomName.length > 50}
-          errorText={"ルーム名は50文字以内です。"}
+          isError={roomName.length > 20 ? true : false}
+          errorText={"ルーム名は20文字以内です。"}
         />
 
         <GeneralSpacer vertical={32} />

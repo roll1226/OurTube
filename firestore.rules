@@ -57,7 +57,7 @@ service cloud.firestore {
         incomingData().videoId.size() == 0 &&
         incomingData().roomName is string &&
         incomingData().roomName.size() > 0 &&
-        incomingData().roomName.size() <= 50 &&
+        incomingData().roomName.size() <= 20 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
