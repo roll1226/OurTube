@@ -28,7 +28,7 @@ const HeadAtoms = ({
       <meta property="og:url" content={url} />
       <meta
         property="og:image"
-        content="https://firebasestorage.googleapis.com/v0/b/our-tubes.appspot.com/o/ogp%2Fogp.jpg?alt=media&token=08ab64b1-4893-4594-a661-b61abf39c107"
+        content="https://firebasestorage.googleapis.com/v0/b/our-tubes.appspot.com/o/ogp%2Fogp.jpg?alt=media&token=976b857e-6373-4526-8e1a-b169535795cf"
       />
       <meta property="og:site_name" content="OurTube" />
       <meta name="twitter:card" content="summary_large_image" />
