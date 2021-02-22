@@ -16,6 +16,8 @@ import {
 } from "../styles/typography/GeneralTextStyle"
 import { useDispatch } from "react-redux"
 import modalSlice from "../ducks/modal/slice"
+import LoggerUtil from "../utils/debugger/LoggerUtil"
+import toastSlice from "../ducks/toast/slice"
 
 const TopPageContainer = styled.div`
   position: relative;
@@ -54,16 +56,33 @@ const TopPage = () => {
     else router.push(OurTubePath.CREATE_ACCOUNT)
   }
 
+  const signInError = () => {
+    dispatch(toastSlice.actions.setIsActive(true))
+    dispatch(toastSlice.actions.setText("サインインに失敗した"))
+    dispatch(toastSlice.actions.setToastColor("error"))
+    setTimeout(() => {
+      dispatch(toastSlice.actions.setIsActive(false))
+    }, 2000)
+  }
+
   const googleSignInClick = async () => {
     dispatch(modalSlice.actions.setLoading(true))
-    const { user } = await FirebaseAuthenticationUtil.signInForGoogle()
-    isNameStore(user.uid)
+    try {
+      const { user } = await FirebaseAuthenticationUtil.signInForGoogle()
+      isNameStore(user.uid)
+    } catch (error) {
+      signInError()
+    }
     dispatch(modalSlice.actions.setLoading(false))
   }
   const twitterSignInClick = async () => {
     dispatch(modalSlice.actions.setLoading(true))
-    const { user } = await FirebaseAuthenticationUtil.signInForTwitter()
-    isNameStore(user.uid)
+    try {
+      const { user } = await FirebaseAuthenticationUtil.signInForTwitter()
+      isNameStore(user.uid)
+    } catch (error) {
+      signInError()
+    }
     dispatch(modalSlice.actions.setLoading(false))
   }
 

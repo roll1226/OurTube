@@ -15,6 +15,14 @@ class FirebaseDatabaseUtil {
   public static connectedDB() {
     return database.ref(".info/connected")
   }
+
+  public static offlineState() {
+    return database.goOffline()
+  }
+
+  public static onlineState() {
+    return database.goOnline()
+  }
 }
 
 export default FirebaseDatabaseUtil

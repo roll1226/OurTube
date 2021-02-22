@@ -6,6 +6,7 @@ import styled from "styled-components"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 import { useRouter } from "next/router"
 import { OurTubePath } from "../../consts/PathConsts"
+import FirebaseDatabaseUtil from "../../utils/lib/FirebaseDatabaseUtil"
 
 const SignOutButtonContainer = styled.div`
   position: absolute;
@@ -15,7 +16,10 @@ const SignOutButtonContainer = styled.div`
 
 const SignOutButtonMolecules = () => {
   const router = useRouter()
+
   const singOut = async () => {
+    FirebaseDatabaseUtil.offlineState()
+
     await FirebaseAuthenticationUtil.SingOut()
     router.replace(OurTubePath.TOP)
   }

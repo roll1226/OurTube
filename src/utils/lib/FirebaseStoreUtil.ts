@@ -67,12 +67,10 @@ class FirebaseStoreUtil {
   public static async setLiveCurrentTime(
     roomId: string,
     currentTime: number,
-    name: string,
-    play: boolean
+    name: string
   ) {
     await FirebaseStoreUtil.room(roomId).update({
       currentTime,
-      play,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
     await FirebaseStoreUtil.setChangeUser(roomId, name)

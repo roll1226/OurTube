@@ -7,6 +7,8 @@ import JoinedRoomOrganisms from "../components/organisms/JoinedRoomOrganisms"
 import { GeneralSpacer } from "../styles/spacer/GeneralSpacerStyle"
 import DoneCreateRoomOrganisms from "../components/organisms/DoneCreateRoomOrganisms"
 import { useModalState } from "../ducks/modal/selectors"
+import { useEffect } from "react"
+import FirebaseDatabaseUtil from "../utils/lib/FirebaseDatabaseUtil"
 
 const CreateRoomContainer = styled.div`
   width: 100vw;
@@ -28,6 +30,10 @@ const CreateRoomCard = styled.div`
 
 const CreateRoom = () => {
   const modalState = useModalState().modal
+
+  useEffect(() => {
+    FirebaseDatabaseUtil.offlineState()
+  }, [])
 
   return (
     <CreateRoomContainer>
