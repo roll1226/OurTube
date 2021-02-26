@@ -158,84 +158,82 @@ const ShareRoom = () => {
 
     const userData = getCurrentUser()
 
-    if (!userData)
-      return router.replace(
-        `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
-          queryPassword ? `?p=${queryPassword}` : ""
-        }`
+    const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
+    const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
+
+    getJoinFlag
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .onSnapshot(
+        async (flags) => {
+          flags.docChanges().forEach(async (flag) => {
+            if (isPlay === null) return
+
+            if (flag.type === "added") {
+              FirebaseStoreUtil.setLiveCurrentTime(
+                roomId,
+                event.target.getCurrentTime() + 2,
+                `${flag.doc.data().uid}SetJoinRoomUser`
+              )
+            }
+          })
+        },
+        (error) => {
+          LoggerUtil.debug(`error log: ${error}`)
+        }
       )
-    else {
-      const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
-      const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
 
-      getJoinFlag
-        .orderBy("createdAt", "desc")
-        .limit(1)
-        .onSnapshot(
-          async (flags) => {
-            flags.docChanges().forEach(async (flag) => {
-              if (isPlay === null) return
+    getChangeUser
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .onSnapshot(
+        async (users) => {
+          users.docChanges().forEach(async (user) => {
+            if (user.type === "added") {
+              const changeUser = user.doc.data()
+              const room = await FirebaseStoreUtil.room(roomId).get()
+              const playNow = room.data().playNow
+              const getStoreVideoId = room.data().videoId[playNow]
+              const uid = getCurrentUser()
+              setSignInId(uid)
 
-              if (flag.type === "added") {
-                FirebaseStoreUtil.setLiveCurrentTime(
-                  roomId,
-                  event.target.getCurrentTime() + 2,
-                  `${flag.doc.data().uid}SetJoinRoomUser`
-                )
-              }
-            })
-          },
-          (error) => {
-            LoggerUtil.debug(`error log: ${error}`)
-          }
-        )
+              if (
+                isPlay &&
+                changeUser.name.includes("SetJoinRoomUser") &&
+                changeUser.name !== `${uid}SetJoinRoomUser`
+              )
+                return
 
-      getChangeUser
-        .orderBy("createdAt", "desc")
-        .limit(1)
-        .onSnapshot(
-          async (users) => {
-            users.docChanges().forEach(async (user) => {
-              if (user.type === "added") {
-                const changeUser = user.doc.data()
-                const room = await FirebaseStoreUtil.room(roomId).get()
-                const playNow = room.data().playNow
-                const getStoreVideoId = room.data().videoId[playNow]
-                const uid = getCurrentUser()
-                setSignInId(uid)
-
-                if (
-                  isPlay &&
-                  changeUser.name.includes("SetJoinRoomUser") &&
-                  changeUser.name !== `${uid}SetJoinRoomUser`
-                )
+              if (isPlay && changeUser.name === "setYouTubePlayerBot") {
+                if (room.data().play) {
+                  event.target.playVideo()
+                  setListCnt(room.data().listCnt)
                   return
-
-                if (isPlay && changeUser.name === "setYouTubePlayerBot") {
-                  if (room.data().play) {
-                    event.target.playVideo()
-                    setListCnt(room.data().listCnt)
-                    return
-                  }
                 }
-
-                LoggerUtil.debug("now play number", room.data().playNow)
-
-                setRoomTitle(room.data().roomName)
-                setPassword(room.data().password)
-                setListCnt(room.data().listCnt)
-                setPlayNow(room.data().playNow)
-                setVideoId(getStoreVideoId)
-
-                changeVideoStatus(room.data(), event, getStoreVideoId)
               }
-            })
-          },
-          (error) => {
-            LoggerUtil.debug(`error log: ${error}`)
-          }
-        )
-    }
+
+              LoggerUtil.debug("now play number", room.data().playNow)
+
+              setRoomTitle(room.data().roomName)
+              setPassword(room.data().password)
+              setListCnt(room.data().listCnt)
+              setPlayNow(room.data().playNow)
+              setVideoId(getStoreVideoId)
+
+              changeVideoStatus(room.data(), event, getStoreVideoId)
+            }
+          })
+        },
+        (error) => {
+          LoggerUtil.debug(`error log: ${error}`)
+        }
+      )
+
+    return router.replace(
+      `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
+        queryPassword ? `?p=${queryPassword}` : ""
+      }`
+    )
   }
 
   /**
