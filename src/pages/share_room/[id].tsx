@@ -229,11 +229,12 @@ const ShareRoom = () => {
         }
       )
 
-    return router.replace(
-      `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
-        queryPassword ? `?p=${queryPassword}` : ""
-      }`
-    )
+    if (!userData)
+      return router.replace(
+        `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
+          queryPassword ? `?p=${queryPassword}` : ""
+        }`
+      )
   }
 
   /**
