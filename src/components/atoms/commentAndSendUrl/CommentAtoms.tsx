@@ -22,6 +22,7 @@ const UserPhoto = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 1000px;
+  border: solid 2px ${GeneralColorStyle.Black};
 `
 
 const CommentWrap = styled.div<{ isMyComment: boolean }>`
@@ -47,7 +48,14 @@ export type Props = {
 const CommentAtoms = ({ name, comment, photoURL, isMyComment }: Props) => {
   return (
     <CommentContainer>
-      <UserPhoto src={photoURL} alt="ユーザアイコン" />
+      <UserPhoto
+        src={
+          photoURL
+            ? photoURL
+            : "https://cahsi.utep.edu/wp-content/uploads/kisspng-computer-icons-user-clip-art-user-5abf13db5624e4.1771742215224718993529.png"
+        }
+        alt="ユーザアイコン"
+      />
 
       <GeneralSpacer horizontal={4} />
 

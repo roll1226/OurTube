@@ -4,8 +4,8 @@ import ColorUtil from "../../utils/color/ColorUtil"
 
 const StatusUserContainer = styled.div`
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
 `
 
 const UserPhoto = styled.img`
@@ -13,6 +13,7 @@ const UserPhoto = styled.img`
   height: 48px;
   border-radius: 1000px;
   background: ${GeneralColorStyle.White};
+  border: solid 2px ${GeneralColorStyle.Black};
 `
 
 const Status = styled.div<{ state: "online" | "offline" }>`
