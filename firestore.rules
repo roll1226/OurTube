@@ -108,6 +108,8 @@ service cloud.firestore {
         allow create: if isAuthenticated() &&
           incomingData().name is string &&
           incomingData().comment is string &&
+          incomingData().comment.size() != 0 &&
+          incomingData().photoURL is string &&
           incomingData().uid is string &&
           incomingData().uid == request.auth.uid &&
           incomingData().createdAt is timestamp &&

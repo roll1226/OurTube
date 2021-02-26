@@ -60,6 +60,7 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
     const sendUser = FirebaseAuthenticationUtil.getCurrentUser()
     await FirebaseStoreUtil.createComment(
       roomId,
+      sendUser.photoURL,
       sendUser.uid,
       sendUser.displayName,
       comment

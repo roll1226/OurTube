@@ -274,18 +274,21 @@ class FirebaseStoreUtil {
   /**
    * create comment
    * @param roomId
+   * @param photoURL
    * @param uid
    * @param name
    * @param comment
    */
   public static async createComment(
     roomId: string,
+    photoURL: string,
     uid: string,
     name: string,
     comment: string
   ) {
     await FirebaseStoreUtil.chat(roomId).add({
       uid,
+      photoURL,
       name,
       comment,
       createdAt: FirebaseStoreUtil.getTimeStamp(),

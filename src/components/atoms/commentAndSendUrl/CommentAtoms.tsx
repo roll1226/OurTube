@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
+import { GeneralSpacer } from "../../../styles/spacer/GeneralSpacerStyle"
 import {
   GeneralText,
   GeneralTextParagraph,
@@ -9,10 +10,18 @@ import {
 const CommentContainer = styled.div`
   margin-bottom: 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
+`
+
+const CommentWraps = styled.div``
+
+const UserPhoto = styled.img`
+  width: 36px;
+  height: 36px;
+  border-radius: 1000px;
 `
 
 const CommentWrap = styled.div<{ isMyComment: boolean }>`
@@ -31,27 +40,34 @@ const CommentWrap = styled.div<{ isMyComment: boolean }>`
 export type Props = {
   name: string
   comment: string
+  photoURL: string
   isMyComment: boolean
 }
 
-const CommentAtoms = ({ name, comment, isMyComment }: Props) => {
+const CommentAtoms = ({ name, comment, photoURL, isMyComment }: Props) => {
   return (
     <CommentContainer>
-      <GeneralText
-        fontSize={GeneralFontSize.SIZE_12}
-        fontColor={GeneralColorStyle.Black}
-      >
-        {name}
-      </GeneralText>
+      <UserPhoto src={photoURL} alt="ユーザアイコン" />
 
-      <CommentWrap isMyComment={isMyComment}>
-        <GeneralTextParagraph
-          fontSize={GeneralFontSize.SIZE_16}
-          fontColor={GeneralColorStyle.White}
+      <GeneralSpacer horizontal={4} />
+
+      <CommentWraps>
+        <GeneralText
+          fontSize={GeneralFontSize.SIZE_12}
+          fontColor={GeneralColorStyle.Black}
         >
-          {comment}
-        </GeneralTextParagraph>
-      </CommentWrap>
+          {name}
+        </GeneralText>
+
+        <CommentWrap isMyComment={isMyComment}>
+          <GeneralTextParagraph
+            fontSize={GeneralFontSize.SIZE_16}
+            fontColor={GeneralColorStyle.White}
+          >
+            {comment}
+          </GeneralTextParagraph>
+        </CommentWrap>
+      </CommentWraps>
     </CommentContainer>
   )
 }

@@ -28,6 +28,7 @@ export type Props = {
     name: string
     isMyComment: boolean
     comment: string
+    photoURL: string
   }[]
 }
 
@@ -51,6 +52,7 @@ const CommentsListMolecules = ({ comments }: Props) => {
           name={comment.name}
           isMyComment={comment.isMyComment}
           comment={comment.comment}
+          photoURL={comment.photoURL}
         />
       ))}
 

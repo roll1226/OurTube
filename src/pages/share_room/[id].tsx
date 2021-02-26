@@ -175,7 +175,7 @@ const ShareRoom = () => {
               if (flag.type === "added") {
                 FirebaseStoreUtil.setLiveCurrentTime(
                   roomId,
-                  event.target.getCurrentTime(),
+                  event.target.getCurrentTime() + 2,
                   `${flag.doc.data().uid}SetJoinRoomUser`
                 )
               }
@@ -257,11 +257,11 @@ const ShareRoom = () => {
 
     setIsAnotherUser(true)
     setIsInitThumbnail(false)
-    // setTimeout(() => {
-    await event.target.playVideo()
-    await event.target.seekTo(room.currentTime)
-    setCurrentTime(room.currentTime)
-    // }, 350)
+    setTimeout(async () => {
+      await event.target.playVideo()
+      await event.target.seekTo(room.currentTime)
+      setCurrentTime(room.currentTime)
+    }, 350)
   }
 
   /**
