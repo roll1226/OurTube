@@ -36,3 +36,5 @@ database-debug.log
 firestore-debug.log
 firebase-debug.log
 ui-debug.log
+
+/functions

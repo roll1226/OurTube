@@ -17,7 +17,7 @@ import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
-import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
+// import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
 import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
@@ -194,6 +194,7 @@ const ShareRoom = () => {
             users.docChanges().forEach(async (user) => {
               if (user.type === "added") {
                 stopIntervalCurrentTime()
+
                 const changeUser = user.doc.data()
                 const room = await FirebaseStoreUtil.room(roomId).get()
                 const playNow = room.data().playNow
@@ -287,7 +288,7 @@ const ShareRoom = () => {
     switch (ytStatus) {
       case YouTube.PlayerState.PLAYING:
         setDurationTime(event.target.getDuration())
-        LoggerUtil.debug("hobdhobho")
+        LoggerUtil.debug("playing youtube")
         stopIntervalCurrentTime()
         startIntervalCurrentTime()
 
@@ -295,7 +296,7 @@ const ShareRoom = () => {
         if (!isInitVideo) return
 
         setIsInitVide(false)
-        event.target.seekTo(currentTime)
+        // event.target.seekTo(currentTime)
         setIsAnotherUser(false)
         break
 
@@ -375,7 +376,7 @@ const ShareRoom = () => {
     const rangeCurrentTime = Number(rangeEvent.value)
 
     setCurrentTime(rangeCurrentTime)
-    youTubeEvent.target.seekTo(rangeCurrentTime)
+    // youTubeEvent.target.seekTo(rangeCurrentTime)
     // const isPlayNow = youTubeEvent.target.getPlayerState()
 
     FirebaseStoreUtil.setLiveCurrentTime(
@@ -410,6 +411,8 @@ const ShareRoom = () => {
    * @param event
    */
   const startIntervalCurrentTime = () => {
+    stopIntervalCurrentTime()
+
     intervalCurrentTime = setInterval(() => {
       setCurrentTime((currentTime) => currentTime + 1)
     }, 1000)
@@ -595,7 +598,7 @@ const ShareRoom = () => {
         videoId={videoId}
       />
 
-      <SearchYouTubeModalOrganisms />
+      {/* <SearchYouTubeModalOrganisms /> */}
     </ShareRoomContainer>
   )
 }

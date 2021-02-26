@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react"
+import { ChangeEvent, KeyboardEvent } from "react"
 import styled, { css } from "styled-components"
 import InputAtoms from "../../atoms/InputAtoms"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
@@ -34,6 +34,11 @@ export type Props = {
 }
 
 const SendTextMolecules = ({ placeholder, text, onChange, onClick }: Props) => {
+  const onKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!text) return
+    if (event.key === "Enter") onClick()
+  }
+
   return (
     <SendContainer>
       <GeneralSpacer horizontal={28} />
@@ -43,6 +48,7 @@ const SendTextMolecules = ({ placeholder, text, onChange, onClick }: Props) => {
         value={text}
         outlineColor={GeneralColorStyle.Black}
         onChange={onChange}
+        onKeyPress={onKeyPress}
       />
       <GeneralSpacer horizontal={8} />
 

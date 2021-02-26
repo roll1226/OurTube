@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import {
   faPause,
   faPlay,
-  faSearch,
+  // faSearch,
   faVolumeDown,
   faVolumeMute,
   faVolumeOff,
@@ -20,8 +20,13 @@ import ControlsVolumeRangeInputAtoms from "../atoms/controls/ControlsVolumeRange
 import dynamic from "next/dynamic"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
-import { useDispatch } from "react-redux"
-import modalSlice from "../../ducks/modal/slice"
+// import { useDispatch } from "react-redux"
+// import modalSlice from "../../ducks/modal/slice"
+import {
+  GeneralFontSize,
+  GeneralText,
+} from "../../styles/typography/GeneralTextStyle"
+import DataUtil from "../../utils/date/DataUtil"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -168,7 +173,7 @@ const ControlsMolecules = ({
   const { id } = router.query
   const roomId = id as string
 
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const [isVolumeHover, setIsVolumeHover] = useState(false)
   const [youTubeTitle, setYouTubeTitle] = useState("")
   const isOpenVolumeControl = (isHover: boolean, isMute: boolean) => {
@@ -186,9 +191,9 @@ const ControlsMolecules = ({
     getTitle()
   }, [videoId, roomId])
 
-  const openSearchModal = () => {
-    dispatch(modalSlice.actions.setIsActive(true))
-  }
+  // const openSearchModal = () => {
+  //   dispatch(modalSlice.actions.setIsActive(true))
+  // }
 
   return (
     <ControlsContainer>
@@ -225,11 +230,18 @@ const ControlsMolecules = ({
         </ControlItemsWrap>
 
         <ControlItemsWrap>
-          <ControlsButtonAtoms
+          {/* <ControlsButtonAtoms
             size={48}
             icon={faSearch}
             onClick={openSearchModal}
-          />
+          /> */}
+
+          <GeneralText fontSize={GeneralFontSize.SIZE_16}>
+            {DataUtil.formatData(currentTimeValue)} /{" "}
+            {videoId
+              ? DataUtil.formatData(currentTimeMax)
+              : DataUtil.formatData(0)}
+          </GeneralText>
 
           <GeneralSpacer horizontal={28} />
 

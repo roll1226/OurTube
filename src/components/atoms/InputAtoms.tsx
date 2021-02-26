@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react"
+import { ChangeEvent, KeyboardEvent } from "react"
 import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { CardShadow } from "../../styles/shadow/GeneralShadowStyle"
@@ -47,6 +47,7 @@ export type Props = {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   errorText?: string
   isError?: boolean
+  onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void
 }
 
 const InputAtoms = ({
@@ -58,6 +59,7 @@ const InputAtoms = ({
   onChange,
   errorText,
   isError = false,
+  onKeyPress,
 }: Props) => {
   return (
     <>
@@ -70,6 +72,7 @@ const InputAtoms = ({
         placeholder={placeholder}
         disabled={disabled}
         disabledStyle={disabled}
+        onKeyPress={onKeyPress}
       />
 
       {isError && (

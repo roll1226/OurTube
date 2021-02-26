@@ -9,7 +9,7 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import OurTubeLogoAtoms, { LogoColor } from "../atoms/svg/OurTubeLogoAtoms"
 import InputAtoms from "../atoms/InputAtoms"
-import { ChangeEvent } from "react"
+import { ChangeEvent, KeyboardEvent } from "react"
 
 export type Props = {
   value: string
@@ -26,6 +26,11 @@ const InsertRoomPasswordAndGuestMaskOrganisms = ({
   onChange,
   onClick,
 }: Props) => {
+  const onKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!value) return
+    if (event.key === "Enter") onClick()
+  }
+
   return (
     <>
       <MaskAtoms isOpen={true}>
@@ -46,6 +51,7 @@ const InsertRoomPasswordAndGuestMaskOrganisms = ({
             value={value}
             outlineColor={GeneralColorStyle.Black}
             onChange={onChange}
+            onKeyPress={onKeyPress}
           />
 
           <GeneralSpacer vertical={16} />
