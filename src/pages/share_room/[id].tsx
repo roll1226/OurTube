@@ -193,8 +193,6 @@ const ShareRoom = () => {
           async (users) => {
             users.docChanges().forEach(async (user) => {
               if (user.type === "added") {
-                stopIntervalCurrentTime()
-
                 const changeUser = user.doc.data()
                 const room = await FirebaseStoreUtil.room(roomId).get()
                 const playNow = room.data().playNow
@@ -207,7 +205,7 @@ const ShareRoom = () => {
                   changeUser.name.includes("SetJoinRoomUser") &&
                   changeUser.name !== `${uid}SetJoinRoomUser`
                 )
-                  return startIntervalCurrentTime()
+                  return
 
                 if (isPlay && changeUser.name === "setYouTubePlayerBot") {
                   if (room.data().play) {
@@ -251,7 +249,11 @@ const ShareRoom = () => {
     setIsPlayYouTube(room.play)
     // stopIntervalCurrentTime()
     LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
-    if (!room.play || !getStoreVideoId) return event.target.pauseVideo()
+    if (!room.play || !getStoreVideoId) {
+      stopIntervalCurrentTime()
+      event.target.pauseVideo()
+      return
+    }
 
     setIsAnotherUser(true)
     setIsInitThumbnail(false)
