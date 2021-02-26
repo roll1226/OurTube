@@ -394,11 +394,13 @@ class FirebaseStoreUtil {
 
     const isOfflineForDatabase = {
       state: "offline",
+      photoURL,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
     }
 
     const isOnlineForDatabase = {
       state: "online",
+      photoURL,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
     }
 
