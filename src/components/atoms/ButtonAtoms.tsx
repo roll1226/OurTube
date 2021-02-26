@@ -32,6 +32,7 @@ const ButtonContainer = styled.button<{
   outline: none;
   cursor: pointer;
   transition: all 150ms ease-out;
+  flex-shrink: 0;
 
   ${({ outlineColor }) =>
     outlineColor &&

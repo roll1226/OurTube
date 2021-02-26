@@ -18,10 +18,10 @@ import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
 import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
 // import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
-import LinkCopyButtonMolecules from "../../components/molecules/LinkCopyButtonMolecules"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
 import FirebaseDatabaseUtil from "../../utils/lib/FirebaseDatabaseUtil"
+import YouTubeUnderContentOrganisms from "../../components/organisms/YouTubeUnderContentOrganisms"
 import {
   GeneralText,
   GeneralFontSize,
@@ -100,9 +100,13 @@ const ShareRoom = () => {
     if (!authUser) return
     if (!roomId) return
 
-    const insertRoomInUser = (roomId: string, uid: string) => {
+    const insertRoomInUser = (
+      roomId: string,
+      uid: string,
+      photoURL: string
+    ) => {
       FirebaseDatabaseUtil.onlineState()
-      FirebaseStoreUtil.setRoomSignInState(roomId, uid)
+      FirebaseStoreUtil.setRoomSignInState(roomId, uid, photoURL)
       FirebaseStoreUtil.setJoinFlag(roomId, uid)
     }
 
@@ -112,13 +116,13 @@ const ShareRoom = () => {
       LoggerUtil.debug(userData.data())
 
       if (userData.data().joinedRooms.includes(roomId)) {
-        insertRoomInUser(roomId, authUser.uid)
+        insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
       } else {
         const room = await FirebaseStoreUtil.room(roomId).get()
 
         if (room.data().privateRoom) {
           if (room.data().hostId === authUser.uid) {
-            insertRoomInUser(roomId, authUser.uid)
+            insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
             await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
           } else {
             if (room.data().password !== queryPassword)
@@ -127,7 +131,7 @@ const ShareRoom = () => {
               )
           }
         } else {
-          insertRoomInUser(roomId, authUser.uid)
+          insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
           await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
         }
       }
@@ -569,7 +573,7 @@ const ShareRoom = () => {
 
         <GeneralSpacer vertical={8} />
 
-        <LinkCopyButtonMolecules roomId={roomId} password={password} />
+        <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
       </ContentWrap>
 
       <ContentWrap position={"right"}>

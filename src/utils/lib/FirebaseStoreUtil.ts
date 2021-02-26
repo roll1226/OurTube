@@ -377,8 +377,13 @@ class FirebaseStoreUtil {
    * set room sign in state
    * @param roomId
    * @param userId
+   * @param photoURL
    */
-  public static setRoomSignInState(roomId: string, userId: string) {
+  public static setRoomSignInState(
+    roomId: string,
+    userId: string,
+    photoURL: string
+  ) {
     const userStatusFireStoreRef = fireStore.doc(
       `/rooms/${roomId}/status/${userId}`
     )
@@ -399,11 +404,13 @@ class FirebaseStoreUtil {
 
     const isOfflineForFireStore = {
       state: "offline",
+      photoURL,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),
     }
 
     const isOnlineForFireStore = {
       state: "online",
+      photoURL,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),
     }
 
