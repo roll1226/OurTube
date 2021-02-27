@@ -24,12 +24,12 @@ const Status = styled.div<{ state: "online" | "offline" }>`
   top: 0;
   right: 0;
   background: ${GeneralColorStyle.Grey};
-  box-shadow: -2px 3px 4px ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.3)};
+  box-shadow: 0px 0px 4px ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.3)};
 
   ${({ state }) =>
     state === `online` &&
     css`
-      background: ${GeneralColorStyle.DarkGreen};
+      background: ${GeneralColorStyle.ActiveUser};
     `}
 `
 

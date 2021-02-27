@@ -11,6 +11,7 @@ const StatusUserListContainer = styled.div`
   overflow-x: auto;
   white-space: nowrap;
   width: 500px;
+  padding: 3px 0;
 `
 
 export type Props = {

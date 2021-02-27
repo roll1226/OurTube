@@ -262,8 +262,10 @@ const ShareRoom = () => {
     setIsInitThumbnail(false)
     setTimeout(async () => {
       await event.target.playVideo()
-      await event.target.seekTo(room.currentTime)
-      setCurrentTime(room.currentTime)
+      setTimeout(async () => {
+        await event.target.seekTo(room.currentTime)
+        setCurrentTime(room.currentTime)
+      }, 50)
     }, 350)
   }
 
