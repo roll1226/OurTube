@@ -15,7 +15,7 @@ import {
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import SignInContainerOrganisms from "../../components/organisms/SignInContainerOrganisms"
-import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
+import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import InputAtoms from "../../components/atoms/InputAtoms"
 import ButtonAtoms from "../../components/atoms/ButtonAtoms"
 

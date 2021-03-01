@@ -10,7 +10,7 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCardMolecules"
-import useFirebaseAuthentication from "../../../hooks/useFirebaseAuthentication"
+import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
 
 const RoomCardWrap = styled.div`
