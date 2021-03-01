@@ -7,13 +7,11 @@ import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import CheckboxAtoms from "../atoms/CheckboxAtoms"
 import styled from "styled-components"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
-import { useRouter } from "next/router"
 import {
   GeneralFontSize,
   GeneralFontWeight,
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
-import { OurTubePath } from "../../consts/PathConsts"
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
@@ -28,7 +26,6 @@ const PasswordWrap = styled.div`
 
 const CreateRoomOrganisms = () => {
   const dispatch = useDispatch()
-  const router = useRouter()
   const [roomName, setRoomName] = useState("")
   const [password, setPassword] = useState("")
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
@@ -53,7 +50,8 @@ const CreateRoomOrganisms = () => {
   const sendToast = (
     text: string,
     toastColor: "success" | "error",
-    roomId?: string
+    roomId?: string,
+    password?: string
   ) => {
     dispatch(toastSlice.actions.setIsActive(true))
     dispatch(toastSlice.actions.setText(text))
@@ -62,6 +60,8 @@ const CreateRoomOrganisms = () => {
       dispatch(modalSlice.actions.setRoomId(roomId))
       dispatch(modalSlice.actions.setIsActive(true))
     }
+    if (password) dispatch(modalSlice.actions.setPassword(password))
+
     setTimeout(() => {
       dispatch(toastSlice.actions.setIsActive(false))
     }, 2000)
@@ -83,8 +83,9 @@ const CreateRoomOrganisms = () => {
       .then(async (res) => {
         LoggerUtil.debug(res.data.text)
         const roomId = res.data.roomId
+        const password = res.data.password
 
-        sendToast("ルームが作成されました", "success", roomId)
+        sendToast("ルームが作成されました", "success", roomId, password)
       })
       .catch((error) => {
         sendToast("作成に失敗しました", "error")

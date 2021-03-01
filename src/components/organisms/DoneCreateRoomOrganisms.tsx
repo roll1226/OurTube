@@ -15,10 +15,11 @@ import { useRouter } from "next/router"
 
 export type Props = {
   roomId: string
+  password: string
   isOpen: boolean
 }
 
-const DoneCreateRoomOrganisms = ({ roomId, isOpen }: Props) => {
+const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
   const router = useRouter()
 
   const joinRoom = () => {
@@ -59,7 +60,7 @@ const DoneCreateRoomOrganisms = ({ roomId, isOpen }: Props) => {
 
           <GeneralSpacer vertical={8} />
 
-          <LinkCopyButtonMolecules roomId={roomId} />
+          <LinkCopyButtonMolecules roomId={roomId} password={password} />
         </CardAtoms>
       </MaskAtoms>
     </>

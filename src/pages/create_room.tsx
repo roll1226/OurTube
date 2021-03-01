@@ -56,6 +56,7 @@ const CreateRoom = () => {
       {modalState.roomId && (
         <DoneCreateRoomOrganisms
           roomId={modalState.roomId}
+          password={modalState.password}
           isOpen={modalState.isOpen}
         />
       )}

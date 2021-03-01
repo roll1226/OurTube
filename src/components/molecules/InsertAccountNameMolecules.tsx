@@ -27,7 +27,7 @@ const InsertAccountNameMolecules = ({
       <CardAtoms width={480}>
         <OurTubeLogoAtoms size={392} color={LogoColor.BLUE} />
 
-        <GeneralSpacer vertical={52} />
+        <GeneralSpacer vertical={24} />
 
         <GeneralText
           fontSize={GeneralFontSize.SIZE_36}
@@ -37,19 +37,26 @@ const InsertAccountNameMolecules = ({
           アカウント名を入力
         </GeneralText>
 
-        <GeneralSpacer vertical={32} />
+        <GeneralText
+          fontSize={GeneralFontSize.SIZE_12}
+          fontColor={GeneralColorStyle.Black}
+        >
+          &#x203B;OurTubeでは各サービスのアイコン画像が使用されます。
+        </GeneralText>
+
+        <GeneralSpacer vertical={24} />
 
         <InputAtoms
           width={360}
-          placeholder={"アカウント作成(20文字以内)"}
+          placeholder={"アカウント名(20文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
           value={userName}
           onChange={insetAccountName}
           isError={userName.length > 20}
-          errorText={"ユーザ名は20文字以内です。"}
+          errorText={"アカウント名は20文字以内です。"}
         />
 
-        <GeneralSpacer vertical={8} />
+        <GeneralSpacer vertical={24} />
 
         <ButtonAtoms
           bgColor={GeneralColorStyle.DarkGreen}

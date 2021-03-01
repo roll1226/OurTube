@@ -120,6 +120,8 @@ const ShareRoom = () => {
       } else {
         const room = await FirebaseStoreUtil.room(roomId).get()
 
+        if (!room.exists) router.replace("/error")
+
         if (room.data().privateRoom) {
           if (room.data().hostId === authUser.uid) {
             insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
@@ -192,6 +194,9 @@ const ShareRoom = () => {
             if (user.type === "added") {
               const changeUser = user.doc.data()
               const room = await FirebaseStoreUtil.room(roomId).get()
+
+              if (!room.exists) router.replace("/error")
+
               const playNow = room.data().playNow
               const getStoreVideoId = room.data().videoId[playNow]
               const uid = getCurrentUser()
@@ -262,10 +267,8 @@ const ShareRoom = () => {
     setIsInitThumbnail(false)
     setTimeout(async () => {
       await event.target.playVideo()
-      setTimeout(async () => {
-        await event.target.seekTo(room.currentTime)
-        setCurrentTime(room.currentTime)
-      }, 50)
+      await event.target.seekTo(room.currentTime)
+      setCurrentTime(room.currentTime)
     }, 350)
   }
 
@@ -302,8 +305,8 @@ const ShareRoom = () => {
         if (!isAnotherUser) return
         if (!isInitVideo) return
 
+        event.target.seekTo(currentTime)
         setIsInitVide(false)
-        // event.target.seekTo(currentTime)
         setIsAnotherUser(false)
         break
 
