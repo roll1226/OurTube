@@ -122,12 +122,16 @@ service cloud.firestore {
         allow create: if isAuthenticated() &&
           incomingData().state is string &&
           incomingData().photoURL is string &&
+          incomingData().displayName is string &&
+          incomingData().displayName.size() != 0 &&
           incomingData().lastChanged is timestamp &&
           incomingData().lastChanged == request.time;
 
         allow update: if isUserAuthenticated(userID) &&
           incomingData().state is string &&
           incomingData().photoURL is string &&
+          incomingData().displayName is string &&
+          incomingData().displayName.size() != 0 &&
           incomingData().lastChanged is timestamp &&
           incomingData().lastChanged == request.time;
 

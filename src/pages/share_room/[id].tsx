@@ -103,10 +103,11 @@ const ShareRoom = () => {
     const insertRoomInUser = (
       roomId: string,
       uid: string,
-      photoURL: string
+      photoURL: string,
+      displayName: string
     ) => {
       FirebaseDatabaseUtil.onlineState()
-      FirebaseStoreUtil.setRoomSignInState(roomId, uid, photoURL)
+      FirebaseStoreUtil.setRoomSignInState(roomId, uid, photoURL, displayName)
       FirebaseStoreUtil.setJoinFlag(roomId, uid)
     }
 
@@ -116,7 +117,12 @@ const ShareRoom = () => {
       LoggerUtil.debug(userData.data())
 
       if (userData.data().joinedRooms.includes(roomId)) {
-        insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
+        insertRoomInUser(
+          roomId,
+          authUser.uid,
+          authUser.photoURL,
+          authUser.displayName
+        )
       } else {
         const room = await FirebaseStoreUtil.room(roomId).get()
 
@@ -124,7 +130,12 @@ const ShareRoom = () => {
 
         if (room.data().privateRoom) {
           if (room.data().hostId === authUser.uid) {
-            insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
+            insertRoomInUser(
+              roomId,
+              authUser.uid,
+              authUser.photoURL,
+              authUser.displayName
+            )
             await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
           } else {
             if (room.data().password !== queryPassword)
@@ -133,7 +144,12 @@ const ShareRoom = () => {
               )
           }
         } else {
-          insertRoomInUser(roomId, authUser.uid, authUser.photoURL)
+          insertRoomInUser(
+            roomId,
+            authUser.uid,
+            authUser.photoURL,
+            authUser.displayName
+          )
           await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
         }
       }

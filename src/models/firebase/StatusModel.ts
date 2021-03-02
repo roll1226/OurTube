@@ -5,6 +5,7 @@ export class StatusModel {
   constructor(
     readonly state: "online" | "offline",
     readonly photoURL: string,
+    readonly displayName: string,
     readonly lastChanged: firebase.firestore.FieldValue
   ) {}
 }
@@ -14,6 +15,7 @@ export const statusConverter = {
     return {
       state: post.state,
       photoURL: post.photoURL,
+      displayName: post.displayName,
       lastChanged: post.lastChanged,
     }
   },
@@ -22,6 +24,11 @@ export const statusConverter = {
     options: firebase.firestore.SnapshotOptions
   ): StatusModel {
     const data = snapshot.data(options)!
-    return new StatusModel(data.state, data.photoURL, data.lastChanged)
+    return new StatusModel(
+      data.state,
+      data.photoURL,
+      data.displayName,
+      data.lastChanged
+    )
   },
 }

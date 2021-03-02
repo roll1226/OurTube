@@ -18,6 +18,7 @@ export type Props = {
   statusList: {
     state: "online" | "offline"
     photoURL: string
+    displayName: string
     lastChanged: firebase.firestore.FieldValue
   }[]
 }
@@ -27,11 +28,14 @@ const StatusUserListMolecules = ({ statusList }: Props) => {
     <StatusUserListContainer>
       {statusList.map((status, index) => (
         <>
-          <StatusUserAtoms
-            key={index}
-            state={status.state}
-            photoURL={status.photoURL}
-          />
+          <div>
+            <StatusUserAtoms
+              key={index}
+              state={status.state}
+              displayName={status.displayName}
+              photoURL={status.photoURL}
+            />
+          </div>
           <GeneralSpacer horizontal={8} />
         </>
       ))}

@@ -17,6 +17,9 @@
             "photoURL": {
               ".validate": "newData.isString()"
             },
+            "displayName": {
+              ".validate": "newData.isString() && 0 < newData.val().length"
+            },
             "$other": {
               ".validate": false
             }
