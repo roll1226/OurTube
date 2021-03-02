@@ -7,6 +7,7 @@ import {
   GeneralFontSize,
   GeneralFontWeight,
 } from "../../styles/typography/GeneralTextStyle"
+import useMedia from "use-media"
 
 const InputContainer = styled.input<{
   width: number
@@ -61,6 +62,8 @@ const InputAtoms = ({
   isError = false,
   onKeyPress,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
     <>
       <InputContainer
@@ -78,7 +81,9 @@ const InputAtoms = ({
       {isError && (
         <ErrorTextWrap width={width}>
           <GeneralText
-            fontSize={GeneralFontSize.SIZE_16}
+            fontSize={
+              isWide ? GeneralFontSize.SIZE_16 : GeneralFontSize.SIZE_12
+            }
             fontColor={GeneralColorStyle.Error}
             fontWeight={GeneralFontWeight.BOLD}
           >

@@ -5,6 +5,7 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import useMedia from "use-media"
 
 const CheckboxContainer = styled.input`
   display: none;
@@ -20,16 +21,24 @@ const CheckboxText = styled.div`
 
 const CheckboxLabel = styled.label``
 
-const Checkbox = styled.div<{ isCheck: boolean }>`
-  width: 20px;
-  height: 20px;
+const Checkbox = styled.div<{ isCheck: boolean; isWide: boolean }>`
+  width: 16px;
+  height: 16px;
   border: 2px solid ${GeneralColorStyle.DarkGreen};
   background: ${GeneralColorStyle.White};
   border-radius: 4px;
   position: relative;
 
-  ${({ isCheck }) =>
-    isCheck &&
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      width: 20px;
+      height: 20px;
+    `}
+
+  ${(props) =>
+    props.isCheck &&
+    props.isWide &&
     css`
       &::after {
         content: "";
@@ -44,6 +53,24 @@ const Checkbox = styled.div<{ isCheck: boolean }>`
         border-right: 4px solid ${GeneralColorStyle.DarkGreen};
       }
     `}
+
+  ${(props) =>
+    props.isCheck &&
+    !props.isWide &&
+    css`
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: -8px;
+        left: 4px;
+        width: 8px;
+        height: 16px;
+        transform: rotate(40deg);
+        border-bottom: 4px solid ${GeneralColorStyle.DarkGreen};
+        border-right: 4px solid ${GeneralColorStyle.DarkGreen};
+      }
+    `}
 `
 
 export type Props = {
@@ -53,6 +80,8 @@ export type Props = {
 }
 
 const CheckboxAtoms = ({ isCheck, text, onChange }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
     <CheckboxLabel>
       <CheckboxContainer
@@ -62,12 +91,12 @@ const CheckboxAtoms = ({ isCheck, text, onChange }: Props) => {
       />
 
       <CheckboxText>
-        <Checkbox isCheck={isCheck} />
+        <Checkbox isCheck={isCheck} isWide={isWide} />
 
-        <GeneralSpacer horizontal={8} />
+        <GeneralSpacer horizontal={isWide ? 8 : 4} />
 
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_16}
+          fontSize={isWide ? GeneralFontSize.SIZE_16 : GeneralFontSize.SIZE_12}
           fontColor={GeneralColorStyle.Black}
         >
           {text}

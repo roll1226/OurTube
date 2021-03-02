@@ -8,9 +8,9 @@ import {
 } from "../../../styles/typography/GeneralTextStyle"
 
 const CommentsListContainer = styled.div`
-  margin: 16px 28px;
-  width: 344px;
-  height: 360px;
+  margin: 16px auto;
+  width: 90%;
+  height: calc(100% - 128px);
   overflow: auto;
 
   &::-webkit-scrollbar {

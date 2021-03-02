@@ -3,7 +3,7 @@ import OurTubeLogoAtoms, {
   LogoColor,
 } from "../components/atoms/svg/OurTubeLogoAtoms"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import SignInContainerOrganisms from "../components/organisms/SignInContainerOrganisms"
 import FirebaseAuthenticationUtil from "../utils/lib/FirebaseAuthenticationUtil"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
@@ -16,8 +16,8 @@ import {
 } from "../styles/typography/GeneralTextStyle"
 import { useDispatch } from "react-redux"
 import modalSlice from "../ducks/modal/slice"
-import LoggerUtil from "../utils/debugger/LoggerUtil"
 import toastSlice from "../ducks/toast/slice"
+import useMedia from "use-media"
 
 const TopPageContainer = styled.div`
   position: relative;
@@ -27,16 +27,29 @@ const TopPageContainer = styled.div`
   height: 100vh;
 `
 
-const LogoContainer = styled.div`
+const LogoContainer = styled.div<{ isWide: boolean }>`
   position: absolute;
-  top: 40px;
-  left: 40px;
+  top: 28px;
+  left: 28px;
+
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      top: 40px;
+      left: 40px;
+    `}
 `
 
-const TopMessageContainer = styled.div`
-  margin-left: 40px;
+const TopMessageContainer = styled.div<{ isWide: boolean }>`
+  margin-left: 28px;
   display: flex;
   flex-direction: column;
+
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      margin-left: 40px;
+    `}
 `
 
 const SignInContainer = styled.div`
@@ -44,11 +57,13 @@ const SignInContainer = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 220px;
 `
 
 const TopPage = () => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const isWide = useMedia({ minWidth: "480px" })
 
   const isNameStore = async (uid: string) => {
     const isName = await FirebaseStoreUtil.checkUserName(uid)
@@ -96,20 +111,20 @@ const TopPage = () => {
         top={true}
       />
 
-      <LogoContainer>
-        <OurTubeLogoAtoms size={500} color={LogoColor.BLUE} />
+      <LogoContainer isWide={isWide}>
+        <OurTubeLogoAtoms size={isWide ? 500 : 200} color={LogoColor.BLUE} />
       </LogoContainer>
 
-      <TopMessageContainer>
+      <TopMessageContainer isWide={isWide}>
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_56}
+          fontSize={isWide ? GeneralFontSize.SIZE_56 : GeneralFontSize.SIZE_24}
           fontWeight={GeneralFontWeight.BOLD}
           fontColor={GeneralColorStyle.ThinGreen}
         >
           お気に入りの動画を
         </GeneralText>
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_56}
+          fontSize={isWide ? GeneralFontSize.SIZE_56 : GeneralFontSize.SIZE_24}
           fontWeight={GeneralFontWeight.BOLD}
           fontColor={GeneralColorStyle.ThinGreen}
         >

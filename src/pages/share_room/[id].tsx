@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, MouseEvent, useEffect } from "react"
+import { useState, ChangeEvent, MouseEvent, useEffect, TouchEvent } from "react"
 import YouTube from "react-youtube"
 import { useRouter } from "next/router"
 import styled, { css } from "styled-components"
@@ -26,32 +26,35 @@ import {
   GeneralText,
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
+import useMedia from "use-media"
 
-const ShareRoomContainer = styled.div`
+const ShareRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      flex-direction: row;
+      justify-content: space-around;
+    `}
   align-items: center;
   position: relative;
 `
 
-const ContentWrap = styled.div<{ position: "left" | "right" }>`
-  ${({ position }) =>
-    position === "left" &&
-    css`
-      margin-left: 40px;
-    `}
-  ${({ position }) =>
-    position === "right" &&
-    css`
-      margin-right: 40px;
-    `}
-
+const ContentWrap = styled.div<{ isWide: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  ${({ isWide }) =>
+    !isWide &&
+    css`
+      width: 92vw;
+      margin: 0 auto;
+    `}
 `
 
 export type YouTubePlayer = {
@@ -64,6 +67,7 @@ let intervalCurrentTime
 
 const ShareRoom = () => {
   const router = useRouter()
+  const isWide = useMedia({ minWidth: "480px" })
   const { id } = router.query
   const queryPassword = router.query.p as string
   const roomId = id as string
@@ -415,6 +419,28 @@ const ShareRoom = () => {
     startIntervalCurrentTime()
   }
 
+  const mobileGetCurrentTime = (range: TouchEvent<HTMLInputElement>) => {
+    if (!videoId) return
+
+    const rangeEvent = range.target as HTMLInputElement
+    const rangeCurrentTime = Number(rangeEvent.value)
+
+    setCurrentTime(rangeCurrentTime)
+
+    FirebaseStoreUtil.setLiveCurrentTime(roomId, rangeCurrentTime, signInId)
+    if (!isPlayYouTube) return
+    startIntervalCurrentTime()
+  }
+
+  const mobileChangeCurrentTime = (range: TouchEvent<HTMLInputElement>) => {
+    if (!videoId) return
+
+    const rangeEvent = range.target as HTMLInputElement
+    const rangeCurrentTime = Number(rangeEvent.value)
+
+    setCurrentTime(rangeCurrentTime)
+  }
+
   /**
    * click youTube
    */
@@ -562,7 +588,7 @@ const ShareRoom = () => {
   }
 
   return (
-    <ShareRoomContainer>
+    <ShareRoomContainer isWide={isWide}>
       <HeadAtoms
         title={"OurTube | シェアルーム"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
@@ -573,7 +599,7 @@ const ShareRoom = () => {
 
       <AccountHeadMolecules />
 
-      <ContentWrap position={"left"}>
+      <ContentWrap isWide={isWide}>
         <GeneralText fontSize={GeneralFontSize.SIZE_24}>
           {roomTitle}
         </GeneralText>
@@ -590,13 +616,18 @@ const ShareRoom = () => {
           isPlay={isPlayYouTube}
           currentTime={currentTime}
         />
+        {isWide && (
+          <>
+            <GeneralSpacer vertical={8} />
 
-        <GeneralSpacer vertical={8} />
-
-        <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
+            <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
+          </>
+        )}
       </ContentWrap>
 
-      <ContentWrap position={"right"}>
+      {!isWide && <GeneralSpacer vertical={44} />}
+
+      <ContentWrap isWide={isWide}>
         <CommentAndSendUrlCardOrganisms
           youTubeUrl={newVideoId}
           changeYouTubeUrl={(event: ChangeEvent<HTMLInputElement>) =>
@@ -622,6 +653,9 @@ const ShareRoom = () => {
         volumeValue={volume}
         changeVolume={(range) => changeVolume(range)}
         videoId={videoId}
+        onTouchEnd={(range) => mobileGetCurrentTime(range)}
+        onTouchStart={stopIntervalCurrentTime}
+        onTouchMove={(range) => mobileChangeCurrentTime(range)}
       />
 
       {/* <SearchYouTubeModalOrganisms /> */}

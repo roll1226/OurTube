@@ -7,10 +7,9 @@ import {
 } from "../../../styles/typography/GeneralTextStyle"
 
 const YouTubeListContainer = styled.div`
-  margin: 16px 24px;
-  padding: 0 4px;
-  width: 344px;
-  height: 360px;
+  margin: 16px auto;
+  width: 90%;
+  height: calc(100% - 128px);
   overflow: auto;
 
   &::-webkit-scrollbar {

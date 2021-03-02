@@ -10,6 +10,7 @@ import {
   GeneralFontWeight,
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
+import useMedia from "use-media"
 
 export type Props = {
   userName: string
@@ -22,15 +23,17 @@ const InsertAccountNameMolecules = ({
   insetAccountName,
   saveUserName,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
     <>
-      <CardAtoms width={480}>
-        <OurTubeLogoAtoms size={392} color={LogoColor.BLUE} />
+      <CardAtoms width={isWide ? 480 : 280}>
+        <OurTubeLogoAtoms size={isWide ? 392 : 200} color={LogoColor.BLUE} />
 
-        <GeneralSpacer vertical={24} />
+        <GeneralSpacer vertical={isWide ? 24 : 12} />
 
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_36}
+          fontSize={isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24}
           fontColor={GeneralColorStyle.DarkGreen}
           fontWeight={GeneralFontWeight.BOLD}
         >
@@ -38,7 +41,7 @@ const InsertAccountNameMolecules = ({
         </GeneralText>
 
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_12}
+          fontSize={isWide ? GeneralFontSize.SIZE_12 : GeneralFontSize.SIZE_08}
           fontColor={GeneralColorStyle.Black}
         >
           &#x203B;OurTubeでは各サービスのアイコン画像が使用されます。
@@ -47,7 +50,7 @@ const InsertAccountNameMolecules = ({
         <GeneralSpacer vertical={24} />
 
         <InputAtoms
-          width={360}
+          width={isWide ? 360 : 240}
           placeholder={"アカウント名(20文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
           value={userName}

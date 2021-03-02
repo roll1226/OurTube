@@ -17,6 +17,7 @@ import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
 import modalSlice from "../../ducks/modal/slice"
+import useMedia from "use-media"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const CreateRoomOrganisms = () => {
   const [roomName, setRoomName] = useState("")
   const [password, setPassword] = useState("")
   const [isPrivateRoom, setIsPrivateRoom] = useState(false)
+  const isWide = useMedia({ minWidth: "480px" })
 
   const insertRoomName = (event: ChangeEvent<HTMLInputElement>) => {
     setRoomName(event.target.value)
@@ -97,19 +99,19 @@ const CreateRoomOrganisms = () => {
 
   return (
     <>
-      <CardAtoms width={440} height={480}>
+      <CardAtoms width={isWide ? 440 : 300} height={isWide ? 480 : 280}>
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_36}
+          fontSize={isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24}
           fontColor={GeneralColorStyle.DarkGreen}
           fontWeight={GeneralFontWeight.BOLD}
         >
           ルーム作成
         </GeneralText>
 
-        <GeneralSpacer vertical={32} />
+        <GeneralSpacer vertical={isWide ? 32 : 16} />
 
         <InputAtoms
-          width={360}
+          width={isWide ? 360 : 240}
           placeholder={"ルーム名(20文字以内)"}
           outlineColor={GeneralColorStyle.DarkGreen}
           value={roomName}
@@ -118,11 +120,11 @@ const CreateRoomOrganisms = () => {
           errorText={"ルーム名は20文字以内です。"}
         />
 
-        <GeneralSpacer vertical={32} />
+        <GeneralSpacer vertical={isWide ? 32 : 16} />
 
         <PasswordWrap>
           <InputAtoms
-            width={360}
+            width={isWide ? 360 : 240}
             placeholder={"パスワード"}
             outlineColor={GeneralColorStyle.DarkGreen}
             value={password}
@@ -139,7 +141,7 @@ const CreateRoomOrganisms = () => {
           />
         </PasswordWrap>
 
-        <GeneralSpacer vertical={56} />
+        <GeneralSpacer vertical={isWide ? 56 : 32} />
 
         <ButtonAtoms
           bgColor={GeneralColorStyle.DarkGreen}

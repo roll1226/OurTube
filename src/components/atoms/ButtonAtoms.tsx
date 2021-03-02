@@ -6,6 +6,7 @@ import {
   GeneralText,
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
+import useMedia from "use-media"
 
 export type Props = {
   bgColor: string
@@ -65,6 +66,8 @@ const ButtonAtoms = ({
   icon,
   onClick,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
     <ButtonContainer
       onClick={onClick}
@@ -75,12 +78,12 @@ const ButtonAtoms = ({
       {icon && (
         <>
           {icon}
-          <GeneralSpacer horizontal={4} />
+          <GeneralSpacer horizontal={isWide ? 4 : 8} />
         </>
       )}
 
       <GeneralText
-        fontSize={GeneralFontSize.SIZE_16}
+        fontSize={isWide ? GeneralFontSize.SIZE_16 : GeneralFontSize.SIZE_12}
         fontColor={disabled ? GeneralColorStyle.White : fontColor}
       >
         {text}

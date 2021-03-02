@@ -36,6 +36,16 @@ const CardContainer = styled.div<{
       height: ${height}px;
     `}
   background: ${({ bgColor }) => bgColor};
+  ${({ width }) =>
+    typeof width === "string" &&
+    css`
+      width: ${width}vw;
+    `}
+  ${({ height }) =>
+    typeof height === "string" &&
+    css`
+      height: ${height}vh;
+    `}
 `
 
 const CardAtoms = ({

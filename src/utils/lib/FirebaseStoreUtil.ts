@@ -288,7 +288,7 @@ class FirebaseStoreUtil {
   ) {
     await FirebaseStoreUtil.chat(roomId).add({
       uid,
-      photoURL,
+      photoURL: photoURL ? photoURL : "",
       name,
       comment,
       createdAt: FirebaseStoreUtil.getTimeStamp(),
@@ -395,28 +395,28 @@ class FirebaseStoreUtil {
 
     const isOfflineForDatabase = {
       state: "offline",
-      photoURL,
+      photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
     }
 
     const isOnlineForDatabase = {
       state: "online",
-      photoURL,
+      photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
     }
 
     const isOfflineForFireStore = {
       state: "offline",
-      photoURL,
+      photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),
     }
 
     const isOnlineForFireStore = {
       state: "online",
-      photoURL,
+      photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),
     }

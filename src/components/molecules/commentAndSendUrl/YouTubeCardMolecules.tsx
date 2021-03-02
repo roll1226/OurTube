@@ -12,13 +12,13 @@ import { useRouter } from "next/router"
 import YouTubeThumbnailAtoms from "../../atoms/YouTubeThumbnailAtoms"
 
 const YouTubeCardContainer = styled.div<{ isNowVideo: boolean }>`
-  margin: 4px 0;
+  margin: 4px auto;
   padding: 20px 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  width: 100%;
+  width: 90%;
   border-radius: 8px;
   transition: all 150ms;
 

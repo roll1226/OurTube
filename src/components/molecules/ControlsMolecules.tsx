@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, TouchEvent } from "react"
 import {
   faPause,
   faPlay,
@@ -27,6 +27,7 @@ import {
   GeneralText,
 } from "../../styles/typography/GeneralTextStyle"
 import DataUtil from "../../utils/date/DataUtil"
+import useMedia from "use-media"
 
 const ControlsContainer = styled.div`
   position: absolute;
@@ -77,6 +78,9 @@ export type Props = {
   isMute: boolean
   volumeValue: number
   videoId: string
+  onTouchEnd: (range: TouchEvent<HTMLInputElement>) => void
+  onTouchStart: () => void
+  onTouchMove: (event: TouchEvent<HTMLInputElement>) => void
 }
 
 /**
@@ -168,7 +172,11 @@ const ControlsMolecules = ({
   volumeValue,
   changeVolume,
   videoId,
+  onTouchEnd,
+  onTouchStart,
+  onTouchMove,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
   const router = useRouter()
   const { id } = router.query
   const roomId = id as string
@@ -245,9 +253,13 @@ const ControlsMolecules = ({
 
           <GeneralSpacer horizontal={28} />
 
-          <ControlsYouTubeTitleAtoms title={youTubeTitle} />
+          {isWide && (
+            <>
+              <ControlsYouTubeTitleAtoms title={youTubeTitle} />
 
-          <GeneralSpacer horizontal={40} />
+              <GeneralSpacer horizontal={40} />
+            </>
+          )}
         </ControlItemsWrap>
 
         <ControlsCurrentTimeRangeInputAtoms
@@ -257,6 +269,9 @@ const ControlsMolecules = ({
           mouseDownCurrentTime={mouseDownCurrentTime}
           mouseUpCurrentTime={mouseUpCurrentTime}
           videoId={videoId}
+          onTouchEnd={onTouchEnd}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
         />
       </ControlsWrap>
     </ControlsContainer>

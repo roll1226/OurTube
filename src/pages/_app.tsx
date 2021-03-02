@@ -15,6 +15,7 @@ import ToastCardMolecules from "../components/molecules/ToastCardMolecules"
 import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
 import { useModalState } from "../ducks/modal/selectors"
 import FirebaseDatabaseUtil from "../utils/lib/FirebaseDatabaseUtil"
+import useMedia from "use-media"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -48,6 +49,7 @@ const DarkGreenCircle = styled(CircleAtoms)``
 
 const AppBackground = () => {
   const router = useRouter()
+  const isWide = useMedia({ minWidth: "480px" })
 
   const [nowPathname, setNowPathname] = useState("/")
 
@@ -89,14 +91,14 @@ const AppBackground = () => {
     <CircleContainer>
       <DarkBlueCircle
         color={GeneralColorStyle.DarkBlue}
-        size={1200}
+        size={isWide ? 80 : 160}
         path={nowPathname}
         scale={1}
       />
 
       <DarkGreenCircle
         color={GeneralColorStyle.DarkGreen}
-        size={900}
+        size={60}
         path={nowPathname}
         scale={1}
       />

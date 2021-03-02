@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux"
 import toastSlice from "../../ducks/toast/slice"
 import { useState, useEffect } from "react"
 import { OurTubePath } from "../../consts/PathConsts"
+import useMedia from "use-media"
 
 export type Props = {
   roomId: string
@@ -16,6 +17,7 @@ export type Props = {
 
 const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
   const dispatch = useDispatch()
+  const isWide = useMedia({ minWidth: "480px" })
 
   const [originUrl, setOriginUrl] = useState("")
 
@@ -47,7 +49,7 @@ const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
         fontColor={GeneralColorStyle.White}
         icon={
           <IconAtoms
-            style={{ width: 24, color: GeneralColorStyle.White }}
+            style={{ width: isWide ? 24 : 20, color: GeneralColorStyle.White }}
             icon={faCopy}
           />
         }

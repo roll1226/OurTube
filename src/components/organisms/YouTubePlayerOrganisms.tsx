@@ -3,18 +3,35 @@ import YouTube, { Options } from "react-youtube"
 import styled, { css } from "styled-components"
 import ControlsButtonAtoms from "../atoms/controls/ControlsButtonAtoms"
 import { faPlay } from "@fortawesome/free-solid-svg-icons"
+import useMedia from "use-media"
 
-const YouTubeContainer = styled.div`
+const YouTubeContainer = styled.div<{ isWide: boolean }>`
   position: relative;
-  width: 724px;
-  height: 408px;
+  position: relative;
+  width: 92vw;
+  height: calc(92vw * 0.6);
+
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      width: 50vw;
+      height: calc(50vw * 0.6);
+    `}
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 `
 
 const YouTubePlayWrap = styled.div<{ img: string; videoId: string }>`
   position: absolute;
   z-index: 2;
-  width: 724px;
-  height: 408px;
+  width: 100%;
+  height: 100%;
   top: 0;
   background: url(${({ img }) => img}) no-repeat center center;
   background-size: cover;
@@ -64,6 +81,8 @@ const YouTubePlayerOrganisms = ({
   isPlay,
   currentTime,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   /**
    * consts
    */
@@ -85,7 +104,7 @@ const YouTubePlayerOrganisms = ({
 
   return (
     <>
-      <YouTubeContainer>
+      <YouTubeContainer isWide={isWide}>
         <YouTubePlayWrap
           onClick={clickYouTube}
           img={

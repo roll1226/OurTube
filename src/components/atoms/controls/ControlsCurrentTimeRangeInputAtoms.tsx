@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent } from "react"
+import { ChangeEvent, MouseEvent, TouchEvent } from "react"
 import styled, { css } from "styled-components"
 import {
   HoverItem,
@@ -81,6 +81,9 @@ export type Props = {
     range: MouseEvent<HTMLInputElement, globalThis.MouseEvent>
   ) => void
   videoId: string
+  onTouchEnd: (range: TouchEvent<HTMLInputElement>) => void
+  onTouchStart: () => void
+  onTouchMove: (event: TouchEvent<HTMLInputElement>) => void
 }
 
 const ControlsCurrentTimeRangeInputAtoms = ({
@@ -90,6 +93,9 @@ const ControlsCurrentTimeRangeInputAtoms = ({
   mouseDownCurrentTime,
   mouseUpCurrentTime,
   videoId,
+  onTouchEnd,
+  onTouchStart,
+  onTouchMove,
 }: Props) => {
   return (
     <>
@@ -104,6 +110,9 @@ const ControlsCurrentTimeRangeInputAtoms = ({
         onMouseUp={mouseUpCurrentTime}
         isActive={videoId ? false : true}
         disabled={videoId ? false : true}
+        onTouchEnd={onTouchEnd}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
       />
       <CurrentTimeTimeColor
         currentTime={currentTimeValue}

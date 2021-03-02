@@ -12,6 +12,7 @@ import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCardMolecules"
 import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
+import useMedia from "use-media"
 
 const RoomCardWrap = styled.div`
   padding: 8px;
@@ -32,6 +33,7 @@ const RoomCardWrap = styled.div`
 const JoinedRoomOrganisms = () => {
   const authUser = useFirebaseAuthentication()
   const [joinedRooms, setJoinedRooms] = useState([])
+  const isWide = useMedia({ minWidth: "480px" })
 
   useEffect(() => {
     if (!authUser) return
@@ -61,16 +63,16 @@ const JoinedRoomOrganisms = () => {
 
   return (
     <>
-      <CardAtoms width={440} height={480}>
+      <CardAtoms width={isWide ? 440 : 300} height={isWide ? 480 : 280}>
         <GeneralText
-          fontSize={GeneralFontSize.SIZE_36}
+          fontSize={isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24}
           fontColor={GeneralColorStyle.DarkGreen}
           fontWeight={GeneralFontWeight.BOLD}
         >
           参加履歴
         </GeneralText>
 
-        <GeneralSpacer vertical={20} />
+        <GeneralSpacer vertical={isWide ? 20 : 12} />
 
         <RoomCardWrap>
           {joinedRooms.map((joinedRoom, index) => (

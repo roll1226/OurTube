@@ -12,6 +12,7 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import LinkCopyButtonMolecules from "../molecules/LinkCopyButtonMolecules"
 import { useRouter } from "next/router"
+import useMedia from "use-media"
 
 export type Props = {
   roomId: string
@@ -21,6 +22,7 @@ export type Props = {
 
 const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
   const router = useRouter()
+  const isWide = useMedia({ minWidth: "480px" })
 
   const joinRoom = () => {
     router.push(`/share_room/${roomId}`)
@@ -29,21 +31,26 @@ const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
   return (
     <>
       <MaskAtoms isOpen={isOpen}>
-        <CardAtoms width={480}>
+        <CardAtoms width={isWide ? 480 : 300}>
           <GeneralText
-            fontSize={GeneralFontSize.SIZE_36}
+            fontSize={
+              isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_28
+            }
             fontColor={GeneralColorStyle.DarkGreen}
           >
             作成完了
           </GeneralText>
-          <GeneralSpacer vertical={20} />
+          <GeneralSpacer vertical={isWide ? 20 : 8} />
 
           <IconAtoms
-            style={{ width: 120, color: GeneralColorStyle.DarkGreen }}
+            style={{
+              width: isWide ? 120 : 80,
+              color: GeneralColorStyle.DarkGreen,
+            }}
             icon={faCheckCircle}
           />
 
-          <GeneralSpacer vertical={36} />
+          <GeneralSpacer vertical={isWide ? 36 : 20} />
 
           <ButtonAtoms
             bgColor={GeneralColorStyle.ThinGreen}
@@ -51,7 +58,10 @@ const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
             fontColor={GeneralColorStyle.White}
             icon={
               <IconAtoms
-                style={{ width: 28, color: GeneralColorStyle.White }}
+                style={{
+                  width: isWide ? 28 : 24,
+                  color: GeneralColorStyle.White,
+                }}
                 icon={faCouch}
               />
             }

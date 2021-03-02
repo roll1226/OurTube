@@ -2,8 +2,14 @@ import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { OurTubePath } from "../../consts/PathConsts"
 import { DefaultAnimation } from "../../styles/animation/GeneralAnimationStyle"
+import useMedia from "use-media"
 
-const getPosition = (scale: number, color: string, path: string) => {
+const getPosition = (
+  scale: number,
+  color: string,
+  path: string,
+  isWide: boolean
+) => {
   if (color === GeneralColorStyle.DarkBlue) {
     switch (path) {
       case OurTubePath.TOP:
@@ -22,9 +28,16 @@ const getPosition = (scale: number, color: string, path: string) => {
 
       case OurTubePath.CREATE_ROOM:
         return css`
-          top: 50%;
-          left: 0%;
+          top: 0%;
+          left: 5%;
           transform: translate(-50%, -50%) scale(${scale});
+
+          ${isWide &&
+          css`
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%) scale(${scale});
+          `}
         `
 
       default:
@@ -72,16 +85,17 @@ const CircleContainer = styled.div<{
   color: string
   path: string
   scale: number
+  isWide: boolean
 }>`
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
+  width: ${({ size }) => size}vw;
+  height: ${({ size }) => size}vw;
   border-radius: 100%;
   background: ${({ color }) => color};
   position: absolute;
   transform-origin: center center;
   transform: translate(0%, -50%) scale(0);
   transition: all 350ms ${DefaultAnimation};
-  ${(props) => getPosition(props.scale, props.color, props.path)};
+  ${(props) => getPosition(props.scale, props.color, props.path, props.isWide)};
 `
 
 export type Props = {
@@ -92,7 +106,17 @@ export type Props = {
 }
 
 const CircleAtoms = ({ size, color, path, scale }: Props) => {
-  return <CircleContainer size={size} color={color} path={path} scale={scale} />
+  const isWide = useMedia({ minWidth: "480px" })
+
+  return (
+    <CircleContainer
+      size={size}
+      color={color}
+      path={path}
+      scale={scale}
+      isWide={isWide}
+    />
+  )
 }
 
 export default CircleAtoms

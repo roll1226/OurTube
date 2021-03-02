@@ -6,7 +6,8 @@ import styled from "styled-components"
 import TabMolecules from "../molecules/commentAndSendUrl/TabAtoms"
 import CommentsMolecules from "../molecules/commentAndSendUrl/CommentsMolecules"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
-import UrlSendMolecules from "../molecules/commentAndSendUrl/UrlSendMolecules "
+import UrlSendMolecules from "../molecules/commentAndSendUrl/UrlSendMolecules"
+import useMedia from "use-media"
 
 const TabsContainer = styled.div`
   display: flex;
@@ -30,6 +31,7 @@ const CommentAndSendUrlCardOrganisms = ({
   nowVideoId,
   stopIntervalCurrentTime,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
   const [isCommentActive, setIsCommentActive] = useState(true)
   const [isSendUrl, setIsSendUrl] = useState(false)
 
@@ -39,7 +41,12 @@ const CommentAndSendUrlCardOrganisms = ({
   }
 
   return (
-    <CardAtoms width={400} isPadding={false} bgColor={GeneralColorStyle.White}>
+    <CardAtoms
+      width={isWide ? "28" : "92"}
+      height={isWide ? "60" : "40"}
+      isPadding={false}
+      bgColor={GeneralColorStyle.White}
+    >
       <TabsContainer>
         <TabMolecules
           icon={faComments}

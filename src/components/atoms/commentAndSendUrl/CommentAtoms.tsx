@@ -9,12 +9,12 @@ import {
 } from "../../../styles/typography/GeneralTextStyle"
 
 const CommentContainer = styled.div`
-  margin-bottom: 8px;
+  margin: 0 auto 8px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 100%;
+  width: 90%;
 `
 
 const CommentWraps = styled.div``

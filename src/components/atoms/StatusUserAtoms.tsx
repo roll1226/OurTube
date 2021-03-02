@@ -53,14 +53,13 @@ const DisplayNameWrap = styled.div<{ isHover: boolean }>`
   position: absolute;
   z-index: 4;
   top: 50%;
-  left: 20%;
+  left: 30%;
   transform: translateY(-50%) translateX(0%) scaleX(0);
   transform-origin: center left;
   background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.8)};
   padding: 2px 12px;
   border-radius: 4px;
   box-shadow: ${ItemShadow};
-  transition: all 200ms cubic-bezier(0.07, 1, 1, 1);
 
   ${({ isHover }) =>
     isHover &&
