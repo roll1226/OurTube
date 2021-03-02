@@ -2,7 +2,7 @@ import styled, { css } from "styled-components"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { ItemShadow } from "../../styles/shadow/GeneralShadowStyle"
 import ColorUtil from "../../utils/color/ColorUtil"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import {
   GeneralFontSize,
   GeneralText,
@@ -81,6 +81,7 @@ const StatusUserAtoms = ({
   state = "offline",
 }: Props) => {
   const [isHover, setIsHover] = useState(false)
+  const imgRef = useRef(null)
 
   return (
     <StatusUserContainer
@@ -101,6 +102,12 @@ const StatusUserAtoms = ({
               ? photoURL
               : "https://cahsi.utep.edu/wp-content/uploads/kisspng-computer-icons-user-clip-art-user-5abf13db5624e4.1771742215224718993529.png"
           }
+          onError={() => {
+            imgRef.current.src =
+              "https://cahsi.utep.edu/wp-content/uploads/kisspng-computer-icons-user-clip-art-user-5abf13db5624e4.1771742215224718993529.png"
+          }}
+          alt="ユーザアイコン"
+          ref={imgRef}
         />
         <Status state={state} />
       </StatusUserWrap>
