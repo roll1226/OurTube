@@ -9,7 +9,7 @@ import {
 const YouTubeListContainer = styled.div`
   margin: 16px auto;
   width: 90%;
-  height: calc(100% - 132px);
+  height: calc(56vh - 132px);
   overflow: auto;
 
   &::-webkit-scrollbar {
