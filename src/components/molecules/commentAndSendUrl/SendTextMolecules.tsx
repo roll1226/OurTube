@@ -61,6 +61,7 @@ const SendTextMolecules = ({ placeholder, text, onChange, onClick }: Props) => {
           }}
         />
       </SendButton>
+      <GeneralSpacer horizontal={28} />
     </SendContainer>
   )
 }

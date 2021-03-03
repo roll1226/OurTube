@@ -120,7 +120,6 @@ const CommentAndSendUrlCardOrganisms = ({
               nowVideoId={nowVideoId}
               stopIntervalCurrentTime={stopIntervalCurrentTime}
             />
-            <GeneralSpacer vertical={28} />
           </CardAtoms>
         </MaskAtoms>
       )}
