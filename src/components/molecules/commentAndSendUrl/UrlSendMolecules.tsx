@@ -89,6 +89,4 @@ const UrlSendMolecules = ({
   )
 }
 
-export default dynamic(() => Promise.resolve(UrlSendMolecules), {
-  ssr: false,
-})
+export default UrlSendMolecules
