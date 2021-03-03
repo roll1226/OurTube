@@ -98,7 +98,7 @@ const AppBackground = () => {
 
       <DarkGreenCircle
         color={GeneralColorStyle.DarkGreen}
-        size={60}
+        size={isWide ? 60 : 120}
         path={nowPathname}
         scale={1}
       />
