@@ -5,42 +5,59 @@ import {
   ControlHover,
 } from "../../../styles/shadow/GeneralShadowStyle"
 import GeneralColorStyle from "../../../styles/colors/GeneralColorStyle"
+import useMedia from "use-media"
 
-const CurrentTimeRangeInput = styled.input<{ isActive: boolean }>`
+const CurrentTimeRangeInput = styled.input<{
+  isActive: boolean
+  isWide: boolean
+}>`
   margin: 0;
   position: absolute;
   left: 0;
   top: -3px;
-  -webkit-appearance: none; // 🚩これ無しだとスタイルがほぼ全く反映されないので注意
+  -webkit-appearance: none;
   appearance: none;
-  cursor: pointer; // カーソルを分かりやすく
-  outline: none; // スライダーのアウトラインは目障りになるので消す
-  background: transparent; // バーの背景色
+  cursor: pointer;
+  outline: none;
+  background: transparent;
   width: 100%;
-  height: 6px; // バーの高さ
-  border-radius: 0; // バーの端の丸み
+  height: 6px;
+  border-radius: 0;
 
   // -webkit-向けのつまみ
   &::-webkit-slider-thumb {
     position: relative;
-    -webkit-appearance: none; // 🚩デフォルトのつまみのスタイルを解除
+    -webkit-appearance: none;
     background-color: ${GeneralColorStyle.ThinBlue};
     background-size: cover;
-    width: 16px; // 幅
-    height: 16px; // 高さ
-    border-radius: 50%; // 円形に
-    box-shadow: ${ControlHover}; // 影
+    width: 24px;
+    height: 24px;
+    ${({ isWide }) =>
+      isWide &&
+      css`
+        width: 16px;
+        height: 16px;
+      `}
+    border-radius: 50%;
+    box-shadow: ${ControlHover};
+    border: none;
   }
 
   // -moz-向けのつまみ
   &::-moz-range-thumb {
     background-size: cover;
     background-color: ${GeneralColorStyle.ThinBlue};
-    width: 16px; // 幅
-    height: 16px; // 高さ
-    border-radius: 50%; // 円形に
-    box-shadow: ${ControlHover}; // 影
-    border: none; // デフォルトの線を消す
+    width: 24px;
+    height: 24px;
+    ${({ isWide }) =>
+      isWide &&
+      css`
+        width: 16px;
+        height: 16px;
+      `}
+    border-radius: 50%;
+    box-shadow: ${ControlHover};
+    border: none;
   }
 
   // Firefoxで点線が周りに表示されてしまう問題の解消
@@ -63,13 +80,20 @@ const CurrentTimeRangeInput = styled.input<{ isActive: boolean }>`
 const CurrentTimeTimeColor = styled.div<{
   currentTime: number
   currentTimeMax: number
+  isWide: boolean
 }>`
   position: absolute;
   left: 0;
-  top: -3px;
+  top: -4px;
   width: ${(props) => (props.currentTime / props.currentTimeMax) * 100}%;
-  height: 6px;
+  height: 8px;
   background: ${GeneralColorStyle.ThinBlue};
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      top: -3px;
+      height: 6px;
+    `}
 `
 
 export type Props = {
@@ -97,6 +121,8 @@ const ControlsCurrentTimeRangeInputAtoms = ({
   onTouchStart,
   onTouchMove,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
     <>
       <CurrentTimeRangeInput
@@ -113,10 +139,12 @@ const ControlsCurrentTimeRangeInputAtoms = ({
         onTouchEnd={onTouchEnd}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
+        isWide={isWide}
       />
       <CurrentTimeTimeColor
         currentTime={currentTimeValue}
         currentTimeMax={currentTimeMax}
+        isWide={isWide}
       />
     </>
   )

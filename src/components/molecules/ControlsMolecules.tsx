@@ -225,7 +225,7 @@ const ControlsMolecules = ({
                 icon={MuteBtn(isMute, volumeValue)}
               />
             </div>
-            {!isMute && (
+            {!isMute && isWide && (
               <ControlsVolumeRangeInputAtoms
                 isVolumeHover={isVolumeHover}
                 onMouseOver={() => isOpenVolumeControl(true, isMute)}

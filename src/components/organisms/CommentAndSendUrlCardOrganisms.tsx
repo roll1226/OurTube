@@ -8,6 +8,10 @@ import CommentsMolecules from "../molecules/commentAndSendUrl/CommentsMolecules"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import UrlSendMolecules from "../molecules/commentAndSendUrl/UrlSendMolecules"
 import useMedia from "use-media"
+import MaskAtoms from "../atoms/MaskAtoms"
+import { useMobileModalState } from "../../ducks/mobileModal/selectors"
+import { useDispatch } from "react-redux"
+import mobileModalSlice from "../../ducks/mobileModal/slice"
 
 const TabsContainer = styled.div`
   display: flex;
@@ -32,8 +36,10 @@ const CommentAndSendUrlCardOrganisms = ({
   stopIntervalCurrentTime,
 }: Props) => {
   const isWide = useMedia({ minWidth: "480px" })
+  const dispatch = useDispatch()
   const [isCommentActive, setIsCommentActive] = useState(true)
   const [isSendUrl, setIsSendUrl] = useState(false)
+  const mobileModalState = useMobileModalState().mobileModal
 
   const selectTab = (isSelect: boolean) => {
     setIsCommentActive(isSelect)
@@ -41,38 +47,82 @@ const CommentAndSendUrlCardOrganisms = ({
   }
 
   return (
-    <CardAtoms
-      width={isWide ? "28" : "92"}
-      height={isWide ? "60" : "40"}
-      isPadding={false}
-      bgColor={GeneralColorStyle.White}
-    >
-      <TabsContainer>
-        <TabMolecules
-          icon={faComments}
-          position={"left"}
-          isActive={isCommentActive}
-          onClick={() => selectTab(true)}
-        />
+    <>
+      {isWide && (
+        <CardAtoms
+          width={"28"}
+          height={"60"}
+          isPadding={false}
+          bgColor={GeneralColorStyle.White}
+        >
+          <TabsContainer>
+            <TabMolecules
+              icon={faComments}
+              position={"left"}
+              isActive={isCommentActive}
+              onClick={() => selectTab(true)}
+            />
 
-        <TabMolecules
-          icon={faFilm}
-          position={"right"}
-          isActive={isSendUrl}
-          onClick={() => selectTab(false)}
-        />
-      </TabsContainer>
-      <CommentsMolecules isActive={isCommentActive} />
+            <TabMolecules
+              icon={faFilm}
+              position={"right"}
+              isActive={isSendUrl}
+              onClick={() => selectTab(false)}
+            />
+          </TabsContainer>
+          <CommentsMolecules isActive={isCommentActive} />
 
-      <UrlSendMolecules
-        isActive={isSendUrl}
-        youTubeUrl={youTubeUrl}
-        changeYouTubeUrl={changeYouTubeUrl}
-        sendYouTubeUrl={sendYouTubeUrl}
-        nowVideoId={nowVideoId}
-        stopIntervalCurrentTime={stopIntervalCurrentTime}
-      />
-    </CardAtoms>
+          <UrlSendMolecules
+            isActive={isSendUrl}
+            youTubeUrl={youTubeUrl}
+            changeYouTubeUrl={changeYouTubeUrl}
+            sendYouTubeUrl={sendYouTubeUrl}
+            nowVideoId={nowVideoId}
+            stopIntervalCurrentTime={stopIntervalCurrentTime}
+          />
+        </CardAtoms>
+      )}
+
+      {!isWide && (
+        <MaskAtoms
+          isOpen={mobileModalState.isOpen}
+          onClick={() => dispatch(mobileModalSlice.actions.setIsOpen(false))}
+        >
+          <CardAtoms
+            width={"90"}
+            height={"60"}
+            isPadding={false}
+            bgColor={GeneralColorStyle.White}
+          >
+            <TabsContainer>
+              <TabMolecules
+                icon={faComments}
+                position={"left"}
+                isActive={isCommentActive}
+                onClick={() => selectTab(true)}
+              />
+
+              <TabMolecules
+                icon={faFilm}
+                position={"right"}
+                isActive={isSendUrl}
+                onClick={() => selectTab(false)}
+              />
+            </TabsContainer>
+            <CommentsMolecules isActive={isCommentActive} />
+
+            <UrlSendMolecules
+              isActive={isSendUrl}
+              youTubeUrl={youTubeUrl}
+              changeYouTubeUrl={changeYouTubeUrl}
+              sendYouTubeUrl={sendYouTubeUrl}
+              nowVideoId={nowVideoId}
+              stopIntervalCurrentTime={stopIntervalCurrentTime}
+            />
+          </CardAtoms>
+        </MaskAtoms>
+      )}
+    </>
   )
 }
 

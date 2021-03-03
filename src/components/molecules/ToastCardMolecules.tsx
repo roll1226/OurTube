@@ -11,6 +11,7 @@ import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import { ToastAnimation } from "../../styles/animation/GeneralAnimationStyle"
 import { useToastState } from "../../ducks/toast/selectors"
+import useMedia from "use-media"
 
 const ToastCardContainer = styled.div<{
   isActive: boolean
@@ -41,18 +42,18 @@ const ToastCardContainer = styled.div<{
   align-items: center;
 `
 
-const toastIcon = (toastColor: "success" | "error" | "") => {
+const toastIcon = (toastColor: "success" | "error" | "", isWide: boolean) => {
   if (toastColor === "success") {
     return (
       <IconAtoms
-        style={{ width: 20, color: GeneralColorStyle.White }}
+        style={{ width: isWide ? 20 : 32, color: GeneralColorStyle.White }}
         icon={faCheckCircle}
       />
     )
   } else if (toastColor === "error") {
     return (
       <IconAtoms
-        style={{ width: 20, color: GeneralColorStyle.White }}
+        style={{ width: isWide ? 20 : 32, color: GeneralColorStyle.White }}
         icon={faExclamationCircle}
       />
     )
@@ -60,6 +61,7 @@ const toastIcon = (toastColor: "success" | "error" | "") => {
 }
 
 const ToastCardMolecules = () => {
+  const isWide = useMedia({ minWidth: "480px" })
   const toastState = useToastState().toast
 
   return (
@@ -67,12 +69,12 @@ const ToastCardMolecules = () => {
       isActive={toastState.isActive}
       toastColor={toastState.toastColor}
     >
-      {toastIcon(toastState.toastColor)}
+      {toastIcon(toastState.toastColor, isWide)}
 
       <GeneralSpacer horizontal={8} />
 
       <GeneralText
-        fontSize={GeneralFontSize.SIZE_20}
+        fontSize={isWide ? GeneralFontSize.SIZE_20 : GeneralFontSize.SIZE_12}
         fontColor={GeneralColorStyle.White}
       >
         {toastState.text}

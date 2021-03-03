@@ -10,6 +10,11 @@ import { useModalState } from "../ducks/modal/selectors"
 import { useEffect } from "react"
 import FirebaseDatabaseUtil from "../utils/lib/FirebaseDatabaseUtil"
 import useMedia from "use-media"
+import ButtonAtoms from "../components/atoms/ButtonAtoms"
+import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
+import IconAtoms from "../components/atoms/IconAtoms"
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons"
+import { useState } from "react"
 
 const CreateRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -38,6 +43,7 @@ const CreateRoomCard = styled.div`
 const CreateRoom = () => {
   const modalState = useModalState().modal
   const isWide = useMedia({ minWidth: "480px" })
+  const [changeCard, setChangeCard] = useState(false)
 
   useEffect(() => {
     FirebaseDatabaseUtil.offlineState()
@@ -53,15 +59,53 @@ const CreateRoom = () => {
         top={false}
       />
       <AccountHeadMolecules />
-      {!isWide && <GeneralSpacer vertical={60} />}
-      <CreateRoomCard>
-        <CreateRoomOrganisms />
-      </CreateRoomCard>
-      {isWide && <GeneralSpacer horizontal={64} />}
-      {!isWide && <GeneralSpacer vertical={12} />}
-      <CreateRoomCard>
-        <JoinedRoomOrganisms />
-      </CreateRoomCard>
+
+      {isWide && (
+        <>
+          <CreateRoomCard>
+            <CreateRoomOrganisms />
+          </CreateRoomCard>
+          <GeneralSpacer horizontal={64} />
+          <CreateRoomCard>
+            <JoinedRoomOrganisms />
+          </CreateRoomCard>
+        </>
+      )}
+
+      {!isWide && (
+        <>
+          {changeCard && (
+            <CreateRoomCard>
+              <CreateRoomOrganisms />
+            </CreateRoomCard>
+          )}
+
+          {!changeCard && (
+            <CreateRoomCard>
+              <JoinedRoomOrganisms />
+            </CreateRoomCard>
+          )}
+
+          <GeneralSpacer vertical={16} />
+
+          <ButtonAtoms
+            bgColor={GeneralColorStyle.White}
+            outlineColor={GeneralColorStyle.Black}
+            text={"切り替える"}
+            fontColor={GeneralColorStyle.Black}
+            icon={
+              <IconAtoms
+                style={{
+                  color: GeneralColorStyle.Black,
+                  width: 20,
+                }}
+                icon={faSyncAlt}
+              />
+            }
+            onClick={() => setChangeCard((v) => !v)}
+          />
+        </>
+      )}
 
       {modalState.roomId && (
         <DoneCreateRoomOrganisms

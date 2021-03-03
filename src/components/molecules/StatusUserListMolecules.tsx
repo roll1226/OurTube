@@ -1,16 +1,22 @@
 import firebase from "firebase/app"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import StatusUserAtoms from "../atoms/StatusUserAtoms"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import useMedia from "use-media"
 
-const StatusUserListContainer = styled.div`
+const StatusUserListContainer = styled.div<{ isWide: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-content: center;
   overflow-x: auto;
   white-space: nowrap;
-  width: 500px;
+  width: 36vw;
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      width: 32vw;
+    `}
   padding: 3px 0;
 `
 
@@ -24,8 +30,10 @@ export type Props = {
 }
 
 const StatusUserListMolecules = ({ statusList }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   return (
-    <StatusUserListContainer>
+    <StatusUserListContainer isWide={isWide}>
       {statusList.map((status, index) => (
         <>
           <div>

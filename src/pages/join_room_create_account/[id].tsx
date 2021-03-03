@@ -18,8 +18,10 @@ import SignInContainerOrganisms from "../../components/organisms/SignInContainer
 import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import InputAtoms from "../../components/atoms/InputAtoms"
 import ButtonAtoms from "../../components/atoms/ButtonAtoms"
+import useMedia from "use-media"
 
 const JoinRoomCreateAccount = () => {
+  const isWide = useMedia({ minWidth: "480px" })
   const router = useRouter()
   const { id } = router.query
   const queryPassword = router.query.p as string
@@ -97,18 +99,20 @@ const JoinRoomCreateAccount = () => {
       />
 
       <MaskAtoms isOpen={true}>
-        <CardAtoms width={480}>
-          <OurTubeLogoAtoms size={430} color={LogoColor.BLUE} />
+        <CardAtoms width={isWide ? 480 : 280}>
+          <OurTubeLogoAtoms size={isWide ? 430 : 280} color={LogoColor.BLUE} />
           {!istNameStore && (
             <>
               <GeneralText
-                fontSize={GeneralFontSize.SIZE_36}
+                fontSize={
+                  isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24
+                }
                 fontColor={GeneralColorStyle.DarkGreen}
               >
-                参加するにはログイン必須
+                参加にはログイン必須
               </GeneralText>
 
-              <GeneralSpacer vertical={32} />
+              <GeneralSpacer vertical={isWide ? 32 : 20} />
 
               <SignInContainerOrganisms
                 googleSignInClick={googleSignInClick}
@@ -120,16 +124,27 @@ const JoinRoomCreateAccount = () => {
           {istNameStore && (
             <>
               <GeneralText
-                fontSize={GeneralFontSize.SIZE_36}
+                fontSize={
+                  isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24
+                }
                 fontColor={GeneralColorStyle.DarkGreen}
               >
                 アカウント名を入力
               </GeneralText>
 
-              <GeneralSpacer vertical={32} />
+              <GeneralText
+                fontSize={
+                  isWide ? GeneralFontSize.SIZE_12 : GeneralFontSize.SIZE_08
+                }
+                fontColor={GeneralColorStyle.Black}
+              >
+                &#x203B;OurTubeでは各サービスのアイコン画像が使用されます。
+              </GeneralText>
+
+              <GeneralSpacer vertical={isWide ? 32 : 20} />
 
               <InputAtoms
-                width={360}
+                width={isWide ? 360 : 240}
                 placeholder={"アカウント作成(20文字以内)"}
                 outlineColor={GeneralColorStyle.DarkGreen}
                 value={userName}

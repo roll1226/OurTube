@@ -27,6 +27,9 @@ import {
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
 import useMedia from "use-media"
+import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import ControlsButtonAtoms from "../../components/atoms/controls/ControlsButtonAtoms"
+import mobileModalSlice from "../../ducks/mobileModal/slice"
 
 const ShareRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -600,11 +603,13 @@ const ShareRoom = () => {
       <AccountHeadMolecules />
 
       <ContentWrap isWide={isWide}>
-        <GeneralText fontSize={GeneralFontSize.SIZE_24}>
+        <GeneralText
+          fontSize={isWide ? GeneralFontSize.SIZE_24 : GeneralFontSize.SIZE_20}
+        >
           {roomTitle}
         </GeneralText>
 
-        <GeneralSpacer vertical={8} />
+        <GeneralSpacer vertical={isWide ? 8 : 4} />
 
         <YouTubePlayerOrganisms
           clickYouTube={clickYouTube}
@@ -616,16 +621,20 @@ const ShareRoom = () => {
           isPlay={isPlayYouTube}
           currentTime={currentTime}
         />
-        {isWide && (
-          <>
-            <GeneralSpacer vertical={8} />
 
-            <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
-          </>
+        <GeneralSpacer vertical={isWide ? 8 : 4} />
+
+        <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
+
+        {!isWide && (
+          <ControlsButtonAtoms
+            size={44}
+            iconSize={28}
+            icon={faCaretUp}
+            onClick={() => dispatch(mobileModalSlice.actions.setIsOpen(true))}
+          />
         )}
       </ContentWrap>
-
-      {!isWide && <GeneralSpacer vertical={44} />}
 
       <ContentWrap isWide={isWide}>
         <CommentAndSendUrlCardOrganisms

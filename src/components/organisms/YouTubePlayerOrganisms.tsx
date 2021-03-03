@@ -7,7 +7,6 @@ import useMedia from "use-media"
 
 const YouTubeContainer = styled.div<{ isWide: boolean }>`
   position: relative;
-  position: relative;
   width: 92vw;
   height: calc(92vw * 0.6);
 
@@ -20,10 +19,12 @@ const YouTubeContainer = styled.div<{ isWide: boolean }>`
 
   iframe {
     position: absolute;
+    z-index: 1;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
   }
 `
 
@@ -50,6 +51,8 @@ const YouTubePlayWrap = styled.div<{ img: string; videoId: string }>`
 const YouTubePlayer = styled(YouTube)`
   position: absolute;
   top: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
 `
 
@@ -117,7 +120,7 @@ const YouTubePlayerOrganisms = ({
           videoId={videoId}
         >
           {videoId && !isPlayYouTube && (
-            <ControlsButtonAtoms size={92} icon={faPlay} />
+            <ControlsButtonAtoms size={isWide ? 92 : 76} icon={faPlay} />
           )}
         </YouTubePlayWrap>
         <YouTubePlayer
