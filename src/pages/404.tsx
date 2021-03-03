@@ -1,4 +1,5 @@
 import HeadAtoms from "../components/atoms/HeadAtoms"
+import Link from "next/link"
 import styled, { css } from "styled-components"
 import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
 import {
@@ -71,18 +72,23 @@ const Custom404 = () => {
         </GeneralText>
       </TextWrap>
 
-      <ButtonAtoms
-        bgColor={GeneralColorStyle.White}
-        outlineColor={GeneralColorStyle.Black}
-        fontColor={GeneralColorStyle.Black}
-        text={"戻る"}
-        icon={
-          <IconAtoms
-            style={{ color: GeneralColorStyle.Black, width: isWide ? 16 : 12 }}
-            icon={faChevronLeft}
-          />
-        }
-      />
+      <Link href="/create_room">
+        <ButtonAtoms
+          bgColor={GeneralColorStyle.White}
+          outlineColor={GeneralColorStyle.Black}
+          fontColor={GeneralColorStyle.Black}
+          text={"戻る"}
+          icon={
+            <IconAtoms
+              style={{
+                color: GeneralColorStyle.Black,
+                width: isWide ? 16 : 12,
+              }}
+              icon={faChevronLeft}
+            />
+          }
+        />
+      </Link>
     </Custom404Container>
   )
 }
