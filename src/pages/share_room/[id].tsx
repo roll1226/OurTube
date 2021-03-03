@@ -27,7 +27,7 @@ import {
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
 import useMedia from "use-media"
-import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import { faColumns, faQuestion } from "@fortawesome/free-solid-svg-icons"
 import ControlsButtonAtoms from "../../components/atoms/controls/ControlsButtonAtoms"
 import mobileModalSlice from "../../ducks/mobileModal/slice"
 
@@ -58,6 +58,18 @@ const ContentWrap = styled.div<{ isWide: boolean }>`
       width: 92vw;
       margin: 0 auto;
     `}
+`
+
+const AboutUseBtnWrap = styled.div<{ isWide: boolean }>`
+  position: absolute;
+  right: 20px;
+  ${({ isWide }) =>
+    isWide &&
+    css`
+      right: 40px;
+    `}
+
+  bottom: 100px;
 `
 
 export type YouTubePlayer = {
@@ -628,9 +640,8 @@ const ShareRoom = () => {
 
         {!isWide && (
           <ControlsButtonAtoms
-            size={44}
-            iconSize={28}
-            icon={faCaretUp}
+            size={56}
+            icon={faColumns}
             onClick={() => dispatch(mobileModalSlice.actions.setIsOpen(true))}
           />
         )}
@@ -666,6 +677,16 @@ const ShareRoom = () => {
         onTouchStart={stopIntervalCurrentTime}
         onTouchMove={(range) => mobileChangeCurrentTime(range)}
       />
+
+      <AboutUseBtnWrap isWide={isWide}>
+        <a
+          href="https://www.notion.so/OurTube-f35756afcd014034a9708b7dad93b5a5"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ControlsButtonAtoms size={isWide ? 44 : 56} icon={faQuestion} />
+        </a>
+      </AboutUseBtnWrap>
 
       {/* <SearchYouTubeModalOrganisms /> */}
     </ShareRoomContainer>
