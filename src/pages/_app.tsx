@@ -14,7 +14,6 @@ import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
 import ToastCardMolecules from "../components/molecules/ToastCardMolecules"
 import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
 import { useModalState } from "../ducks/modal/selectors"
-import FirebaseDatabaseUtil from "../utils/lib/FirebaseDatabaseUtil"
 import useMedia from "use-media"
 
 const GlobalStyle = createGlobalStyle`
@@ -56,6 +55,7 @@ const AppBackground = () => {
   useEffect(() => {
     return firebaseAuth.onAuthStateChanged(async (user) => {
       const pathname = router.pathname
+      LoggerUtil.debug(pathname)
 
       if (!user) {
         if (
@@ -63,7 +63,8 @@ const AppBackground = () => {
           pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
           pathname !== OurTubePath.CREATE_GUEST &&
           pathname !== OurTubePath.ERROR &&
-          pathname !== OurTubePath.SHARE_ROOM
+          pathname !== OurTubePath.SHARE_ROOM &&
+          pathname !== OurTubePath.NOT_FOUND
         ) {
           router.replace("/")
           LoggerUtil.debug(router)
@@ -75,6 +76,7 @@ const AppBackground = () => {
         if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
         if (pathname === OurTubePath.CREATE_GUEST) return
         if (pathname === OurTubePath.ERROR) return
+        if (pathname === OurTubePath.NOT_FOUND) return
 
         if (userName) router.push(OurTubePath.CREATE_ROOM)
         else router.push(OurTubePath.CREATE_ACCOUNT)

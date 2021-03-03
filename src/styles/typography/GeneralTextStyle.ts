@@ -16,6 +16,7 @@ export enum GeneralFontSize {
   SIZE_52 = 52,
   SIZE_56 = 56,
   SIZE_60 = 60,
+  SIZE_80 = 80,
 }
 
 export enum GeneralFontWeight {

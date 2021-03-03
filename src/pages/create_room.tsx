@@ -43,7 +43,7 @@ const CreateRoomCard = styled.div`
 const CreateRoom = () => {
   const modalState = useModalState().modal
   const isWide = useMedia({ minWidth: "480px" })
-  const [changeCard, setChangeCard] = useState(false)
+  const [changeCard, setChangeCard] = useState(true)
 
   useEffect(() => {
     FirebaseDatabaseUtil.offlineState()
@@ -56,7 +56,7 @@ const CreateRoom = () => {
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
         url={"/"}
-        top={false}
+        top={true}
       />
       <AccountHeadMolecules />
 
