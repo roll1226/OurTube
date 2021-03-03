@@ -12,6 +12,7 @@ import MaskAtoms from "../atoms/MaskAtoms"
 import { useMobileModalState } from "../../ducks/mobileModal/selectors"
 import { useDispatch } from "react-redux"
 import mobileModalSlice from "../../ducks/mobileModal/slice"
+import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 
 const TabsContainer = styled.div`
   display: flex;
@@ -90,7 +91,7 @@ const CommentAndSendUrlCardOrganisms = ({
         >
           <CardAtoms
             width={"90"}
-            height={"72"}
+            height={"60"}
             isPadding={false}
             bgColor={GeneralColorStyle.White}
           >
@@ -119,6 +120,7 @@ const CommentAndSendUrlCardOrganisms = ({
               nowVideoId={nowVideoId}
               stopIntervalCurrentTime={stopIntervalCurrentTime}
             />
+            <GeneralSpacer vertical={28} />
           </CardAtoms>
         </MaskAtoms>
       )}

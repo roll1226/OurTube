@@ -7,7 +7,6 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 import { GeneralSpacer } from "../../../styles/spacer/GeneralSpacerStyle"
 
 const SendContainer = styled.div`
-  padding-bottom: 28px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -62,7 +61,6 @@ const SendTextMolecules = ({ placeholder, text, onChange, onClick }: Props) => {
           }}
         />
       </SendButton>
-      <GeneralSpacer horizontal={28} />
     </SendContainer>
   )
 }
