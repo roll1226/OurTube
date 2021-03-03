@@ -90,7 +90,7 @@ const CommentAndSendUrlCardOrganisms = ({
         >
           <CardAtoms
             width={"90"}
-            height={"64"}
+            height={"72"}
             isPadding={false}
             bgColor={GeneralColorStyle.White}
           >
