@@ -52,6 +52,7 @@ const InsertRoomPasswordAndGuestMaskOrganisms = ({
             outlineColor={GeneralColorStyle.Black}
             onChange={onChange}
             onKeyPress={onKeyPress}
+            password={true}
           />
 
           <GeneralSpacer vertical={16} />

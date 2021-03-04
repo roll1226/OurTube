@@ -49,6 +49,7 @@ export type Props = {
   errorText?: string
   isError?: boolean
   onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void
+  password?: boolean
 }
 
 const InputAtoms = ({
@@ -61,13 +62,14 @@ const InputAtoms = ({
   errorText,
   isError = false,
   onKeyPress,
+  password = false,
 }: Props) => {
   const isWide = useMedia({ minWidth: "480px" })
 
   return (
     <>
       <InputContainer
-        type="text"
+        type={password ? "password" : "text"}
         width={width}
         outlineColor={isError ? GeneralColorStyle.Error : outlineColor}
         value={value}
