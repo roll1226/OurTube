@@ -52,37 +52,37 @@ const AppBackground = () => {
 
   const [nowPathname, setNowPathname] = useState("/")
 
-  useEffect(() => {
-    return firebaseAuth.onAuthStateChanged(async (user) => {
-      const pathname = router.pathname
-      LoggerUtil.debug(pathname)
+  // useEffect(() => {
+  //   return firebaseAuth.onAuthStateChanged(async (user) => {
+  //     const pathname = router.pathname
+  //     LoggerUtil.debug(pathname)
 
-      if (!user) {
-        if (
-          pathname !== OurTubePath.TOP &&
-          pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-          pathname !== OurTubePath.CREATE_GUEST &&
-          pathname !== OurTubePath.ERROR &&
-          pathname !== OurTubePath.SHARE_ROOM &&
-          pathname !== OurTubePath.NOT_FOUND
-        ) {
-          router.replace("/")
-          LoggerUtil.debug(router)
-        }
-      } else {
-        const userName = await FirebaseStoreUtil.checkUserName(user.uid)
+  //     if (!user) {
+  //       if (
+  //         pathname !== OurTubePath.TOP &&
+  //         pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+  //         pathname !== OurTubePath.CREATE_GUEST &&
+  //         pathname !== OurTubePath.ERROR &&
+  //         pathname !== OurTubePath.SHARE_ROOM &&
+  //         pathname !== OurTubePath.NOT_FOUND
+  //       ) {
+  //         router.replace("/")
+  //         LoggerUtil.debug(router)
+  //       }
+  //     } else {
+  //       const userName = await FirebaseStoreUtil.checkUserName(user.uid)
 
-        if (pathname === OurTubePath.SHARE_ROOM) return
-        if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
-        if (pathname === OurTubePath.CREATE_GUEST) return
-        if (pathname === OurTubePath.ERROR) return
-        if (pathname === OurTubePath.NOT_FOUND) return
+  //       if (pathname === OurTubePath.SHARE_ROOM) return
+  //       if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
+  //       if (pathname === OurTubePath.CREATE_GUEST) return
+  //       if (pathname === OurTubePath.ERROR) return
+  //       if (pathname === OurTubePath.NOT_FOUND) return
 
-        if (userName) router.push(OurTubePath.CREATE_ROOM)
-        else router.push(OurTubePath.CREATE_ACCOUNT)
-      }
-    })
-  }, [])
+  //       if (userName) router.push(OurTubePath.CREATE_ROOM)
+  //       else router.push(OurTubePath.CREATE_ACCOUNT)
+  //     }
+  //   })
+  // }, [])
 
   useEffect(() => {
     const pathname = router.pathname

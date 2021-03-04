@@ -10,6 +10,7 @@ import {
 import OurTubeLogoAtoms, { LogoColor } from "../atoms/svg/OurTubeLogoAtoms"
 import InputAtoms from "../atoms/InputAtoms"
 import { ChangeEvent, KeyboardEvent } from "react"
+import useMedia from "use-media"
 
 export type Props = {
   value: string
@@ -26,6 +27,8 @@ const InsertRoomPasswordAndGuestMaskOrganisms = ({
   onChange,
   onClick,
 }: Props) => {
+  const isWide = useMedia({ minWidth: "480px" })
+
   const onKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (!value) return
     if (event.key === "Enter") onClick()
@@ -34,20 +37,22 @@ const InsertRoomPasswordAndGuestMaskOrganisms = ({
   return (
     <>
       <MaskAtoms isOpen={true}>
-        <CardAtoms width={480}>
-          <OurTubeLogoAtoms size={430} color={LogoColor.BLUE} />
+        <CardAtoms width={isWide ? 480 : 280}>
+          <OurTubeLogoAtoms size={isWide ? 430 : 280} color={LogoColor.BLUE} />
           <GeneralText
-            fontSize={GeneralFontSize.SIZE_36}
+            fontSize={
+              isWide ? GeneralFontSize.SIZE_36 : GeneralFontSize.SIZE_24
+            }
             fontColor={GeneralColorStyle.DarkGreen}
           >
             {title}
           </GeneralText>
 
-          <GeneralSpacer vertical={32} />
+          <GeneralSpacer vertical={isWide ? 32 : 20} />
 
           <InputAtoms
             placeholder={placeholder}
-            width={300}
+            width={isWide ? 300 : 240}
             value={value}
             outlineColor={GeneralColorStyle.Black}
             onChange={onChange}
