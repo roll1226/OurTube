@@ -102,6 +102,7 @@ const CommentAndSendUrlCardOrganisms = ({
                 position={"left"}
                 isActive={isCommentActive}
                 onClick={() => selectTab(true)}
+                name={"コメント"}
               />
 
               <TabMolecules
@@ -109,6 +110,7 @@ const CommentAndSendUrlCardOrganisms = ({
                 position={"right"}
                 isActive={isSendUrl}
                 onClick={() => selectTab(false)}
+                name={"動画リスト"}
               />
             </TabsContainer>
             <CommentsMolecules isActive={isCommentActive} />
