@@ -12,7 +12,6 @@ import MaskAtoms from "../atoms/MaskAtoms"
 import { useMobileModalState } from "../../ducks/mobileModal/selectors"
 import { useDispatch } from "react-redux"
 import mobileModalSlice from "../../ducks/mobileModal/slice"
-import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 
 const TabsContainer = styled.div`
   display: flex;
@@ -62,6 +61,7 @@ const CommentAndSendUrlCardOrganisms = ({
               position={"left"}
               isActive={isCommentActive}
               onClick={() => selectTab(true)}
+              name={"コメント"}
             />
 
             <TabMolecules
@@ -69,6 +69,7 @@ const CommentAndSendUrlCardOrganisms = ({
               position={"right"}
               isActive={isSendUrl}
               onClick={() => selectTab(false)}
+              name={"動画リスト"}
             />
           </TabsContainer>
           <CommentsMolecules isActive={isCommentActive} />

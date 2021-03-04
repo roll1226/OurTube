@@ -15,6 +15,7 @@ import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import IconAtoms from "../components/atoms/IconAtoms"
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
+import NotionButtonMolecules from "../components/molecules/NotionButtonMolecules"
 
 const CreateRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -114,6 +115,8 @@ const CreateRoom = () => {
           isOpen={modalState.isOpen}
         />
       )}
+
+      <NotionButtonMolecules />
     </CreateRoomContainer>
   )
 }
