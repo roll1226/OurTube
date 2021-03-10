@@ -267,6 +267,9 @@ const ShareRoom = () => {
               changeVideoStatus(room.data(), event, getStoreVideoId)
             }
           })
+        },
+        (error) => {
+          LoggerUtil.debug(`error log: ${error}`)
 
           if (!userData)
             return router.replace(
@@ -274,9 +277,6 @@ const ShareRoom = () => {
                 queryPassword ? `?p=${queryPassword}` : ""
               }`
             )
-        },
-        (error) => {
-          LoggerUtil.debug(`error log: ${error}`)
         }
       )
   }
