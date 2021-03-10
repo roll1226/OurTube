@@ -31,6 +31,7 @@ import { faColumns } from "@fortawesome/free-solid-svg-icons"
 import ControlsButtonAtoms from "../../components/atoms/controls/ControlsButtonAtoms"
 import mobileModalSlice from "../../ducks/mobileModal/slice"
 import NotionButtonMolecules from "../../components/molecules/NotionButtonMolecules"
+import { Base64 } from "js-base64"
 
 const ShareRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -146,10 +147,23 @@ const ShareRoom = () => {
             )
             await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
           } else {
-            if (room.data().password !== queryPassword)
+            if (!queryPassword)
+              return router.push(
+                `${OurTubePath.INSERT_ROOM_PASSWORD.replace("[id]", roomId)}`
+              )
+            if (room.data().password !== Base64.decode(queryPassword))
               router.push(
                 `${OurTubePath.INSERT_ROOM_PASSWORD.replace("[id]", roomId)}`
               )
+            else {
+              insertRoomInUser(
+                roomId,
+                authUser.uid,
+                authUser.photoURL,
+                authUser.displayName
+              )
+              await FirebaseStoreUtil.setUserJoinedRoom(roomId, authUser.uid)
+            }
           }
         } else {
           insertRoomInUser(
@@ -280,7 +294,6 @@ const ShareRoom = () => {
     isPlay = 1
     setIsPlayYouTube(room.play)
     // stopIntervalCurrentTime()
-    LoggerUtil.debug("わたしはかみ", event.target.getPlaylist())
     if (!room.play || !getStoreVideoId) {
       stopIntervalCurrentTime()
       event.target.pauseVideo()

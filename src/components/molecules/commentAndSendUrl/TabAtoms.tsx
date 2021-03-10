@@ -44,8 +44,8 @@ const TabWrap = styled.div<{
 const TabName = styled.div<{ isHover: boolean }>`
   position: absolute;
   z-index: 4;
-  top: -50%;
-  left: 25%;
+  top: -55%;
+  left: 30%;
   /* transform: translateY(0%) translateX(-50%); */
   transform-origin: center left;
   background: ${ColorUtil.addOpacity(GeneralColorStyle.Black, 0.8)};

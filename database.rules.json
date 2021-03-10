@@ -6,8 +6,8 @@
         "status": {
           "$userID": {
             ".read": "auth != null",
-            ".write": "$userID === auth.uid",
-            ".validate": "newData.hasChildren(['state', 'lastChanged'])",
+            ".write": "auth != null",
+            ".validate": "newData.hasChildren(['state', 'lastChanged', 'photoURL', 'displayName'])",
             "state": {
               ".validate": "newData.isString() && 0 < newData.val().length"
             },

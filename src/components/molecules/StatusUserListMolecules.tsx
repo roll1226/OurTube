@@ -1,7 +1,6 @@
 import firebase from "firebase/app"
 import styled, { css } from "styled-components"
 import StatusUserAtoms from "../atoms/StatusUserAtoms"
-import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import useMedia from "use-media"
 
 const StatusUserListContainer = styled.div<{ isWide: boolean }>`
@@ -20,6 +19,10 @@ const StatusUserListContainer = styled.div<{ isWide: boolean }>`
   padding: 3px 0;
 `
 
+const UserStatusWrap = styled.div`
+  margin-right: 8px;
+`
+
 export type Props = {
   statusList: {
     state: "online" | "offline"
@@ -35,17 +38,13 @@ const StatusUserListMolecules = ({ statusList }: Props) => {
   return (
     <StatusUserListContainer isWide={isWide}>
       {statusList.map((status, index) => (
-        <>
-          <div>
-            <StatusUserAtoms
-              key={index}
-              state={status.state}
-              displayName={status.displayName}
-              photoURL={status.photoURL}
-            />
-          </div>
-          <GeneralSpacer horizontal={8} />
-        </>
+        <UserStatusWrap key={index}>
+          <StatusUserAtoms
+            state={status.state}
+            displayName={status.displayName}
+            photoURL={status.photoURL}
+          />
+        </UserStatusWrap>
       ))}
     </StatusUserListContainer>
   )

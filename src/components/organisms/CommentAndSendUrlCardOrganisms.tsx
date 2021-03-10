@@ -61,7 +61,7 @@ const CommentAndSendUrlCardOrganisms = ({
               position={"left"}
               isActive={isCommentActive}
               onClick={() => selectTab(true)}
-              name={"コメント"}
+              name={"チャット"}
             />
 
             <TabMolecules

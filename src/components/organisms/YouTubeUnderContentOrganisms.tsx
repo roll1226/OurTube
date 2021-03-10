@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { useEffect, useState } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
+import { Base64 } from "js-base64"
 
 const YouTubeUnderContentContainer = styled.div`
   display: flex;
@@ -37,7 +38,10 @@ const YouTubeUnderContentOrganisms = ({ roomId, password }: Props) => {
 
   return (
     <YouTubeUnderContentContainer>
-      <LinkCopyButtonMolecules roomId={roomId} password={password} />
+      <LinkCopyButtonMolecules
+        roomId={roomId}
+        password={Base64.encode(password)}
+      />
 
       <GeneralSpacer horizontal={8} />
 
