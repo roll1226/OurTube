@@ -267,17 +267,17 @@ const ShareRoom = () => {
               changeVideoStatus(room.data(), event, getStoreVideoId)
             }
           })
+
+          if (!userData)
+            return router.replace(
+              `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
+                queryPassword ? `?p=${queryPassword}` : ""
+              }`
+            )
         },
         (error) => {
           LoggerUtil.debug(`error log: ${error}`)
         }
-      )
-
-    if (!userData)
-      return router.replace(
-        `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
-          queryPassword ? `?p=${queryPassword}` : ""
-        }`
       )
   }
 
