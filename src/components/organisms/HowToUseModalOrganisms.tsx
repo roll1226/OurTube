@@ -13,7 +13,8 @@ import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { useHowToUseState } from "../../ducks/howToUse/selectors"
 import { useDispatch } from "react-redux"
 import howToUseSlice from "../../ducks/howToUse/slice"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import LoggerUtil from "../../utils/debugger/LoggerUtil"
 
 const HowToUseImgWrap = styled.div`
   width: 100%;
@@ -27,6 +28,25 @@ const HowToUseModalOrganisms = () => {
   const dispatch = useDispatch()
   const howToUseState = useHowToUseState().howToUse
   const [pageNum, setPageNum] = useState(1)
+
+  const initialState = localStorage.getItem("isAlreadyOpen")
+    ? JSON.parse(localStorage.getItem("isAlreadyOpen"))
+    : {
+        isAlready: false,
+      }
+  const [isAlreadyOpen, setIsAlreadyOpen] = useState(initialState)
+
+  useEffect(() => {
+    if (isAlreadyOpen.isAlready) return
+    LoggerUtil.debug(isAlreadyOpen)
+    dispatch(howToUseSlice.actions.setIsOpen(true))
+    localStorage.setItem(
+      "isAlreadyOpen",
+      JSON.stringify({
+        isAlready: true,
+      })
+    )
+  }, [isAlreadyOpen, dispatch])
 
   const closeModal = () => {
     dispatch(howToUseSlice.actions.setIsOpen(false))
