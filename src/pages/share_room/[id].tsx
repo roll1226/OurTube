@@ -32,6 +32,7 @@ import ControlsButtonAtoms from "../../components/atoms/controls/ControlsButtonA
 import mobileModalSlice from "../../ducks/mobileModal/slice"
 import NotionButtonMolecules from "../../components/molecules/NotionButtonMolecules"
 import { Base64 } from "js-base64"
+import HowToUseModalOrganisms from "../../components/organisms/HowToUseModalOrganisms"
 
 const ShareRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -680,9 +681,10 @@ const ShareRoom = () => {
         onTouchMove={(range) => mobileChangeCurrentTime(range)}
       />
 
-      <NotionButtonMolecules />
+      <NotionButtonMolecules href={!isWide && true} />
 
       {/* <SearchYouTubeModalOrganisms /> */}
+      {isWide && <HowToUseModalOrganisms />}
     </ShareRoomContainer>
   )
 }

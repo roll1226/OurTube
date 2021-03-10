@@ -11,6 +11,8 @@ import {
   GeneralFontWeight,
 } from "../../styles/typography/GeneralTextStyle"
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import howToUseSlice from "../../ducks/howToUse/slice"
 
 const AboutUseBtnContainer = styled.div<{ isWide: boolean }>`
   position: absolute;
@@ -49,9 +51,19 @@ const AboutUserBtnWrap = styled.div`
   position: relative;
 `
 
-const NotionButtonMolecules = () => {
+export type Props = {
+  href?: boolean
+}
+
+const NotionButtonMolecules = ({ href = false }: Props) => {
+  const dispatch = useDispatch()
+
   const isWide = useMedia({ minWidth: "480px" })
   const [isHover, setIsHover] = useState(false)
+
+  const openHowToUse = () => {
+    dispatch(howToUseSlice.actions.setIsOpen(true))
+  }
 
   return (
     <AboutUseBtnContainer
@@ -60,13 +72,23 @@ const NotionButtonMolecules = () => {
       onMouseOut={() => setIsHover(false)}
     >
       <AboutUserBtnWrap>
-        <a
-          href="https://www.notion.so/OurTube-f35756afcd014034a9708b7dad93b5a5"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ControlsButtonAtoms size={isWide ? 44 : 56} icon={faQuestion} />
-        </a>
+        {href && (
+          <a
+            href="https://www.notion.so/OurTube-f35756afcd014034a9708b7dad93b5a5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ControlsButtonAtoms size={isWide ? 44 : 56} icon={faQuestion} />
+          </a>
+        )}
+
+        {!href && (
+          <ControlsButtonAtoms
+            size={isWide ? 44 : 56}
+            icon={faQuestion}
+            onClick={openHowToUse}
+          />
+        )}
 
         <NotionTitle isHover={isHover} isWide={isWide}>
           <GeneralText

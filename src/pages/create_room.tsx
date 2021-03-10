@@ -116,7 +116,7 @@ const CreateRoom = () => {
         />
       )}
 
-      <NotionButtonMolecules />
+      <NotionButtonMolecules href={true} />
     </CreateRoomContainer>
   )
 }

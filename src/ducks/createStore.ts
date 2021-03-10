@@ -8,6 +8,7 @@ import searchSlice, { initialState as SearchState } from "./search/slice"
 import mobileModalSlice, {
   initialState as MobileModalState,
 } from "./mobileModal/slice"
+import howToUseSlice, { initialState as HowToUseState } from "./howToUse/slice"
 
 const rootReducer = combineReducers({
   toast: toastSlice.reducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   modal: modalSlice.reducer,
   search: searchSlice.reducer,
   mobileModal: mobileModalSlice.reducer,
+  howToUse: howToUseSlice.reducer,
 })
 
 const preloadedState = () => {
@@ -24,6 +26,7 @@ const preloadedState = () => {
     modal: ModalState,
     search: SearchState,
     mobileModal: MobileModalState,
+    howToUse: HowToUseState,
   }
 }
 
