@@ -48,7 +48,7 @@ const YouTubeCLickAction = (videoId: string, text: string, icon: IconProp) => {
         src={
           videoId
             ? `http://img.youtube.com/vi/${videoId}/mqdefault.jpg`
-            : "https://firebasestorage.googleapis.com/v0/b/our-tubes.appspot.com/o/signIn%2Fnot_thumbnail.jpg?alt=media&token=013ab526-b66f-4345-8682-ab0bc7caa3c0"
+            : "/img/not_thumbnail.jpeg"
         }
         alt={"サムネイル"}
         width={124}
