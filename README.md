@@ -6,3 +6,6 @@
 ## OurTubeとは
 YouTube上にある動画を複数人で共有しながら、コメントをしあえるサービス。
 動画の時間や再生の有無などを同期して、まるで近くで一緒に見ているかのような視聴が出来ます。
+
+## functions
+[OurTube-Functions](https://github.com/roll1226/OurTube-Functons)
