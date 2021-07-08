@@ -213,7 +213,7 @@ const ShareRoom = () => {
             if (flag.type === "added") {
               FirebaseStoreUtil.setLiveCurrentTime(
                 roomId,
-                event.target.getCurrentTime() + 2,
+                event.target.getCurrentTime() + 1,
                 `${flag.doc.data().uid}SetJoinRoomUser`
               )
             }

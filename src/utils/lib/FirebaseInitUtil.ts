@@ -3,6 +3,7 @@ import "firebase/firestore"
 import "firebase/auth"
 import "firebase/functions"
 import "firebase/database"
+import "firebase/storage"
 import { env } from "../../env/DotEnv"
 
 const isEmulator = () => {
@@ -18,6 +19,7 @@ if (!firebase.apps.length) {
     firebase.functions().useEmulator("localhost", 5001)
     firebase.firestore().useEmulator("localhost", 8080)
     firebase.database().useEmulator("localhost", 9000)
+    firebase.storage().useEmulator("localhost", 9199)
   }
 } else {
   firebase.app()
