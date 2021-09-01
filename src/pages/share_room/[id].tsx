@@ -136,7 +136,7 @@ const ShareRoom = () => {
       } else {
         const room = await FirebaseStoreUtil.room(roomId).get()
 
-        if (!room.exists) router.replace(OurTubePath.NOT_FOUND)
+        if (!room.exists) return router.replace(OurTubePath.NOT_FOUND)
 
         if (room.data().privateRoom) {
           if (room.data().hostId === authUser.uid) {
