@@ -82,10 +82,17 @@ class FirebaseStoreUtil {
    * @param name
    */
   public static async setChangeUser(roomId: string, name: string) {
-    await FirebaseStoreUtil.changeUser(roomId).add({
-      name,
-      createdAt: FirebaseStoreUtil.getTimeStamp(),
-    })
+    await FirebaseStoreUtil.changeUser(roomId)
+      .doc("changeDoc")
+      .set(
+        {
+          name,
+          count: FirebaseStoreUtil.setCount(1),
+          type: "changeField",
+          createdAt: FirebaseStoreUtil.getTimeStamp(),
+        },
+        { merge: true }
+      )
   }
 
   /**
@@ -338,7 +345,7 @@ class FirebaseStoreUtil {
 
     if (youTube.exists) return youTube.data().title
     else {
-      const youTubeData = await FetchYouTubeUtil.fetchVideo(videoId)
+      const youTubeData = await FetchYouTubeUtil.nextFetchVideo(videoId)
 
       if (youTubeData.status === 200) return youTubeData.title
       else return ""

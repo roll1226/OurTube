@@ -4,6 +4,8 @@ dev-firebase:
 	yarn dev:firebase
 build:
 	yarn build
+build-functions:
+	yarn build-functions
 start:
 	yarn start
 emulators:

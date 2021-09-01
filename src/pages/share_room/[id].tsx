@@ -226,11 +226,46 @@ const ShareRoom = () => {
 
     getChangeUser
       .orderBy("createdAt", "desc")
-      .limit(1)
+      .where("type", "==", "changeField")
       .onSnapshot(
         async (users) => {
           users.docChanges().forEach(async (user) => {
             if (user.type === "added") {
+              const changeUser = user.doc.data()
+              const room = await FirebaseStoreUtil.room(roomId).get()
+
+              if (!room.exists) router.replace(OurTubePath.NOT_FOUND)
+
+              const playNow = room.data().playNow
+              const getStoreVideoId = room.data().videoId[playNow]
+              const uid = getCurrentUser()
+              setSignInId(uid)
+
+              if (
+                isPlay &&
+                changeUser.name.includes("SetJoinRoomUser") &&
+                changeUser.name !== `${uid}SetJoinRoomUser`
+              )
+                return
+
+              if (isPlay && changeUser.name === "setYouTubePlayerBot") {
+                if (room.data().play) {
+                  event.target.playVideo()
+                  setListCnt(room.data().listCnt)
+                  return
+                }
+              }
+
+              LoggerUtil.debug("now play number", room.data().playNow)
+
+              setRoomTitle(room.data().roomName)
+              setPassword(room.data().password)
+              setListCnt(room.data().listCnt)
+              setPlayNow(room.data().playNow)
+              setVideoId(getStoreVideoId)
+
+              changeVideoStatus(room.data(), event, getStoreVideoId)
+            } else if (user.type === "modified") {
               const changeUser = user.doc.data()
               const room = await FirebaseStoreUtil.room(roomId).get()
 
@@ -544,7 +579,7 @@ const ShareRoom = () => {
     const nextListCnt = listCnt + 1
     LoggerUtil.debug(nextListCnt, listCnt)
 
-    const youTubeData = await FetchYouTubeUtil.fetchVideo(resultVideoId)
+    const youTubeData = await FetchYouTubeUtil.nextFetchVideo(resultVideoId)
 
     if (youTubeData.status === 400) return
 

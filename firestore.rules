@@ -78,6 +78,15 @@ service cloud.firestore {
 
         allow create: if isAuthenticated() &&
           incomingData().name is string &&
+          incomingData().count is number &&
+          incomingData().type is string &&
+          incomingData().createdAt is timestamp &&
+          incomingData().createdAt == request.time;
+
+        allow update: if isAuthenticated() &&
+          incomingData().name is string &&
+          incomingData().count is number &&
+          incomingData().type is string &&
           incomingData().createdAt is timestamp &&
           incomingData().createdAt == request.time;
       }
