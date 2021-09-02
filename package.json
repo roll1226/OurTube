@@ -13,6 +13,7 @@
     "deploy:rule-firestore": "firebase deploy --only firestore:rules",
     "deploy:rule-database": "firebase deploy --only database",
     "deploy:rule-storage": "firebase deploy --only storage",
+    "prepare": "husky install",
     "lint": "eslint src/**/*.{ts,tsx}"
   },
   "lint-staged": {
