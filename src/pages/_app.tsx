@@ -15,6 +15,8 @@ import ToastCardMolecules from "../components/molecules/ToastCardMolecules"
 import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
 import { useModalState } from "../ducks/modal/selectors"
 import useMedia from "use-media"
+import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -129,8 +131,8 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       <ComponentContainer>
         <Component {...pageProps} />
       </ComponentContainer>
-
-      <ToastCardMolecules />
+      <ToastContainer />
+      {/* <ToastCardMolecules /> */}
 
       <GlobalLoader />
     </Provider>

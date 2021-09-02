@@ -16,8 +16,8 @@ import {
 } from "../styles/typography/GeneralTextStyle"
 import { useDispatch } from "react-redux"
 import modalSlice from "../ducks/modal/slice"
-import toastSlice from "../ducks/toast/slice"
 import useMedia from "use-media"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 const TopPageContainer = styled.div`
   position: relative;
@@ -72,12 +72,7 @@ const TopPage = () => {
   }
 
   const signInError = () => {
-    dispatch(toastSlice.actions.setIsActive(true))
-    dispatch(toastSlice.actions.setText("サインインに失敗した"))
-    dispatch(toastSlice.actions.setToastColor("error"))
-    setTimeout(() => {
-      dispatch(toastSlice.actions.setIsActive(false))
-    }, 2000)
+    ToastUtil.error("サインインに失敗した")
   }
 
   const googleSignInClick = async () => {

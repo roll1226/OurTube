@@ -11,7 +11,7 @@ import { useRouter } from "next/router"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 const YouTubeClickActionCardContainer = styled.div`
   padding: 12px 0;
@@ -81,13 +81,7 @@ const YouTubeClickActionCardMolecules = ({
   const dispatch = useDispatch()
 
   const pageTransition = () => {
-    dispatch(toastSlice.actions.setIsActive(true))
-    dispatch(toastSlice.actions.setText("コピーしました"))
-    dispatch(toastSlice.actions.setToastColor("success"))
-
-    setTimeout(() => {
-      dispatch(toastSlice.actions.setIsActive(false))
-    }, 2000)
+    ToastUtil.success("コピーしました")
   }
 
   if (roomId) {

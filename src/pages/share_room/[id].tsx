@@ -16,7 +16,6 @@ import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
 // import SearchYouTubeModalOrganisms from "../../components/organisms/SearchYouTubeModalOrganisms"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
@@ -33,6 +32,7 @@ import mobileModalSlice from "../../ducks/mobileModal/slice"
 import NotionButtonMolecules from "../../components/molecules/NotionButtonMolecules"
 import { Base64 } from "js-base64"
 import HowToUseModalOrganisms from "../../components/organisms/HowToUseModalOrganisms"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 const ShareRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -566,15 +566,7 @@ const ShareRoom = () => {
       resultVideoId
     )
 
-    if (isVideId) {
-      dispatch(toastSlice.actions.setText("すでにある動画です"))
-      dispatch(toastSlice.actions.setIsActive(true))
-      dispatch(toastSlice.actions.setToastColor("error"))
-      setTimeout(() => {
-        dispatch(toastSlice.actions.setIsActive(false))
-      }, 2000)
-      return
-    }
+    if (isVideId) return ToastUtil.warning("すでにある動画です")
 
     const nextListCnt = listCnt + 1
     LoggerUtil.debug(nextListCnt, listCnt)
@@ -632,12 +624,8 @@ const ShareRoom = () => {
    * @param toastColor
    */
   const sendToast = (text: string, toastColor: "success" | "error") => {
-    dispatch(toastSlice.actions.setIsActive(true))
-    dispatch(toastSlice.actions.setText(text))
-    dispatch(toastSlice.actions.setToastColor(toastColor))
-    setTimeout(() => {
-      dispatch(toastSlice.actions.setIsActive(false))
-    }, 2000)
+    if (toastColor === "success") ToastUtil.success(text)
+    else if (toastColor === "error") ToastUtil.error(text)
   }
 
   return (

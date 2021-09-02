@@ -5,10 +5,10 @@ import IconAtoms from "../atoms/IconAtoms"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
 import { useState, useEffect } from "react"
 import { OurTubePath } from "../../consts/PathConsts"
 import useMedia from "use-media"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 export type Props = {
   roomId: string
@@ -27,13 +27,7 @@ const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
   }, [])
 
   const copyLink = () => {
-    dispatch(toastSlice.actions.setIsActive(true))
-    dispatch(toastSlice.actions.setText("リンクをコピーしました"))
-    dispatch(toastSlice.actions.setToastColor("success"))
-
-    setTimeout(() => {
-      dispatch(toastSlice.actions.setIsActive(false))
-    }, 2000)
+    ToastUtil.success("リンクをコピーしました")
   }
 
   return (
