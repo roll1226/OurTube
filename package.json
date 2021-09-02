@@ -14,7 +14,8 @@
     "deploy:rule-database": "firebase deploy --only database",
     "deploy:rule-storage": "firebase deploy --only storage",
     "prepare": "husky install",
-    "lint": "eslint src/**/*.{ts,tsx}"
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "check-types": "tsc --noEmit"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
