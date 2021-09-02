@@ -16,6 +16,10 @@ import IconAtoms from "../components/atoms/IconAtoms"
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
 import NotionButtonMolecules from "../components/molecules/NotionButtonMolecules"
+import FirebaseAuthenticationUtil from "@src/utils/lib/FirebaseAuthenticationUtil"
+import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
+import { useContext } from "react"
+import { AuthContext } from "@context/AuthContext"
 
 const CreateRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -45,10 +49,20 @@ const CreateRoom = () => {
   const modalState = useModalState().modal
   const isWide = useMedia({ minWidth: "480px" })
   const [changeCard, setChangeCard] = useState(true)
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
+    if (!currentUser) return
     FirebaseDatabaseUtil.offlineState()
-  }, [])
+    resetUserNowRoomId(currentUser.uid)
+  }, [currentUser])
+
+  const resetUserNowRoomId = async (userId: string) => {
+    await FirebaseStoreUtil.users(userId).update({
+      nowRoomId: "",
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+  }
 
   return (
     <CreateRoomContainer isWide={isWide}>

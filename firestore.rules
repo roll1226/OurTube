@@ -18,7 +18,7 @@ service cloud.firestore {
     }
 
     match /users/{userID} {
-      allow read: if isUserAuthenticated(userID);
+      allow read: if isAuthenticated();
 
       allow create: if isUserAuthenticated(userID) &&
         incomingData().name is string &&
@@ -26,6 +26,8 @@ service cloud.firestore {
         incomingData().name.size() <= 20 &&
         incomingData().joinedRooms is list &&
         incomingData().joinedRooms.size() == 0 &&
+        incomingData().nowRoomId is string &&
+        incomingData().nowRoomId.size() == 20 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
@@ -33,6 +35,8 @@ service cloud.firestore {
 
       allow update: if isUserAuthenticated(userID) &&
         incomingData().joinedRooms is list &&
+        incomingData().nowRoomId is string &&
+        incomingData().nowRoomId.size() >= 0 &&
         incomingData().updatedAt is timestamp &&
         incomingData().updatedAt == request.time;
     }
@@ -130,6 +134,7 @@ service cloud.firestore {
 
         allow create: if isAuthenticated() &&
           incomingData().state is string &&
+          incomingData().roomId is string &&
           incomingData().photoURL is string &&
           incomingData().displayName is string &&
           incomingData().displayName.size() != 0 &&
@@ -138,6 +143,7 @@ service cloud.firestore {
 
         allow update: if isAuthenticated() &&
           incomingData().state is string &&
+          incomingData().roomId is string &&
           incomingData().photoURL is string &&
           incomingData().displayName is string &&
           incomingData().displayName.size() != 0 &&

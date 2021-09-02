@@ -16,6 +16,7 @@ import useMedia from "use-media"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
 import { useRouter } from "next/router"
+import { AuthProvider } from "@context/AuthContext"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -124,16 +125,18 @@ const GlobalLoader = () => {
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Provider store={createStore()}>
-      <GlobalStyle />
-      <AppBackground />
+      <AuthProvider>
+        <GlobalStyle />
+        <AppBackground />
 
-      <ComponentContainer>
-        <Component {...pageProps} />
-      </ComponentContainer>
-      <ToastContainer />
-      {/* <ToastCardMolecules /> */}
+        <ComponentContainer>
+          <Component {...pageProps} />
+        </ComponentContainer>
+        <ToastContainer />
+        {/* <ToastCardMolecules /> */}
 
-      <GlobalLoader />
+        <GlobalLoader />
+      </AuthProvider>
     </Provider>
   )
 }

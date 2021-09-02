@@ -30,6 +30,7 @@ const YouTubeUnderContentOrganisms = ({ roomId, password }: Props) => {
       statusList.forEach((statusData) => {
         statusSave.push({
           ...statusData.data(),
+          userId: statusData.id,
         })
       })
       setStatus(statusSave)

@@ -12,6 +12,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
 import ToastUtil from "@src/utils/toast/ToastUtil"
+import FirebaseAuthenticationUtil from "@src/utils/lib/FirebaseAuthenticationUtil"
+import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
 
 const YouTubeClickActionCardContainer = styled.div`
   padding: 12px 0;
@@ -78,17 +80,27 @@ const YouTubeClickActionCardMolecules = ({
   roomId,
   youTubeUrl,
 }: Props) => {
+  const router = useRouter()
   const dispatch = useDispatch()
 
   const pageTransition = () => {
     ToastUtil.success("コピーしました")
   }
 
+  const pushRoom = async (roomId: string) => {
+    const currentUser = FirebaseAuthenticationUtil.getCurrentUser()
+    await FirebaseStoreUtil.users(currentUser.uid).update({
+      nowRoomId: roomId,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
+    router.push(`/share_room/${roomId}`)
+  }
+
   if (roomId) {
     return (
-      <Link href={`/share_room/${roomId}`}>
+      <div onClick={() => pushRoom(roomId)}>
         {YouTubeCLickAction(videoId, text, icon)}
-      </Link>
+      </div>
     )
   }
 

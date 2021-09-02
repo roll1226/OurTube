@@ -29,6 +29,7 @@ export type Props = {
     photoURL: string
     displayName: string
     lastChanged: firebase.firestore.FieldValue
+    userId: string
   }[]
 }
 
@@ -40,6 +41,7 @@ const StatusUserListMolecules = ({ statusList }: Props) => {
       {statusList.map((status, index) => (
         <UserStatusWrap key={index}>
           <StatusUserAtoms
+            userId={status.userId}
             state={status.state}
             displayName={status.displayName}
             photoURL={status.photoURL}

@@ -2,7 +2,7 @@ import firebase from "firebase/app"
 import { roomConverter } from "../../models/firebase/RoomModel"
 import { joinFlagConverter } from "../../models/firebase/JoinFlagModel"
 import FirebaseInitUtil from "./FirebaseInitUtil"
-import { UserConverter } from "../../models/firebase/UsersModel"
+import { UserConverter } from "../../models/firebase/UserModel"
 import FirebaseAuthenticationUtil from "./FirebaseAuthenticationUtil"
 import { chatConverter } from "../../models/firebase/ChatModel"
 import { youTubeListConverter } from "../../models/firebase/YouTubeListModel"
@@ -253,6 +253,7 @@ class FirebaseStoreUtil {
     await FirebaseStoreUtil.users(user.uid).set({
       name,
       joinedRooms: [],
+      nowRoomId: "",
       createdAt: FirebaseStoreUtil.getTimeStamp(),
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
@@ -402,6 +403,7 @@ class FirebaseStoreUtil {
 
     const isOfflineForDatabase = {
       state: "offline",
+      roomId: "",
       photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
@@ -409,6 +411,7 @@ class FirebaseStoreUtil {
 
     const isOnlineForDatabase = {
       state: "online",
+      roomId,
       photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: firebase.database.ServerValue.TIMESTAMP,
@@ -416,6 +419,7 @@ class FirebaseStoreUtil {
 
     const isOfflineForFireStore = {
       state: "offline",
+      roomId: "",
       photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),
@@ -423,6 +427,7 @@ class FirebaseStoreUtil {
 
     const isOnlineForFireStore = {
       state: "online",
+      roomId,
       photoURL: photoURL ? photoURL : "",
       displayName,
       lastChanged: FirebaseStoreUtil.getTimeStamp(),

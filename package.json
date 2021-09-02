@@ -14,6 +14,7 @@
     "deploy:rule-database": "firebase deploy --only database",
     "deploy:rule-storage": "firebase deploy --only storage",
     "prepare": "husky install",
+    "watch-functions": "cd functions && npm run watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "check-types": "tsc --noEmit"
   },
