@@ -12,15 +12,13 @@
     "deploy:functions": "firebase deploy --only functions",
     "deploy:rule-firestore": "firebase deploy --only firestore:rules",
     "deploy:rule-database": "firebase deploy --only database",
-    "deploy:rule-storage": "firebase deploy --only storage"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "deploy:rule-storage": "firebase deploy --only storage",
+    "lint": "eslint src/**/*.{ts,tsx}"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint 'src/**/*.ts{,x}"
+    "*.@(ts|tsx)": [
+      "yarn lint"
+    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -65,7 +63,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.2",
     "lint-staged": "^10.5.4",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
