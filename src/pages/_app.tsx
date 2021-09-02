@@ -1,6 +1,5 @@
 import { AppProps } from "next/app"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
 import { Provider } from "react-redux"
@@ -16,6 +15,7 @@ import { useModalState } from "../ducks/modal/selectors"
 import useMedia from "use-media"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
+import { useRouter } from "next/router"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
