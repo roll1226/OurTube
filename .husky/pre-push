@@ -1,4 +1,4 @@
 #!/bin/sh
-."$(dirmname "$0")/_/husky.sh"
+."$(dirname "$0")/_/husky.sh"
 
 yarn check-types
