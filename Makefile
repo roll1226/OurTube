@@ -20,5 +20,7 @@ deploy-rule-storage:
 	yarn deploy:rule-storage
 deploy-rule-firestore:
 	yarn deploy:rule-firestore
+deploy-all:
+	yarn deploy:all
 watch-functions:
 	yarn watch-functions

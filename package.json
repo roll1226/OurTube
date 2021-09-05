@@ -13,6 +13,7 @@
     "deploy:rule-firestore": "firebase deploy --only firestore:rules",
     "deploy:rule-database": "firebase deploy --only database",
     "deploy:rule-storage": "firebase deploy --only storage",
+    "deploy:all": "yarn deploy:functions && yarn deploy:rule-firestore && yarn deploy:rule-database && deploy:rule-storage",
     "prepare": "husky install",
     "watch-functions": "cd functions && npm run watch",
     "lint": "eslint src/**/*.{ts,tsx}",
