@@ -27,10 +27,11 @@ const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
   const isWide = useMedia({ minWidth: "480px" })
 
   const joinRoom = async (roomId: string) => {
-    const currentUser = FirebaseAuthenticationUtil.getCurrentUser()
-    await FirebaseStoreUtil.users(currentUser.uid).update({
-      nowRoomId: roomId,
-    })
+    // const currentUser = FirebaseAuthenticationUtil.getCurrentUser()
+    // await FirebaseStoreUtil.users(currentUser.uid).update({
+    //   nowRoomId: roomId,
+    //   updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    // })
     router.push(`/share_room/${roomId}`)
   }
 

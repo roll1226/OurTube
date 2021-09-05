@@ -27,7 +27,7 @@ service cloud.firestore {
         incomingData().joinedRooms is list &&
         incomingData().joinedRooms.size() == 0 &&
         incomingData().nowRoomId is string &&
-        incomingData().nowRoomId.size() == 20 &&
+        incomingData().nowRoomId.size() == 0 &&
         incomingData().createdAt is timestamp &&
         incomingData().createdAt == request.time &&
         incomingData().updatedAt is timestamp &&
