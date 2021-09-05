@@ -7,7 +7,7 @@ build:
 build-functions:
 	yarn build-functions
 watch:
-	yarn watch
+	yarn watch-functions
 start:
 	yarn start
 emulators:
