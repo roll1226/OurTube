@@ -13,6 +13,8 @@ import {
 import LinkCopyButtonMolecules from "../molecules/LinkCopyButtonMolecules"
 import { useRouter } from "next/router"
 import useMedia from "use-media"
+import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
+import FirebaseAuthenticationUtil from "@src/utils/lib/FirebaseAuthenticationUtil"
 
 export type Props = {
   roomId: string
@@ -24,7 +26,12 @@ const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
   const router = useRouter()
   const isWide = useMedia({ minWidth: "480px" })
 
-  const joinRoom = () => {
+  const joinRoom = async (roomId: string) => {
+    const currentUser = FirebaseAuthenticationUtil.getCurrentUser()
+    await FirebaseStoreUtil.users(currentUser.uid).update({
+      nowRoomId: roomId,
+      updatedAt: FirebaseStoreUtil.getTimeStamp(),
+    })
     router.push(`/share_room/${roomId}`)
   }
 
@@ -65,7 +72,7 @@ const DoneCreateRoomOrganisms = ({ roomId, password, isOpen }: Props) => {
                 icon={faCouch}
               />
             }
-            onClick={joinRoom}
+            onClick={() => joinRoom(roomId)}
           />
 
           <GeneralSpacer vertical={8} />

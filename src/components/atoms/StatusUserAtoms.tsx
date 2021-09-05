@@ -8,6 +8,9 @@ import {
   GeneralText,
   GeneralFontWeight,
 } from "../../styles/typography/GeneralTextStyle"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
 
 const StatusUserContainer = styled.div`
   position: relative;
@@ -71,16 +74,36 @@ const DisplayNameWrap = styled.div<{ isHover: boolean }>`
 export type Props = {
   photoURL: string
   displayName: string
+  userId: string
   state: "online" | "offline"
 }
 
 const StatusUserAtoms = ({
   photoURL,
   displayName,
+  userId,
   state = "offline",
 }: Props) => {
+  const router = useRouter()
+  const { id } = router.query
+  const roomId = id as string
   const [isHover, setIsHover] = useState(false)
   const imgRef = useRef(null)
+  const [isOnline, setIsOnline] = useState<"online" | "offline">("offline")
+
+  useEffect(() => {
+    if (!roomId || !userId) return
+    const getUser = async () => {
+      const user = await FirebaseStoreUtil.getUserData(userId)
+      if (user.data().nowRoomId === roomId) {
+        setIsOnline(state)
+      } else {
+        setIsOnline("offline")
+      }
+    }
+
+    getUser()
+  }, [roomId, state, userId])
 
   return (
     <StatusUserContainer
@@ -108,7 +131,7 @@ const StatusUserAtoms = ({
           alt="ユーザアイコン"
           ref={imgRef}
         />
-        <Status state={state} />
+        <Status state={isOnline} />
       </StatusUserWrap>
 
       <DisplayNameWrap isHover={isHover}>

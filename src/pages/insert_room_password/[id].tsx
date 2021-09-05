@@ -5,8 +5,8 @@ import { OurTubePath } from "../../consts/PathConsts"
 import { ChangeEvent, useState } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 const InsertRoomPassword = () => {
   const dispatch = useDispatch()
@@ -24,13 +24,6 @@ const InsertRoomPassword = () => {
     const room = await FirebaseStoreUtil.room(roomId).get()
 
     if (room.data().password === roomPassword) {
-      // dispatch(toastSlice.actions.setText("パスワードが一致しました"))
-      // dispatch(toastSlice.actions.setIsActive(true))
-      // dispatch(toastSlice.actions.setToastColor("success"))
-      // setTimeout(() => {
-      //   dispatch(toastSlice.actions.setIsActive(false))
-      // }, 2000)
-
       const user = FirebaseAuthenticationUtil.getCurrentUser()
       if (user) {
         FirebaseStoreUtil.setUserJoinedRoom(roomId, user.uid)
@@ -39,12 +32,7 @@ const InsertRoomPassword = () => {
         router.replace(`${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}`)
       }
     } else {
-      dispatch(toastSlice.actions.setText("パスワードが一致しません"))
-      dispatch(toastSlice.actions.setIsActive(true))
-      dispatch(toastSlice.actions.setToastColor("error"))
-      setTimeout(() => {
-        dispatch(toastSlice.actions.setIsActive(false))
-      }, 2000)
+      ToastUtil.error("パスワードが一致しません")
     }
   }
 

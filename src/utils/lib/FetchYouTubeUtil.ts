@@ -1,3 +1,4 @@
+import axios from "axios"
 import { env } from "../../env/DotEnv"
 import LoggerUtil from "../debugger/LoggerUtil"
 
@@ -19,6 +20,29 @@ class FetchYouTubeUtil {
         status: 200,
       }
     } else {
+      return {
+        title: "",
+        image: "",
+        status: 400,
+      }
+    }
+  }
+
+  public static async nextFetchVideo(videoId: string) {
+    try {
+      const res = await axios.get(
+        `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`
+      )
+      const data = res.data
+      if (data.error) {
+        throw new TypeError("動画が見つかりませんでした")
+      }
+      return {
+        title: data.title,
+        image: data.thumbnail_url,
+        status: 200,
+      }
+    } catch (error) {
       return {
         title: "",
         image: "",

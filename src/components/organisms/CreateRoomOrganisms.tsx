@@ -15,9 +15,9 @@ import {
 import FirebaseFunctionsUtil from "../../utils/lib/FirebaseFunctions"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import { useDispatch } from "react-redux"
-import toastSlice from "../../ducks/toast/slice"
 import modalSlice from "../../ducks/modal/slice"
 import useMedia from "use-media"
+import ToastUtil from "@src/utils/toast/ToastUtil"
 
 const PasswordWrap = styled.div`
   display: flex;
@@ -55,18 +55,14 @@ const CreateRoomOrganisms = () => {
     roomId?: string,
     password?: string
   ) => {
-    dispatch(toastSlice.actions.setIsActive(true))
-    dispatch(toastSlice.actions.setText(text))
-    dispatch(toastSlice.actions.setToastColor(toastColor))
+    if (toastColor === "success") ToastUtil.success(text)
+    else if (toastColor === "error") ToastUtil.error(text)
+
     if (roomId) {
       dispatch(modalSlice.actions.setRoomId(roomId))
       dispatch(modalSlice.actions.setIsActive(true))
     }
     if (password) dispatch(modalSlice.actions.setPassword(password))
-
-    setTimeout(() => {
-      dispatch(toastSlice.actions.setIsActive(false))
-    }, 2000)
   }
 
   const createShareRoom = async () => {

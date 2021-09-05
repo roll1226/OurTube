@@ -7,9 +7,12 @@
           "$userID": {
             ".read": "auth != null",
             ".write": "auth != null",
-            ".validate": "newData.hasChildren(['state', 'lastChanged', 'photoURL', 'displayName'])",
+            ".validate": "newData.hasChildren(['state', 'roomId', 'lastChanged', 'photoURL', 'displayName'])",
             "state": {
               ".validate": "newData.isString() && 0 < newData.val().length"
+            },
+            "roomId": {
+              ".validate": "newData.isString() && 0 <= newData.val().length"
             },
             "lastChanged": {
               ".validate": "newData.isNumber() && 0 < newData.val()"

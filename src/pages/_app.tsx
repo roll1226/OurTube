@@ -1,6 +1,5 @@
 import { AppProps } from "next/app"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
 import { Provider } from "react-redux"
@@ -11,10 +10,13 @@ import { firebaseAuth } from "../utils/lib/FirebaseAuthenticationUtil"
 import CircleAtoms from "../components/atoms/CircleAtoms"
 import { OurTubePath } from "../consts/PathConsts"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
-import ToastCardMolecules from "../components/molecules/ToastCardMolecules"
 import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
 import { useModalState } from "../ducks/modal/selectors"
 import useMedia from "use-media"
+import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
+import { useRouter } from "next/router"
+import { AuthProvider } from "@context/AuthContext"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -123,16 +125,18 @@ const GlobalLoader = () => {
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Provider store={createStore()}>
-      <GlobalStyle />
-      <AppBackground />
+      <AuthProvider>
+        <GlobalStyle />
+        <AppBackground />
 
-      <ComponentContainer>
-        <Component {...pageProps} />
-      </ComponentContainer>
+        <ComponentContainer>
+          <Component {...pageProps} />
+        </ComponentContainer>
+        <ToastContainer />
+        {/* <ToastCardMolecules /> */}
 
-      <ToastCardMolecules />
-
-      <GlobalLoader />
+        <GlobalLoader />
+      </AuthProvider>
     </Provider>
   )
 }

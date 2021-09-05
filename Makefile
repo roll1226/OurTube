@@ -4,6 +4,10 @@ dev-firebase:
 	yarn dev:firebase
 build:
 	yarn build
+build-functions:
+	yarn build-functions
+watch:
+	yarn watch-functions
 start:
 	yarn start
 emulators:
@@ -16,3 +20,7 @@ deploy-rule-storage:
 	yarn deploy:rule-storage
 deploy-rule-firestore:
 	yarn deploy:rule-firestore
+deploy-all:
+	yarn deploy:all
+watch-functions:
+	yarn watch-functions
