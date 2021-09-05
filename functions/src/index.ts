@@ -1,9 +1,13 @@
+/* eslint-disable */
 import * as admin from "firebase-admin"
 admin.initializeApp()
 
 const funcs = {
   apiService: "./functions/createRoom",
   onUserStatusChanged: "./functions/changeStatus",
+  changeDatabase: "./functions/changeDatabase",
+  changeUser: "./functions/changeUser",
+  changeStatus: "./functions/updateStaus",
 }
 
 const loadFunction = (funcsObj: { [key: string]: string }) => {
@@ -18,3 +22,4 @@ const loadFunction = (funcsObj: { [key: string]: string }) => {
 }
 
 loadFunction(funcs)
+/* eslint-enable */

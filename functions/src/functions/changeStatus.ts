@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 
@@ -31,3 +32,4 @@ module.exports = functions
 
     return userStatusFireStoreRef.set(eventStatus)
   })
+/* eslint-enable */

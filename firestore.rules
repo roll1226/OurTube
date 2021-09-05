@@ -85,14 +85,16 @@ service cloud.firestore {
           incomingData().count is number &&
           incomingData().type is string &&
           incomingData().createdAt is timestamp &&
-          incomingData().createdAt == request.time;
+          incomingData().createdAt == request.time &&
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time;
 
         allow update: if isAuthenticated() &&
           incomingData().name is string &&
           incomingData().count is number &&
           incomingData().type is string &&
-          incomingData().createdAt is timestamp &&
-          incomingData().createdAt == request.time;
+          incomingData().updatedAt is timestamp &&
+          incomingData().updatedAt == request.time
       }
 
       match /joinFlag/{flagID} {

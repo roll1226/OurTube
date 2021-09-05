@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as functions from "firebase-functions"
 import * as express from "express"
 import * as admin from "firebase-admin"
@@ -52,6 +53,7 @@ app.post("/api/creatRoom", async (req, res) => {
         count: 0,
         type: "changeField",
         createdAt: timestamp,
+        updatedAt: timestamp,
       })
 
     await fireStore
@@ -84,3 +86,4 @@ app.post("/api/creatRoom", async (req, res) => {
 })
 
 module.exports = functions.https.onRequest(app)
+/* eslint-enable */

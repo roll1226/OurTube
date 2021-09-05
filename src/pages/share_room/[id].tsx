@@ -192,12 +192,22 @@ const ShareRoom = () => {
   }, [currentUser, roomId, router, queryPassword])
 
   /**
+   * get current user
+   */
+  const getCurrentUser = () => {
+    const user = FirebaseAuthenticationUtil.getCurrentUser()
+    return user ? user.uid : ""
+  }
+
+  /**
    * get live info
    * @param event
    */
-  const getRoomInfo = async (event, userUid: string) => {
+  const getRoomInfo = async (event) => {
     isPlay = null
-    if (!roomId || !userUid) return
+    if (!roomId) return
+
+    const userData = getCurrentUser()
 
     const getChangeUser = FirebaseStoreUtil.changeUser(roomId)
     const getJoinFlag = FirebaseStoreUtil.joinFlag(roomId)
@@ -238,12 +248,13 @@ const ShareRoom = () => {
 
               const playNow = room.data().playNow
               const getStoreVideoId = room.data().videoId[playNow]
-              setSignInId(userUid)
+              const uid = getCurrentUser()
+              setSignInId(uid)
 
               if (
                 isPlay &&
                 changeUser.name.includes("SetJoinRoomUser") &&
-                changeUser.name !== `${userUid}SetJoinRoomUser`
+                changeUser.name !== `${uid}SetJoinRoomUser`
               )
                 return
 
@@ -272,12 +283,13 @@ const ShareRoom = () => {
 
               const playNow = room.data().playNow
               const getStoreVideoId = room.data().videoId[playNow]
-              setSignInId(userUid)
+              const uid = getCurrentUser()
+              setSignInId(uid)
 
               if (
                 isPlay &&
                 changeUser.name.includes("SetJoinRoomUser") &&
-                changeUser.name !== `${userUid}SetJoinRoomUser`
+                changeUser.name !== `${uid}SetJoinRoomUser`
               )
                 return
 
@@ -304,7 +316,7 @@ const ShareRoom = () => {
         (error) => {
           LoggerUtil.debug(`error log: ${error}`)
 
-          if (!userUid)
+          if (!userData)
             return router.replace(
               `${OurTubePath.CREATE_GUEST.replace("[id]", roomId)}${
                 queryPassword ? `?p=${queryPassword}` : ""
@@ -347,11 +359,11 @@ const ShareRoom = () => {
    * ready youTube video
    * @param event
    */
-  const _onReady = async (event, userUid: string) => {
+  const _onReady = async (event) => {
     await event.target.mute()
     setVolume(event.target.getVolume())
     setYouTubeEvent(event)
-    getRoomInfo(event, userUid)
+    getRoomInfo(event)
   }
 
   /**
@@ -652,7 +664,7 @@ const ShareRoom = () => {
           isInitThumbnail={isInitThumbnail}
           videoId={videoId}
           isPlayYouTube={isPlayYouTube}
-          _onReady={(event) => _onReady(event, currentUser.uid)}
+          _onReady={_onReady}
           changeState={changeState}
           isPlay={isPlayYouTube}
           currentTime={currentTime}

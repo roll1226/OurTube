@@ -89,7 +89,7 @@ class FirebaseStoreUtil {
           name,
           count: FirebaseStoreUtil.setCount(1),
           type: "changeField",
-          createdAt: FirebaseStoreUtil.getTimeStamp(),
+          updatedAt: FirebaseStoreUtil.getTimeStamp(),
         },
         { merge: true }
       )

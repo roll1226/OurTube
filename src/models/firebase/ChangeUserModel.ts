@@ -6,7 +6,8 @@ export class ChangeUser {
     readonly name: string,
     readonly count: number,
     readonly type: "changeField",
-    readonly createdAt: firebase.firestore.FieldValue
+    readonly createdAt: firebase.firestore.FieldValue,
+    readonly updatedAt: firebase.firestore.FieldValue
   ) {}
 }
 
@@ -17,6 +18,7 @@ export const changeUserConverter = {
       count: post.count,
       type: post.type,
       createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
     }
   },
   fromFirestore(
@@ -24,6 +26,12 @@ export const changeUserConverter = {
     options: firebase.firestore.SnapshotOptions
   ): ChangeUser {
     const data = snapshot.data(options)!
-    return new ChangeUser(data.name, data.count, data.type, data.createdAt)
+    return new ChangeUser(
+      data.name,
+      data.count,
+      data.type,
+      data.createdAt,
+      data.updatedAt
+    )
   },
 }
