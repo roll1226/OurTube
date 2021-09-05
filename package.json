@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "build-functions": "cd functions && npm run build",
+    "watch": "cd functions && npm run watch",
     "emulators": "yarn build-functions && firebase emulators:start",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:rule-firestore": "firebase deploy --only firestore:rules",

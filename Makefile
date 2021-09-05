@@ -6,6 +6,8 @@ build:
 	yarn build
 build-functions:
 	yarn build-functions
+watch:
+	yarn watch
 start:
 	yarn start
 emulators:
