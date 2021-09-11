@@ -9,6 +9,7 @@ import { useState, useEffect } from "react"
 import { OurTubePath } from "../../consts/PathConsts"
 import useMedia from "use-media"
 import ToastUtil from "@src/utils/toast/ToastUtil"
+import { useRouter } from "next/router"
 
 export type Props = {
   roomId: string
@@ -16,9 +17,9 @@ export type Props = {
 }
 
 const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
+  const router = useRouter()
   const dispatch = useDispatch()
   const isWide = useMedia({ minWidth: "480px" })
-
   const [originUrl, setOriginUrl] = useState("")
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const LinkCopyButtonMolecules = ({ roomId, password }: Props) => {
 
   return (
     <CopyToClipboard
-      text={`${originUrl}${OurTubePath.SHARE_ROOM.replace("[id]", roomId)}${
+      text={`${originUrl}${router.pathname.replace("[id]", roomId)}${
         password ? `?p=${password}` : ""
       }`}
       onCopy={copyLink}
