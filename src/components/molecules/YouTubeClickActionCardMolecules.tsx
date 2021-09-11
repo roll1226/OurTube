@@ -94,7 +94,7 @@ const YouTubeClickActionCardMolecules = ({
       nowRoomId: roomId,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
-    if (isDemo) return router.push(`/demo_room`)
+    if (roomId === "demoRoom") return router.push("/demo_room")
     router.push(`/share_room/${roomId}`)
   }
 

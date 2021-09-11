@@ -75,13 +75,13 @@ const JoinedRoomOrganisms = () => {
         <GeneralSpacer vertical={isWide ? 20 : 12} />
 
         <RoomCardWrap>
-          <YouTubeClickActionCardMolecules
+          {/* <YouTubeClickActionCardMolecules
             text={"デモページ(自由に使用してください)"}
             videoId={""}
             icon={faChevronCircleRight}
             roomId={"demoRoom"}
             isDemo={true}
-          />
+          /> */}
 
           {joinedRooms.map((joinedRoom, index) => (
             <YouTubeClickActionCardMolecules

@@ -252,7 +252,7 @@ class FirebaseStoreUtil {
 
     await FirebaseStoreUtil.users(user.uid).set({
       name,
-      joinedRooms: [],
+      joinedRooms: ["demoRoom"],
       nowRoomId: "",
       createdAt: FirebaseStoreUtil.getTimeStamp(),
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
