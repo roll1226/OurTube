@@ -125,6 +125,7 @@ const CommentAndSendUrlCardOrganisms = ({
               sendYouTubeUrl={sendYouTubeUrl}
               nowVideoId={nowVideoId}
               stopIntervalCurrentTime={stopIntervalCurrentTime}
+              roomId={roomId}
             />
           </CardAtoms>
         </MaskAtoms>
