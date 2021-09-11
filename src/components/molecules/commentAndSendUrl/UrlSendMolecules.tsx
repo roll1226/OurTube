@@ -26,6 +26,7 @@ export type Props = {
   isActive: boolean
   nowVideoId: string
   stopIntervalCurrentTime: () => void
+  roomId: string
 }
 
 let youTubeList = []
@@ -37,14 +38,13 @@ const UrlSendMolecules = ({
   isActive = true,
   nowVideoId,
   stopIntervalCurrentTime,
+  roomId,
 }: Props) => {
   const [youTubesList, setYouTubeList] = useState([])
   const router = useRouter()
-  const { id } = router.query
-  const roomId = id as string
 
   useEffect(() => {
-    youTubeList = []
+    if (!roomId) return
     const unsubscribe = FirebaseStoreUtil.youTubeList(roomId)
       .orderBy("createdAt", "asc")
       .onSnapshot((youTubes) => {
@@ -52,19 +52,12 @@ const UrlSendMolecules = ({
           if (youTube.type === "added") {
             const youTubeData = youTube.doc.data()
 
-            youTubeList.push({
+            const init = {
               title: youTubeData.title,
               image: youTubeData.image,
               videoId: youTube.doc.id,
-            })
-            setYouTubeList([
-              ...youTubeList,
-              {
-                title: youTubeData.title,
-                image: youTubeData.image,
-                videoId: youTube.doc.id,
-              },
-            ])
+            }
+            setYouTubeList((youTubesList) => [...youTubesList, init])
           }
         })
       })
@@ -74,7 +67,7 @@ const UrlSendMolecules = ({
   return (
     <UrlSendContainer isActive={isActive}>
       <YouTubeListMolecules
-        youTubes={youTubeList}
+        youTubes={youTubesList}
         nowVideoId={nowVideoId}
         stopIntervalCurrentTime={stopIntervalCurrentTime}
       />

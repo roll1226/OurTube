@@ -26,6 +26,7 @@ export type Props = {
   sendYouTubeUrl: () => void
   nowVideoId: string
   stopIntervalCurrentTime: () => void
+  roomId: string
 }
 
 const CommentAndSendUrlCardOrganisms = ({
@@ -34,6 +35,7 @@ const CommentAndSendUrlCardOrganisms = ({
   sendYouTubeUrl,
   nowVideoId,
   stopIntervalCurrentTime,
+  roomId,
 }: Props) => {
   const isWide = useMedia({ minWidth: "480px" })
   const dispatch = useDispatch()
@@ -81,6 +83,7 @@ const CommentAndSendUrlCardOrganisms = ({
             sendYouTubeUrl={sendYouTubeUrl}
             nowVideoId={nowVideoId}
             stopIntervalCurrentTime={stopIntervalCurrentTime}
+            roomId={roomId}
           />
         </CardAtoms>
       )}

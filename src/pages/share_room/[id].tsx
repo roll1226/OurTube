@@ -691,6 +691,7 @@ const ShareRoom = () => {
           sendYouTubeUrl={setStoreVideoId}
           nowVideoId={videoId}
           stopIntervalCurrentTime={stopIntervalCurrentTime}
+          roomId={roomId}
         />
       </ContentWrap>
 
