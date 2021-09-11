@@ -38,8 +38,8 @@ const CreateAccount = () => {
   const saveUserName = async () => {
     dispatch(modalSlice.actions.setLoading(true))
     await FirebaseStoreUtil.createUserName(userName)
-    router.replace(OurTubePath.CREATE_ROOM)
     dispatch(modalSlice.actions.setLoading(false))
+    router.replace(OurTubePath.CREATE_ROOM)
   }
 
   return (

@@ -78,12 +78,12 @@ export type YouTubePlayer = {
 let isPlay = null
 let intervalCurrentTime
 
-const ShareRoom = () => {
+const DemoPage = () => {
   const router = useRouter()
   const isWide = useMedia({ minWidth: "480px" })
   const { id } = router.query
   const queryPassword = router.query.p as string
-  const roomId = id as string
+  const roomId = "demoRoom"
   const { currentUser } = useContext(AuthContext)
 
   const dispatch = useDispatch()
@@ -721,4 +721,4 @@ const ShareRoom = () => {
   )
 }
 
-export default ShareRoom
+export default DemoPage

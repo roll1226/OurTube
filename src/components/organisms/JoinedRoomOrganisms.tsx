@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import styled from "styled-components"
 import CardAtoms from "../atoms/CardAtoms"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
@@ -10,9 +10,9 @@ import {
 } from "../../styles/typography/GeneralTextStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import YouTubeClickActionCardMolecules from "../molecules/YouTubeClickActionCardMolecules"
-import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
 import useMedia from "use-media"
+import { AuthContext } from "@context/AuthContext"
 
 const RoomCardWrap = styled.div`
   padding: 8px;
@@ -31,15 +31,15 @@ const RoomCardWrap = styled.div`
 `
 
 const JoinedRoomOrganisms = () => {
-  const authUser = useFirebaseAuthentication()
   const [joinedRooms, setJoinedRooms] = useState([])
   const isWide = useMedia({ minWidth: "480px" })
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!authUser) return
+    if (!currentUser) return
 
     const getUser = async () => {
-      const user = await FirebaseStoreUtil.users(authUser.uid).get()
+      const user = await FirebaseStoreUtil.users(currentUser.uid).get()
       const joinedRoomsList = user.data().joinedRooms
       const roomList = []
 
@@ -59,7 +59,7 @@ const JoinedRoomOrganisms = () => {
     }
 
     getUser()
-  }, [authUser])
+  }, [currentUser])
 
   return (
     <>
@@ -75,6 +75,14 @@ const JoinedRoomOrganisms = () => {
         <GeneralSpacer vertical={isWide ? 20 : 12} />
 
         <RoomCardWrap>
+          <YouTubeClickActionCardMolecules
+            text={"デモページ(自由に使用してください)"}
+            videoId={""}
+            icon={faChevronCircleRight}
+            roomId={"demoRoom"}
+            isDemo={true}
+          />
+
           {joinedRooms.map((joinedRoom, index) => (
             <YouTubeClickActionCardMolecules
               key={index}

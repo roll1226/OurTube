@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import HeadAtoms from "../../components/atoms/HeadAtoms"
 import { OurTubePath } from "../../consts/PathConsts"
-import { ChangeEvent, useState, useEffect } from "react"
+import { ChangeEvent, useState, useEffect, useContext } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 import MaskAtoms from "../../components/atoms/MaskAtoms"
@@ -15,10 +15,10 @@ import {
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import SignInContainerOrganisms from "../../components/organisms/SignInContainerOrganisms"
-import useFirebaseAuthentication from "../../hooks/useFirebaseAuthentication"
 import InputAtoms from "../../components/atoms/InputAtoms"
 import ButtonAtoms from "../../components/atoms/ButtonAtoms"
 import useMedia from "use-media"
+import { AuthContext } from "@context/AuthContext"
 
 const JoinRoomCreateAccount = () => {
   const isWide = useMedia({ minWidth: "480px" })
@@ -30,15 +30,13 @@ const JoinRoomCreateAccount = () => {
   const [istNameStore, setIsNameStore] = useState(false)
   const [userName, setUserName] = useState("")
 
-  const authUser = useFirebaseAuthentication()
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!authUser) return
-    if (!roomId) return
-    if (!queryPassword) return
+    if (!currentUser || !roomId || !queryPassword) return
 
     const checkUser = async () => {
-      const isName = await FirebaseStoreUtil.checkUserName(authUser.uid)
+      const isName = await FirebaseStoreUtil.checkUserName(currentUser.uid)
       if (!isName) setIsNameStore(true)
       else
         router.replace(
@@ -49,7 +47,7 @@ const JoinRoomCreateAccount = () => {
     }
 
     checkUser()
-  }, [authUser, roomId, router, queryPassword])
+  }, [currentUser, roomId, router, queryPassword])
 
   const insetAccountName = (event: ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value)

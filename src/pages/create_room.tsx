@@ -1,3 +1,4 @@
+import firebase from "firebase/app"
 import HeadAtoms from "../components/atoms/HeadAtoms"
 import styled, { keyframes, css } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
@@ -16,10 +17,10 @@ import IconAtoms from "../components/atoms/IconAtoms"
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
 import NotionButtonMolecules from "../components/molecules/NotionButtonMolecules"
-import FirebaseAuthenticationUtil from "@src/utils/lib/FirebaseAuthenticationUtil"
 import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
-import { useContext } from "react"
-import { AuthContext } from "@context/AuthContext"
+import FirebaseInitUtil from "@src/utils/lib/FirebaseInitUtil"
+import { useRouter } from "next/router"
+import LoggerUtil from "@src/utils/debugger/LoggerUtil"
 
 const CreateRoomContainer = styled.div<{ isWide: boolean }>`
   width: 100vw;
@@ -46,23 +47,24 @@ const CreateRoomCard = styled.div`
 `
 
 const CreateRoom = () => {
+  const router = useRouter()
   const modalState = useModalState().modal
   const isWide = useMedia({ minWidth: "480px" })
   const [changeCard, setChangeCard] = useState(true)
-  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!currentUser) return
-    FirebaseDatabaseUtil.offlineState()
-    resetUserNowRoomId(currentUser.uid)
-  }, [currentUser])
+    FirebaseInitUtil.firebaseAuth().onAuthStateChanged(
+      async (user: firebase.User) => {
+        if (!user) return router.replace("/")
 
-  const resetUserNowRoomId = async (userId: string) => {
-    await FirebaseStoreUtil.users(userId).update({
-      nowRoomId: "",
-      updatedAt: FirebaseStoreUtil.getTimeStamp(),
-    })
-  }
+        FirebaseDatabaseUtil.offlineState()
+        await FirebaseStoreUtil.users(user.uid).update({
+          nowRoomId: "",
+          updatedAt: FirebaseStoreUtil.getTimeStamp(),
+        })
+      }
+    )
+  }, [])
 
   return (
     <CreateRoomContainer isWide={isWide}>

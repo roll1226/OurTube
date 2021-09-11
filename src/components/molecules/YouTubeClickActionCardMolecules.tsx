@@ -39,6 +39,7 @@ export type Props = {
   icon: IconProp
   roomId?: string
   youTubeUrl?: string
+  isDemo?: boolean
 }
 
 const YouTubeCLickAction = (videoId: string, text: string, icon: IconProp) => {
@@ -79,26 +80,27 @@ const YouTubeClickActionCardMolecules = ({
   icon,
   roomId,
   youTubeUrl,
+  isDemo = false,
 }: Props) => {
   const router = useRouter()
-  const dispatch = useDispatch()
 
   const pageTransition = () => {
     ToastUtil.success("コピーしました")
   }
 
-  const pushRoom = async (roomId: string) => {
+  const pushRoom = async (roomId: string, isDemo: boolean) => {
     const currentUser = FirebaseAuthenticationUtil.getCurrentUser()
     await FirebaseStoreUtil.users(currentUser.uid).update({
       nowRoomId: roomId,
       updatedAt: FirebaseStoreUtil.getTimeStamp(),
     })
+    if (isDemo) return router.push(`/demo_room`)
     router.push(`/share_room/${roomId}`)
   }
 
   if (roomId) {
     return (
-      <div onClick={() => pushRoom(roomId)}>
+      <div onClick={() => pushRoom(roomId, isDemo)}>
         {YouTubeCLickAction(videoId, text, icon)}
       </div>
     )

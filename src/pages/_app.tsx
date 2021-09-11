@@ -1,5 +1,5 @@
 import { AppProps } from "next/app"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import styled, { createGlobalStyle } from "styled-components"
 import reset from "styled-reset"
 import { Provider } from "react-redux"
@@ -16,7 +16,7 @@ import useMedia from "use-media"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
 import { useRouter } from "next/router"
-import { AuthProvider } from "@context/AuthContext"
+import { AuthContext, AuthProvider } from "@context/AuthContext"
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -51,40 +51,44 @@ const DarkGreenCircle = styled(CircleAtoms)``
 const AppBackground = () => {
   const router = useRouter()
   const isWide = useMedia({ minWidth: "480px" })
+  const { currentUser } = useContext(AuthContext)
 
   const [nowPathname, setNowPathname] = useState("/")
 
   useEffect(() => {
-    return firebaseAuth.onAuthStateChanged(async (user) => {
-      const pathname = router.pathname
-      LoggerUtil.debug(pathname)
-
-      if (!user) {
-        if (
-          pathname !== OurTubePath.TOP &&
-          pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
-          pathname !== OurTubePath.CREATE_GUEST &&
-          pathname !== OurTubePath.ERROR &&
-          pathname !== OurTubePath.SHARE_ROOM &&
-          pathname !== OurTubePath.NOT_FOUND
-        ) {
-          router.replace("/")
-          LoggerUtil.debug(router)
-        }
-      } else {
-        const userName = await FirebaseStoreUtil.checkUserName(user.uid)
-
-        if (pathname === OurTubePath.SHARE_ROOM) return
-        if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
-        if (pathname === OurTubePath.CREATE_GUEST) return
-        if (pathname === OurTubePath.ERROR) return
-        if (pathname === OurTubePath.NOT_FOUND) return
-
-        if (userName) router.push(OurTubePath.CREATE_ROOM)
-        else router.push(OurTubePath.CREATE_ACCOUNT)
+    const pathname = router.pathname
+    if (!currentUser) {
+      if (
+        pathname !== OurTubePath.TOP &&
+        pathname !== OurTubePath.INSERT_ROOM_PASSWORD &&
+        pathname !== OurTubePath.CREATE_GUEST &&
+        pathname !== OurTubePath.ERROR &&
+        pathname !== OurTubePath.SHARE_ROOM &&
+        pathname !== OurTubePath.NOT_FOUND &&
+        pathname !== OurTubePath.DEMO_ROOM
+      ) {
+        router.replace("/")
+        LoggerUtil.debug(router)
       }
-    })
-  }, [])
+      return
+    }
+
+    const checkAuth = async () => {
+      const userName = await FirebaseStoreUtil.checkUserName(currentUser.uid)
+
+      if (pathname === OurTubePath.SHARE_ROOM) return
+      if (pathname === OurTubePath.DEMO_ROOM) return
+      if (pathname === OurTubePath.INSERT_ROOM_PASSWORD) return
+      if (pathname === OurTubePath.CREATE_GUEST) return
+      if (pathname === OurTubePath.ERROR) return
+      if (pathname === OurTubePath.NOT_FOUND) return
+
+      if (userName) router.push(OurTubePath.CREATE_ROOM)
+      else router.push(OurTubePath.CREATE_ACCOUNT)
+    }
+
+    checkAuth()
+  }, [currentUser])
 
   useEffect(() => {
     const pathname = router.pathname

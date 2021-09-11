@@ -1,10 +1,11 @@
 import LinkCopyButtonMolecules from "../molecules/LinkCopyButtonMolecules"
 import StatusUserListMolecules from "../molecules/StatusUserListMolecules"
 import styled from "styled-components"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import { Base64 } from "js-base64"
+import { AuthContext } from "@context/AuthContext"
 
 const YouTubeUnderContentContainer = styled.div`
   display: flex;
@@ -20,8 +21,10 @@ export type Props = {
 
 const YouTubeUnderContentOrganisms = ({ roomId, password }: Props) => {
   const [status, setStatus] = useState([])
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
+    if (!currentUser || !roomId) return
     FirebaseStoreUtil.signInState(roomId).onSnapshot((statusList) => {
       if (!statusList.size) return
 
@@ -35,7 +38,7 @@ const YouTubeUnderContentOrganisms = ({ roomId, password }: Props) => {
       })
       setStatus(statusSave)
     })
-  }, [roomId])
+  }, [roomId, currentUser])
 
   return (
     <YouTubeUnderContentContainer>

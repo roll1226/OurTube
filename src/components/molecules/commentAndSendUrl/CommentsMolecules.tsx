@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from "react"
+import { useEffect, useState, ChangeEvent, useContext } from "react"
 import SendTextMolecules from "./SendTextMolecules"
 import styled, { css } from "styled-components"
 import FirebaseStoreUtil from "../../../utils/lib/FirebaseStoreUtil"
@@ -6,6 +6,7 @@ import FirebaseAuthenticationUtil from "../../../utils/lib/FirebaseAuthenticatio
 import CommentsListMolecules from "./CommentsListMolecules"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
+import { AuthContext } from "@context/AuthContext"
 
 export type Props = {
   isActive: boolean
@@ -28,8 +29,11 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
   const router = useRouter()
   const { id } = router.query
   const roomId = id as string
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
+    if (!currentUser) return
+
     const unsubscribe = FirebaseStoreUtil.chat(roomId)
       .orderBy("createdAt", "asc")
       .onSnapshot((comments) => {
@@ -48,7 +52,7 @@ const CommentsMolecules = ({ isActive = true }: Props) => {
       })
 
     return () => unsubscribe()
-  }, [roomId])
+  }, [roomId, currentUser])
 
   const changeComment = (event: ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value)
