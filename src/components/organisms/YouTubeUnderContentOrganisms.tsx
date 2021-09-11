@@ -49,7 +49,7 @@ const YouTubeUnderContentOrganisms = ({ roomId, password }: Props) => {
 
       <GeneralSpacer horizontal={8} />
 
-      <StatusUserListMolecules statusList={status} />
+      <StatusUserListMolecules statusList={status} roomId={roomId} />
     </YouTubeUnderContentContainer>
   )
 }

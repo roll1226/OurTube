@@ -76,6 +76,7 @@ export type Props = {
   displayName: string
   userId: string
   state: "online" | "offline"
+  roomId: string
 }
 
 const StatusUserAtoms = ({
@@ -83,10 +84,8 @@ const StatusUserAtoms = ({
   displayName,
   userId,
   state = "offline",
+  roomId,
 }: Props) => {
-  const router = useRouter()
-  const { id } = router.query
-  const roomId = id as string
   const [isHover, setIsHover] = useState(false)
   const imgRef = useRef(null)
   const [isOnline, setIsOnline] = useState<"online" | "offline">("offline")

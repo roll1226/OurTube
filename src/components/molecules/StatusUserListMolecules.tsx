@@ -31,9 +31,10 @@ export type Props = {
     lastChanged: firebase.firestore.FieldValue
     userId: string
   }[]
+  roomId: string
 }
 
-const StatusUserListMolecules = ({ statusList }: Props) => {
+const StatusUserListMolecules = ({ statusList, roomId }: Props) => {
   const isWide = useMedia({ minWidth: "480px" })
 
   return (
@@ -45,6 +46,7 @@ const StatusUserListMolecules = ({ statusList }: Props) => {
             state={status.state}
             displayName={status.displayName}
             photoURL={status.photoURL}
+            roomId={roomId}
           />
         </UserStatusWrap>
       ))}
