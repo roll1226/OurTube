@@ -74,7 +74,7 @@ const CommentAndSendUrlCardOrganisms = ({
               name={"動画リスト"}
             />
           </TabsContainer>
-          <CommentsMolecules isActive={isCommentActive} />
+          <CommentsMolecules isActive={isCommentActive} roomId={roomId} />
 
           <UrlSendMolecules
             isActive={isSendUrl}
@@ -116,7 +116,7 @@ const CommentAndSendUrlCardOrganisms = ({
                 name={"動画リスト"}
               />
             </TabsContainer>
-            <CommentsMolecules isActive={isCommentActive} />
+            <CommentsMolecules isActive={isCommentActive} roomId={roomId} />
 
             <UrlSendMolecules
               isActive={isSendUrl}

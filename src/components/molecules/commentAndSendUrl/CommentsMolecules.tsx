@@ -10,6 +10,7 @@ import { AuthContext } from "@context/AuthContext"
 
 export type Props = {
   isActive: boolean
+  roomId: string
 }
 
 const CommentsContainer = styled.div<{ isActive: boolean }>`
@@ -23,16 +24,14 @@ const CommentsContainer = styled.div<{ isActive: boolean }>`
     `};
 `
 
-const CommentsMolecules = ({ isActive = true }: Props) => {
+const CommentsMolecules = ({ isActive = true, roomId }: Props) => {
   const [comment, setComment] = useState("")
   const [comments, setComments] = useState([])
   const router = useRouter()
-  const { id } = router.query
-  const roomId = id as string
   const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!currentUser) return
+    if (!currentUser || !roomId) return
 
     const unsubscribe = FirebaseStoreUtil.chat(roomId)
       .orderBy("createdAt", "asc")
