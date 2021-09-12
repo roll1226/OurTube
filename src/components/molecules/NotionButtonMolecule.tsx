@@ -74,7 +74,7 @@ const NotionButtonMolecule = ({ href = false }: Props) => {
       <AboutUserBtnWrap>
         {href && (
           <a
-            href="https://www.notion.so/OurTube-f35756afcd014034a9708b7dad93b5a5"
+            href="https://square-tuba-8e1.notion.site/OurTube-f35756afcd014034a9708b7dad93b5a5"
             target="_blank"
             rel="noopener noreferrer"
           >
