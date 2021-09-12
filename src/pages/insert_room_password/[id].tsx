@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
-import InsertRoomPasswordAndGuestMaskOrganisms from "../../components/organisms/InsertRoomPasswordAndGuestMaskOrganisms"
-import HeadAtoms from "../../components/atoms/HeadAtoms"
+import InsertRoomPasswordAndGuestMaskOrganism from "../../components/organisms/InsertRoomPasswordAndGuestMaskOrganism"
+import HeadAtom from "../../components/atoms/HeadAtom"
 import { OurTubePath } from "../../consts/PathConsts"
 import { ChangeEvent, useState } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
@@ -38,7 +38,7 @@ const InsertRoomPassword = () => {
 
   return (
     <>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | ルームパスワード入力"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
@@ -46,7 +46,7 @@ const InsertRoomPassword = () => {
         top={true}
       />
 
-      <InsertRoomPasswordAndGuestMaskOrganisms
+      <InsertRoomPasswordAndGuestMaskOrganism
         title={"ルームパスワードを入力"}
         placeholder={"ルームパスワードを入力"}
         value={roomPassword}

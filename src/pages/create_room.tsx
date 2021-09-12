@@ -1,22 +1,22 @@
 import firebase from "firebase/app"
-import HeadAtoms from "../components/atoms/HeadAtoms"
+import HeadAtom from "../components/atoms/HeadAtom"
 import styled, { keyframes, css } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
-import CreateRoomOrganisms from "../components/organisms/CreateRoomOrganisms"
-import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
-import JoinedRoomOrganisms from "../components/organisms/JoinedRoomOrganisms"
+import CreateRoomOrganism from "../components/organisms/CreateRoomOrganism"
+import AccountHeadMolecule from "../components/molecules/AccountHeadMolecule"
+import JoinedRoomOrganism from "../components/organisms/JoinedRoomOrganism"
 import { GeneralSpacer } from "../styles/spacer/GeneralSpacerStyle"
-import DoneCreateRoomOrganisms from "../components/organisms/DoneCreateRoomOrganisms"
+import DoneCreateRoomOrganism from "../components/organisms/DoneCreateRoomOrganism"
 import { useModalState } from "../ducks/modal/selectors"
 import { useEffect } from "react"
 import FirebaseDatabaseUtil from "../utils/lib/FirebaseDatabaseUtil"
 import useMedia from "use-media"
-import ButtonAtoms from "../components/atoms/ButtonAtoms"
+import ButtonAtom from "../components/atoms/ButtonAtom"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
-import IconAtoms from "../components/atoms/IconAtoms"
+import IconAtom from "../components/atoms/IconAtom"
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
-import NotionButtonMolecules from "../components/molecules/NotionButtonMolecules"
+import NotionButtonMolecule from "../components/molecules/NotionButtonMolecule"
 import FirebaseStoreUtil from "@src/utils/lib/FirebaseStoreUtil"
 import FirebaseInitUtil from "@src/utils/lib/FirebaseInitUtil"
 import { useRouter } from "next/router"
@@ -68,23 +68,23 @@ const CreateRoom = () => {
 
   return (
     <CreateRoomContainer isWide={isWide}>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | ルーム作成"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
         url={"/"}
         top={true}
       />
-      <AccountHeadMolecules />
+      <AccountHeadMolecule />
 
       {isWide && (
         <>
           <CreateRoomCard>
-            <CreateRoomOrganisms />
+            <CreateRoomOrganism />
           </CreateRoomCard>
           <GeneralSpacer horizontal={64} />
           <CreateRoomCard>
-            <JoinedRoomOrganisms />
+            <JoinedRoomOrganism />
           </CreateRoomCard>
         </>
       )}
@@ -93,25 +93,25 @@ const CreateRoom = () => {
         <>
           {changeCard && (
             <CreateRoomCard>
-              <CreateRoomOrganisms />
+              <CreateRoomOrganism />
             </CreateRoomCard>
           )}
 
           {!changeCard && (
             <CreateRoomCard>
-              <JoinedRoomOrganisms />
+              <JoinedRoomOrganism />
             </CreateRoomCard>
           )}
 
           <GeneralSpacer vertical={16} />
 
-          <ButtonAtoms
+          <ButtonAtom
             bgColor={GeneralColorStyle.White}
             outlineColor={GeneralColorStyle.Black}
             text={"切り替える"}
             fontColor={GeneralColorStyle.Black}
             icon={
-              <IconAtoms
+              <IconAtom
                 style={{
                   color: GeneralColorStyle.Black,
                   width: 20,
@@ -125,14 +125,14 @@ const CreateRoom = () => {
       )}
 
       {modalState.roomId && (
-        <DoneCreateRoomOrganisms
+        <DoneCreateRoomOrganism
           roomId={modalState.roomId}
           password={modalState.password}
           isOpen={modalState.isOpen}
         />
       )}
 
-      <NotionButtonMolecules href={true} />
+      <NotionButtonMolecule href={true} />
     </CreateRoomContainer>
   )
 }

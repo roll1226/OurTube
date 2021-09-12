@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from "react"
-import HeadAtoms from "../components/atoms/HeadAtoms"
-import InsertAccountNameMolecules from "../components/molecules/InsertAccountNameMolecules"
+import HeadAtom from "../components/atoms/HeadAtom"
+import InsertAccountNameMolecule from "../components/molecules/InsertAccountNameMolecule"
 import styled, { keyframes } from "styled-components"
 import { DefaultAnimation } from "../styles/animation/GeneralAnimationStyle"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
@@ -44,7 +44,7 @@ const CreateAccount = () => {
 
   return (
     <CreateAccountContainer>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | アカウント作成"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
@@ -52,7 +52,7 @@ const CreateAccount = () => {
         top={false}
       />
       <InsertAccountNameCard>
-        <InsertAccountNameMolecules
+        <InsertAccountNameMolecule
           userName={userName}
           insetAccountName={insetAccountName}
           saveUserName={saveUserName}

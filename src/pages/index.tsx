@@ -1,10 +1,10 @@
-import HeadAtoms from "../components/atoms/HeadAtoms"
-import OurTubeLogoAtoms, {
+import HeadAtom from "../components/atoms/HeadAtom"
+import OurTubeLogoAtom, {
   LogoColor,
-} from "../components/atoms/svg/OurTubeLogoAtoms"
+} from "../components/atoms/svg/OurTubeLogoAtom"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import styled, { css } from "styled-components"
-import SignInContainerOrganisms from "../components/organisms/SignInContainerOrganisms"
+import SignInContainerOrganism from "../components/organisms/SignInContainerOrganism"
 import FirebaseAuthenticationUtil from "../utils/lib/FirebaseAuthenticationUtil"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
 import { useRouter } from "next/router"
@@ -98,7 +98,7 @@ const TopPage = () => {
 
   return (
     <TopPageContainer>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
@@ -107,7 +107,7 @@ const TopPage = () => {
       />
 
       <LogoContainer isWide={isWide}>
-        <OurTubeLogoAtoms size={isWide ? 500 : 200} color={LogoColor.BLUE} />
+        <OurTubeLogoAtom size={isWide ? 500 : 200} color={LogoColor.BLUE} />
       </LogoContainer>
 
       <TopMessageContainer isWide={isWide}>
@@ -128,7 +128,7 @@ const TopPage = () => {
       </TopMessageContainer>
 
       <SignInContainer>
-        <SignInContainerOrganisms
+        <SignInContainerOrganism
           googleSignInClick={googleSignInClick}
           twitterSignInClick={twitterSignInClick}
         />

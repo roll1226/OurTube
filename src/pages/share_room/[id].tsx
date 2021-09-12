@@ -9,16 +9,16 @@ import {
 import YouTube from "react-youtube"
 import { useRouter } from "next/router"
 import styled, { css } from "styled-components"
-import HeadAtoms from "../../components/atoms/HeadAtoms"
+import HeadAtom from "../../components/atoms/HeadAtom"
 import { OurTubePath } from "../../consts/PathConsts"
-import AccountHeadMolecules from "../../components/molecules/AccountHeadMolecules"
-import YouTubePlayerOrganisms from "../../components/organisms/YouTubePlayerOrganisms"
+import AccountHeadMolecule from "../../components/molecules/AccountHeadMolecule"
+import YouTubePlayerOrganism from "../../components/organisms/YouTubePlayerOrganism"
 import LoggerUtil from "../../utils/debugger/LoggerUtil"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
 import { RoomModel } from "../../models/firebase/RoomModel"
-import ControlsMolecules from "../../components/molecules/ControlsMolecules"
-import CommentAndSendUrlCardOrganisms from "../../components/organisms/CommentAndSendUrlCardOrganisms"
+import ControlsMolecule from "../../components/molecules/ControlsMolecule"
+import CommentAndSendUrlCardOrganism from "../../components/organisms/CommentAndSendUrlCardOrganism"
 import UrlParamsUtil from "../../utils/url/UrlParamsUtil"
 import FetchYouTubeUtil from "../../utils/lib/FetchYouTubeUtil"
 import { useDispatch } from "react-redux"
@@ -26,18 +26,18 @@ import { useDispatch } from "react-redux"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
 import modalSlice from "../../ducks/modal/slice"
 import FirebaseDatabaseUtil from "../../utils/lib/FirebaseDatabaseUtil"
-import YouTubeUnderContentOrganisms from "../../components/organisms/YouTubeUnderContentOrganisms"
+import YouTubeUnderContentOrganism from "../../components/organisms/YouTubeUnderContentOrganism"
 import {
   GeneralText,
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
 import useMedia from "use-media"
 import { faColumns } from "@fortawesome/free-solid-svg-icons"
-import ControlsButtonAtoms from "../../components/atoms/controls/ControlsButtonAtoms"
+import ControlsButtonAtom from "../../components/atoms/controls/ControlsButtonAtom"
 import mobileModalSlice from "../../ducks/mobileModal/slice"
-import NotionButtonMolecules from "../../components/molecules/NotionButtonMolecules"
+import NotionButtonMolecule from "../../components/molecules/NotionButtonMolecule"
 import { Base64 } from "js-base64"
-import HowToUseModalOrganisms from "../../components/organisms/HowToUseModalOrganisms"
+import HowToUseModalOrganism from "../../components/organisms/HowToUseModalOrganism"
 import ToastUtil from "@src/utils/toast/ToastUtil"
 import { AuthContext } from "@context/AuthContext"
 
@@ -639,7 +639,7 @@ const ShareRoom = () => {
 
   return (
     <ShareRoomContainer isWide={isWide}>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | シェアルーム"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
@@ -647,7 +647,7 @@ const ShareRoom = () => {
         top={false}
       />
 
-      <AccountHeadMolecules />
+      <AccountHeadMolecule />
 
       <ContentWrap isWide={isWide}>
         <GeneralText
@@ -658,7 +658,7 @@ const ShareRoom = () => {
 
         <GeneralSpacer vertical={isWide ? 8 : 4} />
 
-        <YouTubePlayerOrganisms
+        <YouTubePlayerOrganism
           clickYouTube={clickYouTube}
           isInitThumbnail={isInitThumbnail}
           videoId={videoId}
@@ -671,10 +671,10 @@ const ShareRoom = () => {
 
         <GeneralSpacer vertical={isWide ? 8 : 4} />
 
-        <YouTubeUnderContentOrganisms roomId={roomId} password={password} />
+        <YouTubeUnderContentOrganism roomId={roomId} password={password} />
 
         {!isWide && (
-          <ControlsButtonAtoms
+          <ControlsButtonAtom
             size={56}
             icon={faColumns}
             onClick={() => dispatch(mobileModalSlice.actions.setIsOpen(true))}
@@ -683,7 +683,7 @@ const ShareRoom = () => {
       </ContentWrap>
 
       <ContentWrap isWide={isWide}>
-        <CommentAndSendUrlCardOrganisms
+        <CommentAndSendUrlCardOrganism
           youTubeUrl={newVideoId}
           changeYouTubeUrl={(event: ChangeEvent<HTMLInputElement>) =>
             setNewVideoId(event.target.value)
@@ -695,7 +695,7 @@ const ShareRoom = () => {
         />
       </ContentWrap>
 
-      <ControlsMolecules
+      <ControlsMolecule
         mute={videoChangeMute}
         isMute={isMute}
         isPlayYouTube={isPlayYouTube}
@@ -714,10 +714,10 @@ const ShareRoom = () => {
         onTouchMove={(range) => mobileChangeCurrentTime(range)}
       />
 
-      <NotionButtonMolecules href={!isWide && true} />
+      <NotionButtonMolecule href={!isWide && true} />
 
       {/* <SearchYouTubeModalOrganisms /> */}
-      {isWide && <HowToUseModalOrganisms />}
+      {isWide && <HowToUseModalOrganism />}
     </ShareRoomContainer>
   )
 }

@@ -1,15 +1,15 @@
-import HeadAtoms from "../components/atoms/HeadAtoms"
+import HeadAtom from "../components/atoms/HeadAtom"
 import Link from "next/link"
 import styled, { css } from "styled-components"
-import AccountHeadMolecules from "../components/molecules/AccountHeadMolecules"
+import AccountHeadMolecule from "../components/molecules/AccountHeadMolecule"
 import {
   GeneralText,
   GeneralFontSize,
 } from "../styles/typography/GeneralTextStyle"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import useMedia from "use-media"
-import ButtonAtoms from "../components/atoms/ButtonAtoms"
-import IconAtoms from "../components/atoms/IconAtoms"
+import ButtonAtom from "../components/atoms/ButtonAtom"
+import IconAtom from "../components/atoms/IconAtom"
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 
 const Custom404Container = styled.div`
@@ -47,14 +47,14 @@ const Custom404 = () => {
 
   return (
     <Custom404Container>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | 404 Not Found"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
         url={"/"}
         top={true}
       />
-      <AccountHeadMolecules />
+      <AccountHeadMolecule />
 
       <TextWrap isWide={isWide}>
         <GeneralText
@@ -73,13 +73,13 @@ const Custom404 = () => {
       </TextWrap>
 
       <Link href="/create_room">
-        <ButtonAtoms
+        <ButtonAtom
           bgColor={GeneralColorStyle.White}
           outlineColor={GeneralColorStyle.Black}
           fontColor={GeneralColorStyle.Black}
           text={"戻る"}
           icon={
-            <IconAtoms
+            <IconAtom
               style={{
                 color: GeneralColorStyle.Black,
                 width: isWide ? 16 : 12,

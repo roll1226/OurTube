@@ -7,10 +7,10 @@ import createStore from "../ducks/createStore"
 import GeneralColorStyle from "../styles/colors/GeneralColorStyle"
 import LoggerUtil from "../utils/debugger/LoggerUtil"
 import { firebaseAuth } from "../utils/lib/FirebaseAuthenticationUtil"
-import CircleAtoms from "../components/atoms/CircleAtoms"
+import CircleAtom from "../components/atoms/CircleAtom"
 import { OurTubePath } from "../consts/PathConsts"
 import FirebaseStoreUtil from "../utils/lib/FirebaseStoreUtil"
-import LoaderAnimationMaskMolecules from "../components/molecules/LoaderAnimationMaskMolecules"
+import LoaderAnimationMaskMolecule from "../components/molecules/LoaderAnimationMaskMolecule"
 import { useModalState } from "../ducks/modal/selectors"
 import useMedia from "use-media"
 import "react-toastify/dist/ReactToastify.css"
@@ -44,9 +44,9 @@ const ComponentContainer = styled.div`
   z-index: 3;
 `
 
-const DarkBlueCircle = styled(CircleAtoms)``
+const DarkBlueCircle = styled(CircleAtom)``
 
-const DarkGreenCircle = styled(CircleAtoms)``
+const DarkGreenCircle = styled(CircleAtom)``
 
 const AppBackground = () => {
   const router = useRouter()
@@ -118,7 +118,7 @@ const GlobalLoader = () => {
   return (
     <>
       {modalState.loading && (
-        <LoaderAnimationMaskMolecules isOpen={modalState.loading} />
+        <LoaderAnimationMaskMolecule isOpen={modalState.loading} />
       )}
     </>
   )

@@ -1,22 +1,22 @@
 import { useRouter } from "next/router"
-import HeadAtoms from "../../components/atoms/HeadAtoms"
+import HeadAtom from "../../components/atoms/HeadAtom"
 import { OurTubePath } from "../../consts/PathConsts"
 import { ChangeEvent, useState, useEffect, useContext } from "react"
 import FirebaseStoreUtil from "../../utils/lib/FirebaseStoreUtil"
 import FirebaseAuthenticationUtil from "../../utils/lib/FirebaseAuthenticationUtil"
-import MaskAtoms from "../../components/atoms/MaskAtoms"
-import CardAtoms from "../../components/atoms/CardAtoms"
-import OurTubeLogoAtoms from "../../components/atoms/svg/OurTubeLogoAtoms"
-import { LogoColor } from "../../components/atoms/svg/OurTubeLogoAtoms"
+import MaskAtom from "../../components/atoms/MaskAtom"
+import CardAtom from "../../components/atoms/CardAtom"
+import OurTubeLogoAtom from "../../components/atoms/svg/OurTubeLogoAtom"
+import { LogoColor } from "../../components/atoms/svg/OurTubeLogoAtom"
 import {
   GeneralText,
   GeneralFontSize,
 } from "../../styles/typography/GeneralTextStyle"
 import GeneralColorStyle from "../../styles/colors/GeneralColorStyle"
 import { GeneralSpacer } from "../../styles/spacer/GeneralSpacerStyle"
-import SignInContainerOrganisms from "../../components/organisms/SignInContainerOrganisms"
-import InputAtoms from "../../components/atoms/InputAtoms"
-import ButtonAtoms from "../../components/atoms/ButtonAtoms"
+import SignInContainerOrganism from "../../components/organisms/SignInContainerOrganism"
+import InputAtom from "../../components/atoms/InputAtom"
+import ButtonAtom from "../../components/atoms/ButtonAtom"
 import useMedia from "use-media"
 import { AuthContext } from "@context/AuthContext"
 
@@ -88,7 +88,7 @@ const JoinRoomCreateAccount = () => {
 
   return (
     <>
-      <HeadAtoms
+      <HeadAtom
         title={"OurTube | アカウント作成"}
         description={"お気に入りの動画を家族、恋人、友人とともに"}
         keyword={"OurTube, YouTubeShare, 動画, share"}
@@ -96,9 +96,9 @@ const JoinRoomCreateAccount = () => {
         top={true}
       />
 
-      <MaskAtoms isOpen={true}>
-        <CardAtoms width={isWide ? 480 : 280}>
-          <OurTubeLogoAtoms size={isWide ? 430 : 280} color={LogoColor.BLUE} />
+      <MaskAtom isOpen={true}>
+        <CardAtom width={isWide ? 480 : 280}>
+          <OurTubeLogoAtom size={isWide ? 430 : 280} color={LogoColor.BLUE} />
           {!istNameStore && (
             <>
               <GeneralText
@@ -112,7 +112,7 @@ const JoinRoomCreateAccount = () => {
 
               <GeneralSpacer vertical={isWide ? 32 : 20} />
 
-              <SignInContainerOrganisms
+              <SignInContainerOrganism
                 googleSignInClick={googleSignInClick}
                 twitterSignInClick={twitterSignInClick}
               />
@@ -141,7 +141,7 @@ const JoinRoomCreateAccount = () => {
 
               <GeneralSpacer vertical={isWide ? 32 : 20} />
 
-              <InputAtoms
+              <InputAtom
                 width={isWide ? 360 : 240}
                 placeholder={"アカウント作成(20文字以内)"}
                 outlineColor={GeneralColorStyle.DarkGreen}
@@ -153,7 +153,7 @@ const JoinRoomCreateAccount = () => {
 
               <GeneralSpacer vertical={8} />
 
-              <ButtonAtoms
+              <ButtonAtom
                 bgColor={GeneralColorStyle.DarkGreen}
                 text={"アカウントを作成する"}
                 fontColor={GeneralColorStyle.White}
@@ -162,8 +162,8 @@ const JoinRoomCreateAccount = () => {
               />
             </>
           )}
-        </CardAtoms>
-      </MaskAtoms>
+        </CardAtom>
+      </MaskAtom>
     </>
   )
 }
