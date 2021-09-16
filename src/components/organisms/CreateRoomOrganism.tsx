@@ -144,7 +144,13 @@ const CreateRoomOrganism = () => {
           text={"ルームを作成する"}
           fontColor={GeneralColorStyle.White}
           onClick={createShareRoom}
-          disabled={!roomName || roomName.length > 50 ? true : false}
+          disabled={
+            !roomName || roomName.length > 50
+              ? true
+              : isPrivateRoom && !password
+              ? true
+              : false
+          }
         />
       </CardAtom>
     </>
