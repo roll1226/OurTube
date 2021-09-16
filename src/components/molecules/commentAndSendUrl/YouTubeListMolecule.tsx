@@ -32,8 +32,7 @@ export type Props = {
   stopIntervalCurrentTime: () => void
 }
 
-const YouTubeListMolecule
- = ({
+const YouTubeListMolecule = ({
   youTubes,
   nowVideoId,
   stopIntervalCurrentTime,
